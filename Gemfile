@@ -55,3 +55,6 @@ gem 'grape_on_rails_routes'
 gem 'swagger-ui_rails'
 gem 'grape-swagger'
 gem 'grape-swagger-rails'
+
+# JWT authentication
+gem 'devise-jwt'
