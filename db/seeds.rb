@@ -29,3 +29,5 @@ Teneo::DataModel::Storage.create(organization: org1, name: 'Download', protocol:
 Teneo::DataModel::Storage.create(organization: org2, name: 'Download', protocol: 'SFTP', options: {host: 'sftp.org2.com', user: 'ftp', password: '123'})
 Teneo::DataModel::Storage.create(organization: org3, name: 'Download', protocol: 'GDRIVE', options: {credentials_file: 'credentials.json', path: '/data'})
 
+LoginUser.create(email: user1.email, password: 'abc123')
+LoginUser.create(email: user2.email, password: '123abc')

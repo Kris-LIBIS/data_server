@@ -9,7 +9,7 @@ class V1::Users < Grape::API
     end
 
     get ':uuid' do
-      Teneo::DataModel::User.find_by(uuid: params[:uuid])
+      Teneo::DataModel::User.find_by!(uuid: params[:uuid])
     end
 
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_20_120000) do
+ActiveRecord::Schema.define(version: 2019_05_15_190000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -125,6 +125,18 @@ ActiveRecord::Schema.define(version: 2019_03_20_120000) do
     t.index ["parent_id"], name: "index_items_on_parent_id"
   end
 
+  create_table "jwt_blacklist", force: :cascade do |t|
+    t.string "jti", null: false
+    t.datetime "exp", null: false
+    t.index ["jti"], name: "index_jwt_blacklist_on_jti"
+  end
+
+  create_table "login_users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.index ["email"], name: "index_login_users_on_email", unique: true
+  end
+
   create_table "manifestations", force: :cascade do |t|
     t.integer "order", null: false
     t.string "name", null: false
@@ -153,15 +165,8 @@ ActiveRecord::Schema.define(version: 2019_03_20_120000) do
     t.index ["inst_code", "name"], name: "index_material_flows_on_inst_code_and_name", unique: true
   end
 
-  create_table "memberships", force: :cascade do |t|
-    t.string "role", null: false
-    t.bigint "user_id", null: false
-    t.bigint "organization_id", null: false
-    t.integer "lock_version", default: 0, null: false
-    t.index ["organization_id"], name: "index_memberships_on_organization_id"
-    t.index ["user_id", "organization_id", "role"], name: "index_memberships_on_user_id_and_organization_id_and_role", unique: true
-    t.index ["user_id"], name: "index_memberships_on_user_id"
-  end
+# Could not dump table "memberships" because of following StandardError
+#   Unknown type 'user_role' for column 'role'
 
   create_table "organizations", force: :cascade do |t|
     t.string "name", null: false

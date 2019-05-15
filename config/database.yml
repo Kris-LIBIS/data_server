@@ -21,8 +21,9 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-  user: teneo
-  password: teneo
+  database: teneo
+  username: <%= ENV['TENEO_DATABASE_USERNAME'] %>
+  password: <%= ENV['TENEO_DATABASE_PASSWORD'] %>
 
   migrations_paths:
     - <%= Teneo::DataModel.migrations_path %>
@@ -87,6 +88,3 @@ test:
 #
 production:
   <<: *default
-  database: teneo
-  username: <%= ENV['TENEO_DATABASE_USERNAME'] %>
-  password: <%= ENV['TENEO_DATABASE_PASSWORD'] %>
