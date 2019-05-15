@@ -21,9 +21,16 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
+  user: teneo
+  password: teneo
+
+  migrations_paths:
+    - <%= Teneo::DataModel.migrations_path %>
+    - "db/migrate"
+
 development:
   <<: *default
-  database: data_server_development
+  database: teneo_dev
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -57,7 +64,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: data_server_test
+  database: teneo_test
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -80,6 +87,6 @@ test:
 #
 production:
   <<: *default
-  database: data_server_production
-  username: data_server
-  password: <%= ENV['DATA_SERVER_DATABASE_PASSWORD'] %>
+  database: teneo
+  username: <%= ENV['TENEO_DATABASE_USERNAME'] %>
+  password: <%= ENV['TENEO_DATABASE_PASSWORD'] %>

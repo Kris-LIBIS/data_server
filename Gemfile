@@ -43,3 +43,15 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# import DataModel
+gem 'teneo-data_model'
+
+# Grape API
+gem 'grape'
+gem 'hashie-forbidden_attributes'
+gem 'grape-jbuilder'
+gem 'grape_on_rails_routes'
+gem 'swagger-ui_rails'
+gem 'grape-swagger'
+gem 'grape-swagger-rails'
