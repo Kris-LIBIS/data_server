@@ -39,5 +39,9 @@ module DataServer
       env['api.tilt.root'] = Rails.root.join 'app', 'views', 'api'
     end
 
+    # GraphQL
+    config.paths.add File.join('app', 'graphql'), glob: File.join('**', '*.rb')
+    config.autoload_paths += Dir[Rails.root.join('app', 'graphql', '*')]
+
   end
 end

@@ -41,6 +41,7 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'pry-rails'
 end
 
 
@@ -61,3 +62,10 @@ gem 'grape-swagger-rails'
 
 # JWT authentication
 gem 'devise-jwt'
+
+# GraphQL
+gem 'graphql', '1.8.13'
+gem 'graphiql-rails', '1.5.0', group: :development
+
+# Admin
+gem 'activeadmin'

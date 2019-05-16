@@ -10,7 +10,7 @@ class LoginUser < ApplicationRecord
          # :registerable,
          # :recoverable, :rememberable, :validatable,
          # :trackable, :confirmable,
-         :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
+         :jwt_authenticatable, jwt_revocation_strategy: JwtBlacklist
 
   def user_data
     Teneo::DataModel::User.find_by(email: email)
