@@ -1,0 +1,43 @@
+{
+    "organizations": [
+        {
+            "name": "Organization1",
+            "instCode": "INS1",
+            "ingestDir": "/nas/vol03/ingest/org1",
+            "roles": [
+                "ingester",
+                "uploader"
+            ],
+            "storages": [
+                {
+                    "name": "Storage1",
+                    "protocol": "NFS",
+                    "options": {
+                        "location": "/nas/vol04/upload/org1"
+                    }
+                }
+            ],
+            "ingestAgreements": [
+                {
+                    "name": "",
+                    "defaults": {},
+                    "ingest_model": {
+                        "name": "",
+                        "description": "",
+                        "entityType": "",
+                        "userA": "",
+                        "userB": "",
+                        "userC": "",
+                        "identifier": "",
+                        "status": "",
+                        "manifestations": [
+                            {
+
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}
