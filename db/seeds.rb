@@ -31,3 +31,5 @@ Teneo::DataModel::Storage.create(organization: org3, name: 'Download', protocol:
 
 LoginUser.create(email: user1.email, password: 'abc123')
 LoginUser.create(email: user2.email, password: '123abc')
+
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?

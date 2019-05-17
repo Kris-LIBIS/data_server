@@ -23,4 +23,9 @@ Rails.application.routes.draw do
                  # registrations: 'registrations'
              }
 
+  # Active Admin
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  root to: 'active_admin/devise/sessions#new'
+  ActiveAdmin.routes(self)
+
 end
