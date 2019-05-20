@@ -318,4 +318,8 @@ ActiveAdmin.setup do |config|
       menu.add label: 'Code Tables', priority: 100
     end
   end
+
+  config.register_stylesheet 'active_admin/json_editor.css'
+  config.register_javascript 'active_admin/json_editor.js'
+
 end

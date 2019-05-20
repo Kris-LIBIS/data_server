@@ -49,6 +49,8 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'therubyracer'
 
+gem 'normalize-rails'
+
 # import DataModel
 gem 'teneo-data_model'
 
@@ -74,6 +76,7 @@ gem 'graphiql-rails', '1.5.0', group: :development
 # Admin
 gem 'activeadmin'
 gem 'activeadmin_addons'
+gem 'activeadmin_json_editor'
 
 gem 'active_admin_theme'
 # gem "active_material", github: "vigetlabs/active_material"

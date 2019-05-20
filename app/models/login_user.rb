@@ -12,6 +12,10 @@ class LoginUser < ApplicationRecord
          # :trackable, :confirmable,
          :jwt_authenticatable, jwt_revocation_strategy: JwtBlacklist
 
+  def self.from_hash(hash, _id_tags = [:email], &block)
+    super(hash, [:email], &block)
+  end
+
   def user_data
     Teneo::DataModel::User.find_by(email: email)
   end

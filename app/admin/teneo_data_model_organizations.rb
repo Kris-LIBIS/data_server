@@ -1,19 +1,11 @@
+# frozen_string_literal: true
+require 'action_icons'
+
 ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
-menu priority: 2
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+  menu priority: 2
 
   config.sort_order = 'name_asc'
+  config.batch_actions = false
 
   filter :name
   filter :description
@@ -27,7 +19,10 @@ menu priority: 2
     column :name
     column :description
     column :inst_code
-    actions
+    actions defaults: false do |user|
+      # noinspection RubyBlockToMethodReference,RubyResolve
+      action_icons user
+    end
   end
 
   show do
@@ -58,6 +53,7 @@ menu priority: 2
           end
         end
 
+        # noinspection RubyResolve
         panel 'Storage' do
           table_for organization.storages do
             column :name
@@ -72,30 +68,100 @@ menu priority: 2
   end
 
   form do |f|
-    f.inputs 'Organization info' do
-      f.input :name, required: true
-      f.input :description
-      f.input :inst_code, required: true
-      f.input :ingest_dir
-    end
+    tabs do
 
-    f.inputs 'Assigned Users' do
-      # noinspection RailsParamDefResolve
-      f.has_many :memberships, heading: false, allow_destroy: true do |m|
-        m.input :user, required: true
-        m.input :role, required: true
+      tab 'Organization' do
+        columns do
+          column do
+            f.inputs 'Info' do
+              f.input :name, required: true
+              f.input :description
+              f.input :inst_code, required: true
+              f.input :ingest_dir
+            end
+          end
+          column do
+            f.inputs 'Assigned Users' do
+              # noinspection RailsParamDefResolve
+              f.has_many :memberships, heading: false, allow_destroy: true do |m|
+                m.input :user, required: true
+                m.input :role, required: true
+              end
+            end
+          end
+        end
       end
+
+      tab 'Storages' do
+        columns do
+
+          column do
+            f.inputs 'Storages' do
+              # noinspection RailsParamDefResolve
+              f.has_many :storages, heading: false, allow_destroy: true do |m|
+                m.input :name, required: true
+                m.input :protocol, collection: %w'NFS FTP SFTP GDRIVE', required: true
+                m.input :options, as: :jsonb
+              end
+            end
+          end
+
+          column do
+            # noinspection RubyResolve
+            panel :help do
+              div do
+                "The options field configures the storage for a given protocol. The content of the options field " +
+                    "should be different, depending on the protocol choosen:".html_safe
+              end
+
+              data = [
+                  {protocol: 'NFS', options: [{tag: 'location', info: 'the path to the directory'}]},
+                  {protocol: 'FTP', options: [
+                      {tag: 'host', info: 'the hostname or ip-address of the FTP server'},
+                      {tag: 'port', info: 'the port number on which the FTP server listens (optional - default: 22)'},
+                      {tag: 'user', info: 'the login user name'},
+                      {tag: 'password', info: 'the login password'},
+                  ]},
+                  {protocol: 'SFTP', options: [
+                      {tag: 'host', info: 'the hostname or ip-address of the FTP server'},
+                      {tag: 'port', info: 'the port number on which the FTP server listens (optional - default: 22)'},
+                      {tag: 'user', info: 'the login user name'},
+                      {tag: 'password', info: 'the login password'},
+                  ]},
+                  {protocol: 'GDRIVE', options: [
+                      {tag: 'credentials_file', info: 'the file where the credentials for the Google Drive can be found'},
+                      {tag: 'port', info: 'the port number on which the FTP server listens (optional - default: 22)'},
+                      {tag: 'user', info: 'the login user name'},
+                      {tag: 'password', info: 'the login password'},
+                  ]}
+              ]
+              table_for data do
+                column :protocol do |data|
+                  data[:protocol]
+                end
+                column :options do |data|
+                  table_for data[:options] do
+                    column :tag do |option|
+                      option[:tag]
+                    end
+                    column :info do |option|
+                      option[:info]
+                    end
+                  end
+                end
+
+              end
+            end
+          end
+        end
+
+
+      end
+
+      tab 'Ingest Agreements' do
+      end
+
     end
-
-    # f.inputs 'Storages' do
-    #   # noinspection RailsParamDefResolve
-    #   f.has_many :storages, heading: false, allow_destroy: true do |m|
-    #     m.input :name, required: true
-    #     m.input :protocol, collection: %w'NFS FTP SFTP GDRIVE', required: true
-    #     m.input :options, as: :text, input_html: {class: 'jsoneditor-target'}
-    #   end
-    # end
-
     actions
   end
 

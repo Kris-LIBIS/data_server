@@ -1,3 +1,5 @@
+@import "normalize-rails";
+
 @import 'activeadmin_addons/all';
 // SASS variable overrides must be declared before loading up Active Admin's styles.
 //
@@ -29,3 +31,7 @@ $skinTablePadding: 5px!default;
 @import "wigu/active_admin_theme";
 
 //@import "active_admin_flat_skin";
+
+h3 {
+  margin-block-start: 0;
+}
