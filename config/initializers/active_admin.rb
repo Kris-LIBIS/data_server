@@ -82,7 +82,7 @@ ActiveAdmin.setup do |config|
   # because, by default, user gets redirected to Dashboard. If user
   # doesn't have access to Dashboard, he'll end up in a redirect loop.
   # Method provided here should be defined in application_controller.rb.
-  config.on_unauthorized_access = :access_denied
+  # config.on_unauthorized_access = :access_denied
 
   # == Current User
   #
@@ -117,7 +117,7 @@ ActiveAdmin.setup do |config|
   # roots for each namespace.
   #
   # Default:
-  # config.root_to = 'dashboard#index'
+  config.root_to = 'dashboard#index'
 
   # == Admin Comments
   #
@@ -157,7 +157,7 @@ ActiveAdmin.setup do |config|
   # You can exclude possibly sensitive model attributes from being displayed,
   # added to forms, or exported by default by ActiveAdmin
   #
-  config.filter_attributes = [:encrypted_password, :password, :password_confirmation, :lock_version]
+  config.filter_attributes = [:encrypted_password, :created_at, :updated_at]
 
   # == Localize Date/Time Format
   #
@@ -262,6 +262,9 @@ ActiveAdmin.setup do |config|
   #     admin.download_links = proc { can?(:view_download_links) }
   #
   #   end
+  config.namespace :admin do |admin|
+    admin.download_links = [:json, :csv]
+  end
 
   # == Pagination
   #
@@ -313,9 +316,6 @@ ActiveAdmin.setup do |config|
   config.namespace :admin do |admin|
     admin.build_menu do |menu|
       menu.add label: 'Code Tables', priority: 100
-      menu.add label: '------', priority: 10, parent: 'Code Tables'
-      menu.add label: '------', priority: 20, parent: 'Code Tables'
-      menu.add label: '------', priority: 30, parent: 'Code Tables'
     end
   end
 end

@@ -71,7 +71,16 @@ gem 'graphiql-rails', '1.5.0', group: :development
 # Admin
 gem 'activeadmin'
 gem 'activeadmin_addons'
-# gem 'active_material'
-gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary'
+
+gem 'active_admin_theme'
+# gem "active_material", github: "vigetlabs/active_material"
+# gem 'active_admin_flat_skin'
+gem 'font_awesome5_rails'
+
 gem 'sass-rails'
+
+# Better errors
+group :development do
+  gem "better_errors"
+  gem "binding_of_caller"
+end

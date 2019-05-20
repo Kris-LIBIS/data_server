@@ -13,13 +13,13 @@ menu priority: 2
 #   permitted
 # end
 
-  config.sort_order = 'id_asc'
+  config.sort_order = 'name_asc'
 
   filter :name
   filter :description
   filter :inst_code
 
-  permit_params :name, :description, :inst_code, :ingest_dir,
+  permit_params :name, :description, :inst_code, :ingest_dir, :lock_version,
                 memberships_attributes: [:id, :_destroy, :organization_id, :role_id, :user_id],
                 storage_attributes: [:id, :_destroy, :name, :protocol, :options]
 
@@ -39,6 +39,14 @@ menu priority: 2
           row :inst_code
           row :ingest_dir
         end
+
+        # noinspection RubyResolve
+        panel 'Ingest Agreements' do
+          table_for organization.ingest_agreements do
+            column :name
+          end
+        end
+
       end
       column do
 
@@ -57,12 +65,6 @@ menu priority: 2
           end
         end
 
-        # noinspection RubyResolve
-        panel 'Ingest Agreements' do
-          table_for organization.ingest_agreements do
-            column :name
-          end
-        end
       end
     end
 

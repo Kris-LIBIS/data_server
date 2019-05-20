@@ -17,7 +17,7 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
   config.sort_order = 'email_asc'
   config.batch_actions = false
 
-  permit_params :email, :first_name, :last_name,
+  permit_params :email, :first_name, :last_name, :lock_version,
                 memberships_attributes: [:id, :_destroy, :organization_id, :role, :user_id]
 
   filter :organizations
@@ -26,9 +26,13 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
   filter :email
 
   index do
-    column :email, link: true
+    column :email
     column :first_name
     column :last_name
+    # noinspection RubyBlockToMethodReference,RubyResolve
+    list_column :memberships do |user|
+      user.member_organizations.reduce({}) {|h, x| h[x.first] = x.last.join(','); h}
+    end
     actions
   end
 
@@ -55,17 +59,24 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
   end
 
   form do |f|
-    f.inputs 'User info' do
-      f.input :email
-      f.input :first_name
-      f.input :last_name
-    end
+    tabs do
+      tab 'User Details' do
+        f.inputs do
+          f.input :email
+          f.input :first_name
+          f.input :last_name
+          f.hidden_field :lock_version
+        end
+      end
 
-    f.inputs 'Membership info' do
-      # noinspection RailsParamDefResolve
-      f.has_many :memberships, heading: false, allow_destroy: true do |m|
-        m.input :organization, required: true
-        m.input :role, required: true, collection: %w(uploader ingester admin)
+      tab 'Membership info' do
+        f.inputs do
+          # noinspection RailsParamDefResolve
+          f.has_many :memberships, heading: false, allow_destroy: true do |m|
+            m.input :organization, required: true
+            m.input :role, required: true, collection: %w(uploader ingester admin)
+          end
+        end
       end
     end
 
