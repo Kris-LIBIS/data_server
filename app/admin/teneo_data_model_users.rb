@@ -1,18 +1,8 @@
+require 'action_icons'
+
 # noinspection RubyResolve
 ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
   menu priority: 1
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
 
   config.sort_order = 'email_asc'
   config.batch_actions = false
@@ -33,7 +23,27 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
     list_column :memberships do |user|
       user.member_organizations.reduce({}) {|h, x| h[x.first] = x.last.join(','); h}
     end
-    actions
+    # noinspection RubyResolve
+    actions defaults: false do |user|
+      # noinspection RubyBlockToMethodReference
+      action_icons user
+    end
+  end
+
+  index as: :grid, default: true do |user|
+    # noinspection RubyResolve
+    panel link_to(user.name, edit_resource_path(user)) do
+      div do
+        # noinspection RubyResolve
+        link_to(user.email, edit_resource_path(user))
+      end
+      m_orgs = user.member_organizations.reduce([]) {|a, (org, roles)| a << {organization: org, roles: roles.join(',')}}
+      table_for m_orgs do
+        column :organization
+        column :roles
+      end
+      action_icons user
+    end
   end
 
   show do
@@ -75,6 +85,7 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
           f.has_many :memberships, heading: false, allow_destroy: true do |m|
             m.input :organization, required: true
             m.input :role, required: true, collection: %w(uploader ingester admin)
+            m.hidden_field :lock_version
           end
         end
       end

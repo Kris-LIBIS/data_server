@@ -1,16 +1,21 @@
 ActiveAdmin.register Teneo::DataModel::Membership, as: 'Membership' do
   menu false
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+
+  actions :index
+
+  # config.sort_order = 'organization_asc'
+  config.batch_actions = false
+
+  permit_params :role, :user_id, :organization_id, :lock_version
+
+  filter :organization
+  filter :user
+  filter :role
+
+  index do
+    column :organization
+    column :user
+    column :role
+  end
 
 end

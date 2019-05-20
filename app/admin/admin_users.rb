@@ -1,28 +1,28 @@
+require 'action_icons'
+
 ActiveAdmin.register AdminUser do
   menu parent: 'Users', priority: 1
 
-  permit_params :email, :password, :password_confirmation
+  config.sort_order = 'email_asc'
+  config.batch_actions = false
 
-  index do
-    selectable_column
-    id_column
-    column :email
-    column :current_sign_in_at
-    column :sign_in_count
-    column :created_at
-    actions
+  permit_params :email, :password, :password_confirmation, :lock_version
+
+  index as: :grid, default: true do |user|
+    # noinspection RubyResolve
+    panel link_to(user.email, edit_resource_path(user)) do
+      action_icons user, [:edit, :delete]
+    end
   end
 
   filter :email
-  filter :current_sign_in_at
-  filter :sign_in_count
-  filter :created_at
 
   form do |f|
     f.inputs do
       f.input :email
       f.input :password
       f.input :password_confirmation
+      f.hidden_field :lock_version
     end
     f.actions
   end

@@ -52,6 +52,9 @@ gem 'therubyracer'
 # import DataModel
 gem 'teneo-data_model'
 
+gem 'tty-prompt'
+gem 'tty-spinner'
+
 # Grape API
 gem 'grape'
 gem 'hashie-forbidden_attributes'
