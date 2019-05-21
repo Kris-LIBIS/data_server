@@ -20,6 +20,7 @@ ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
       formats.where(category: cat)
     end
   end
+
   # noinspection RubyResolve
   index do
     column :name
@@ -31,6 +32,15 @@ ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
       action_icons object
     end
   end
+
+  # index as: :grid do |object|
+  #   # noinspection RubyResolve
+  #   panel link_to(object.name, edit_resource_path(object)) do
+  #     para object.description
+  #     # noinspection RubyResolve
+  #     action_icons object
+  #   end
+  # end
 
   show do
     # noinspection RubyResolve
