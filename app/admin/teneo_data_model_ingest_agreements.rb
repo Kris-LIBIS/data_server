@@ -8,10 +8,10 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
   config.batch_actions = false
 
   permit_params :name, :project_name, :collection_name,
-                :contact_ingest, :contact_collection, :contact_system,
                 :collection_description, :ingest_job_name,
                 :producer_id, :material_flow_id, :organization_id,
-                :lock_version
+                :lock_version,
+                contact_ingest: [], contact_collection: [], contact_system: []
 
   filter :name
   filter :organization

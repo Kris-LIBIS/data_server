@@ -32,4 +32,3 @@ LoginUser.create(email: 'admin@libis.be', password: 'abc123')
 LoginUser.create(email: 'teneo@libis.be', password: '123abc')
 
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
-

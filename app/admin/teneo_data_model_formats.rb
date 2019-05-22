@@ -8,14 +8,15 @@ ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
   config.paginate = true
 
   permit_params :category, :name, :description, #:lock_version,
-                mime_types: [], puids: [], extensions: []
+                :extensions_list,:mime_types_list, :puids_list
 
-  filter :category, as: :select, collection: proc { Teneo::DataModel::Format.distinct.order(:category).pluck(:category) }
+  # User can use scopes instead
+  # filter :category, as: :select, collection: Teneo::DataModel::Format::CATEGORY_LIST
   filter :name
   filter :description
 
   scope :all, default: true
-  Teneo::DataModel::Format.distinct.order(:category).pluck(:category).each do |cat|
+  Teneo::DataModel::Format::CATEGORY_LIST.each do |cat|
     scope cat, group: :category do |formats|
       formats.where(category: cat)
     end
@@ -26,7 +27,7 @@ ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
     column :name
     column :category
     column :description
-    column :extensions
+    column 'File extensions', :extensions_list
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
       action_icons object
@@ -48,20 +49,26 @@ ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
       row :category
       row :name
       row :description
-      row :extensions
-      row :mime_types
-      row :puids
+      row 'File extensions' do
+        resource.extensions_list
+      end
+      row 'MIME types' do
+        resource.mime_types_list
+      end
+      row 'PRONOM Unique Identifiers' do
+        resource.puids_list
+      end
     end
   end
 
   form do |f|
     f.inputs 'Format info' do
-      f.input :category, as: :select, collection: Teneo::DataModel::Format.distinct.order(:category).pluck(:category)
-      f.input :name
+      f.input :name, required: true
       f.input :description
-      f.input :extensions, as: :tags
-      f.input :mime_types, as: :tags
-      f.input :puids, as: :tags
+      f.input :category, required: true, as: :select, collection: Teneo::DataModel::Format::CATEGORY_LIST
+      f.input :extensions_list, label: 'File extensions', required: true, as: :tags
+      f.input :mime_types_list, label: 'MIME types', required: true, as: :tags
+      f.input :puids_list, label: 'PRONOM Unique Identifiers', as: :tags
       # f.hidden_field :lock_version
     end
     actions

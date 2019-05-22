@@ -1,5 +1,6 @@
 @import "normalize-rails";
 
+
 @import 'activeadmin_addons/all';
 // SASS variable overrides must be declared before loading up Active Admin's styles.
 //
@@ -34,4 +35,8 @@ $skinTablePadding: 5px!default;
 
 h3 {
   margin-block-start: 0;
+}
+
+div.flash_alert {
+  background-color: #aa2e21 !important;
 }

@@ -11,19 +11,44 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
   permit_params :email, :first_name, :last_name, :lock_version,
                 memberships_attributes: [:id, :_destroy, :organization_id, :role, :user_id]
 
+  # controller do
+  #   def update
+  #     resource.update(params.require(:teneo_data_model_user).permit(:email, :first_name, :last_name, :lock_version,
+  #                                                  memberships_attributes: [
+  #                                                      :id, :_destroy, :organization_id, :role, :user_id
+  #                                                  ]))
+  #     redirect_to collection_path
+  #   rescue ActiveRecord::StaleObjectError
+  #     flash[:alert] = 'Update failed: data was updated elsewhere while you were editing.'
+  #     redirect_to resource_path, alert: 'Update failed: data was updated elsewhere while you were editing.'
+  #   # rescue StandardError => e
+  #   #   puts e.class.name
+  #   #   puts e.message
+  #   #   flash[:alert] = "Update failed: #{e.message}"
+  #   #   redirect_to collection_path, alert
+  #   end
+  # end
+
   filter :organizations
   filter :roles
-  filter :first_name_or_last_name_cont, as: :string, label: 'Name'
+  filter :first_name_or_last_name_cont, label: "Name"
   filter :email
 
   index do
-    column :email
-    column :first_name
-    column :last_name
-    # noinspection RubyBlockToMethodReference,RubyResolve
-    list_column :memberships do |user|
-      user.member_organizations.reduce({}) {|h, x| h[x.first] = x.last.join(','); h}
+    column :name do |user|
+      # noinspection RubyBlockToMethodReference
+      user.name
     end
+
+    column :email
+
+    Teneo::DataModel::Membership::ROLE_LIST.each do |role|
+      # noinspection RubyResolve
+      list_column role do |user|
+        user.organizations_for(role).sort_by {|x| x.name}
+      end
+    end
+
     # noinspection RubyResolve
     actions defaults: false do |user|
       # noinspection RubyBlockToMethodReference
@@ -31,21 +56,21 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
     end
   end
 
-  index as: :grid, default: true do |user|
-    # noinspection RubyResolve
-    panel link_to(user.name, edit_resource_path(user)) do
-      div do
-        # noinspection RubyResolve
-        link_to(user.email, edit_resource_path(user))
-      end
-      m_orgs = user.member_organizations.reduce([]) {|a, (org, roles)| a << {organization: org, roles: roles.join(',')}}
-      table_for m_orgs do
-        column :organization
-        column :roles
-      end
-      action_icons user
-    end
-  end
+  # index as: :grid, default: true do |user|
+  #   # noinspection RubyResolve
+  #   panel link_to(user.name, edit_resource_path(user)) do
+  #     div do
+  #       # noinspection RubyResolve
+  #       link_to(user.email, edit_resource_path(user))
+  #     end
+  #     m_orgs = user.member_organizations.reduce([]) {|a, (org, roles)| a << {organization: org, roles: roles.join(',')}}
+  #     table_for m_orgs do
+  #       column :organization
+  #       column :roles
+  #     end
+  #     action_icons user
+  #   end
+  # end
 
   show do
     columns do
