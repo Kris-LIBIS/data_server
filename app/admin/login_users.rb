@@ -6,10 +6,10 @@ ActiveAdmin.register LoginUser do
 
   permit_params :email, :password, :password_confirmation, :lock_version
 
-  index as: :grid, default: true do |user|
+  index as: :grid, default: true do |object|
     # noinspection RubyResolve
-    panel link_to(user.email, edit_resource_path(user)) do
-      action_icons user, [:edit, :delete]
+    panel link_to(object.email, edit_resource_path(object)) do
+      action_icons path: resource_path(object), actions: %i[edit delete]
     end
   end
 
@@ -21,9 +21,6 @@ ActiveAdmin.register LoginUser do
       f.input :password
       f.input :password_confirmation
       f.hidden_field :lock_version
-      text_field :id, label: 'User name' do
-        resource.user_data&.name
-      end
     end
     f.actions
   end

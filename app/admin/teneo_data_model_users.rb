@@ -11,24 +11,6 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
   permit_params :email, :first_name, :last_name, :lock_version,
                 memberships_attributes: [:id, :_destroy, :organization_id, :role, :user_id]
 
-  # controller do
-  #   def update
-  #     resource.update(params.require(:teneo_data_model_user).permit(:email, :first_name, :last_name, :lock_version,
-  #                                                  memberships_attributes: [
-  #                                                      :id, :_destroy, :organization_id, :role, :user_id
-  #                                                  ]))
-  #     redirect_to collection_path
-  #   rescue ActiveRecord::StaleObjectError
-  #     flash[:alert] = 'Update failed: data was updated elsewhere while you were editing.'
-  #     redirect_to resource_path, alert: 'Update failed: data was updated elsewhere while you were editing.'
-  #   # rescue StandardError => e
-  #   #   puts e.class.name
-  #   #   puts e.message
-  #   #   flash[:alert] = "Update failed: #{e.message}"
-  #   #   redirect_to collection_path, alert
-  #   end
-  # end
-
   filter :organizations
   filter :roles
   filter :first_name_or_last_name_cont, label: "Name"
@@ -50,9 +32,9 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
     end
 
     # noinspection RubyResolve
-    actions defaults: false do |user|
+    actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference
-      action_icons user
+      action_icons path: resource_path(object)
     end
   end
 
@@ -68,7 +50,7 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
   #       column :organization
   #       column :roles
   #     end
-  #     action_icons user
+  #     action_icons path: resource_path(object)
   #   end
   # end
 
@@ -110,7 +92,7 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
           # noinspection RailsParamDefResolve
           f.has_many :memberships, heading: false, allow_destroy: true do |m|
             m.input :organization, required: true
-            m.input :role, required: true, collection: %w(uploader ingester admin)
+            m.input :role, required: true, collection: Teneo::DataModel::Membership::ROLE_LIST # %w(uploader ingester admin)
             m.hidden_field :lock_version
           end
         end

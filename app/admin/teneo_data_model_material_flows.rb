@@ -42,7 +42,7 @@ ActiveAdmin.register Teneo::DataModel::MaterialFlow, as: 'MaterialFlow' do
     column :ext_id
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons object, %i'edit delete'
+      action_icons path: resource_path(object), actions: %i[edit delete]
     end
   end
 
@@ -56,7 +56,7 @@ ActiveAdmin.register Teneo::DataModel::MaterialFlow, as: 'MaterialFlow' do
   #       row :ext_id
   #     end
   #     # noinspection RubyResolve
-  #     action_icons object, %i'edit delete'
+  #     action_icons path: resource_path(object), actions: %i[edit delete]
   #   end
   # end
 

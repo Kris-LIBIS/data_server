@@ -79,6 +79,8 @@ gem 'activeadmin_addons'
 gem 'activeadmin_json_editor'
 
 gem 'active_admin_theme'
+# gem 'arctic_admin'
+
 # gem "active_material", github: "vigetlabs/active_material"
 # gem 'active_admin_flat_skin'
 gem 'font_awesome5_rails'

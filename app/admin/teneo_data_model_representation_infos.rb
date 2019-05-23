@@ -40,7 +40,7 @@ ActiveAdmin.register Teneo::DataModel::RepresentationInfo, as: 'RepresentationIn
     column :representation_code
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons object, %i'edit delete'
+      action_icons path: resource_path(object), actions: %i[edit delete]
     end
   end
 
@@ -53,7 +53,7 @@ ActiveAdmin.register Teneo::DataModel::RepresentationInfo, as: 'RepresentationIn
   #       row :usage_type
   #       row :representation_code
   #     end
-  #     action_icons object, %i'edit delete'
+  #     action_icons path: resource_path(object), actions: %i[edit delete]
   #   end
   # end
 

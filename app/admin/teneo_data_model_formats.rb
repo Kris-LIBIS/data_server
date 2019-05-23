@@ -30,7 +30,7 @@ ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
     column 'File extensions', :extensions_list
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons object
+      action_icons path: resource_path(object), actions: %i[edit delete]
     end
   end
 
@@ -39,7 +39,7 @@ ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
   #   panel link_to(object.name, edit_resource_path(object)) do
   #     para object.description
   #     # noinspection RubyResolve
-  #     action_icons object
+  #     action_icons path: resource_path(object), actions: %i[edit delete]
   #   end
   # end
 

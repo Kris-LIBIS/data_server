@@ -40,7 +40,7 @@ ActiveAdmin.register Teneo::DataModel::AccessRight, as: 'AccessRight' do
     column :ext_id
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons object, %i'edit delete'
+      action_icons path: resource_path(object), actions: %i[edit delete]
     end
   end
 
@@ -49,7 +49,7 @@ ActiveAdmin.register Teneo::DataModel::AccessRight, as: 'AccessRight' do
   #   panel link_to(object.name, edit_resource_path(object)) do
   #     para object.description
   #     # noinspection RubyResolve
-  #     action_icons object, %i'edit delete'
+  #     action_icons path: resource_path(object), actions: %i[edit delete]
   #   end
   # end
 

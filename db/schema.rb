@@ -253,6 +253,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.string "name", null: false
     t.string "protocol", null: false
     t.jsonb "options"
+    t.integer "lock_version", default: 0, null: false
     t.bigint "organization_id", null: false
     t.index ["organization_id", "name"], name: "index_storages_on_organization_id_and_name", unique: true
     t.index ["organization_id"], name: "index_storages_on_organization_id"

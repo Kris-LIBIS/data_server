@@ -10,8 +10,8 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
   permit_params :name, :project_name, :collection_name,
                 :collection_description, :ingest_job_name,
                 :producer_id, :material_flow_id, :organization_id,
-                :lock_version,
-                contact_ingest: [], contact_collection: [], contact_system: []
+                :contact_ingest_list, :contact_collection_list, :contact_system_list,
+                :lock_version
 
   filter :name
   filter :organization
@@ -24,7 +24,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
     column :collection_name
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons object
+      action_icons path: resource_path(object)
     end
   end
 
@@ -41,10 +41,17 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
           row :project_name
           row :collection_name
           row :collection_description
-          row :contact_ingest, as: :tags
-          row :contact_collection, as: :tags
-          row :contact_system, as: :tags
           row :ingest_model
+          h2 'Contacts:'
+          row 'Ingest', as: :tags do
+            resource.contact_ingest_list
+          end
+          row 'Collection', as: :tags do
+            resource.contact_collection_list
+          end
+          row 'System', as: :tags do
+            resource.contact_system_list
+          end
         end
       end
       tab 'Ingest Jobs' do
@@ -64,9 +71,9 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
       f.input :project_name
       f.input :collection_name
       f.input :collection_description
-      f.input :contact_ingest, as: :tags
-      f.input :contact_collection, as: :tags
-      f.input :contact_system, as: :tags
+      f.input :contact_ingest_list, as: :tags
+      f.input :contact_collection_list, as: :tags
+      f.input :contact_system_list, as: :tags
       f.hidden_field :lock_version
     end
     actions
