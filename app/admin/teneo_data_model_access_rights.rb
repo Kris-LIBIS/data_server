@@ -7,20 +7,11 @@ ActiveAdmin.register Teneo::DataModel::AccessRight, as: 'AccessRight' do
   actions :index, :new, :edit, :destroy
 
   controller do
-    # noinspection RubySuperCallWithoutSuperclassInspection,RubyResolve
-    def create
-      # noinspection RubySuperCallWithoutSuperclassInspection
-      super do |_|
-        redirect_to collection_url and return if resource.valid?
-      end
-    end
+    # noinspection RubySuperCallWithoutSuperclassInspection,RubyBlockToMethodReference,RubyResolve
+    def create; super {collection_url};end
 
-    # noinspection RubySuperCallWithoutSuperclassInspection,RubyResolve
-    def update
-      super do |_ |
-        redirect_to collection_url and return if resource.valid?
-      end
-    end
+    # noinspection RubyBlockToMethodReference,RubySuperCallWithoutSuperclassInspection,RubyResolve
+    def update; super {collection_url};end
   end
 
   config.sort_order = 'name_asc'

@@ -1,5 +1,5 @@
 ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
-  menu parent: 'Code Tables', priority: 10
+  menu parent: 'Ingest tools', priority: 10
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters

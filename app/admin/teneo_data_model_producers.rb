@@ -7,20 +7,13 @@ ActiveAdmin.register Teneo::DataModel::Producer, as: 'Producer' do
   actions :index, :new, :edit, :destroy
 
   controller do
-    # noinspection RubySuperCallWithoutSuperclassInspection,RubyResolve
-    def create
-      # noinspection RubySuperCallWithoutSuperclassInspection
-      super do |_|
-        redirect_to collection_url and return if resource.valid?
-      end
-    end
+    # noinspection RubySuperCallWithoutSuperclassInspection,RubyBlockToMethodReference,RubyResolve
+    def create; super {collection_url};end
 
-    # noinspection RubySuperCallWithoutSuperclassInspection,RubyResolve
+    # noinspection RubyBlockToMethodReference,RubySuperCallWithoutSuperclassInspection,RubyResolve
     def update
       params[:teneo_data_model_producer].delete(:password) if params[:teneo_data_model_producer][:password].blank?
-      super do |_|
-        redirect_to collection_url and return if resource.valid?
-      end
+      super {collection_url}
     end
   end
 
@@ -65,10 +58,10 @@ ActiveAdmin.register Teneo::DataModel::Producer, as: 'Producer' do
   form do |f|
     f.inputs 'Producer info' do
       f.input :name, required: true
-      f.input :inst_code, required: true
+      f.input :inst_code, label: 'Organization', required: true, as: :select, collection: Teneo::DataModel::Organization.pluck(:name, :inst_code)
       f.input :ext_id, required: true
       f.input :agent, required: true
-      f.input :password, placeholder: '******', required: true
+      f.input :password, placeholder: '********', required: true
       f.input :description
       f.hidden_field :lock_version
     end

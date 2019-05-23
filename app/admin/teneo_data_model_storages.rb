@@ -3,6 +3,7 @@ require 'nested_action_icons'
 
 ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   menu false
+
   belongs_to :organization, parent_class: Teneo::DataModel::Organization
 
   config.sort_order = 'name_asc'
@@ -11,20 +12,11 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   # actions :new, :show, :edit, :destroy
 
   # controller do
-  #   # noinspection RubySuperCallWithoutSuperclassInspection,RubyResolve
-  #   def create
-  #     # noinspection RubySuperCallWithoutSuperclassInspection
-  #     super do |_|
-  #       redirect_to collection_url and return if resource.valid?
-  #     end
-  #   end
+  #   # noinspection RubySuperCallWithoutSuperclassInspection,RubyBlockToMethodReference,RubyResolve
+  #   def create; super {collection_url};end
   #
-  #   # noinspection RubySuperCallWithoutSuperclassInspection,RubyResolve
-  #   def update
-  #     super do |_ |
-  #       redirect_to collection_url and return if resource.valid?
-  #     end
-  #   end
+  #   # noinspection RubyBlockToMethodReference,RubySuperCallWithoutSuperclassInspection,RubyResolve
+  #   def update; super {collection_url};end
   # end
 
   permit_params :name, :protocol, :options, :organization_id, :lock_Version

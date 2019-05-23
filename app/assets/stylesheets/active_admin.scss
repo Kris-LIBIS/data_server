@@ -41,3 +41,12 @@ h3 {
 div.flash_alert {
   background-color: #aa2e21 !important;
 }
+
+button {
+  @include light-button;
+}
+
+.right-align {
+  display: block;
+  float: right;
+}

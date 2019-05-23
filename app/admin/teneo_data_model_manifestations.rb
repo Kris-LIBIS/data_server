@@ -1,17 +1,9 @@
+#frozen_string_literal: true
+require 'action_icons'
+
 ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
-  menu false
-  belongs_to :ingest_model
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+
+  belongs_to :ingest_model, parent_class: Teneo::DataModel::IngestModel
+  navigation_menu :ingest_model
 
 end

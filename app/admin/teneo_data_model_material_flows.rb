@@ -7,21 +7,11 @@ ActiveAdmin.register Teneo::DataModel::MaterialFlow, as: 'MaterialFlow' do
   actions :index, :new, :edit, :destroy
 
   controller do
-    # noinspection RubySuperCallWithoutSuperclassInspection,RubyResolve
-    def create
-      # noinspection RubySuperCallWithoutSuperclassInspection
-      super do |_|
-        redirect_to collection_url and return if resource.valid?
-      end
-    end
+    # noinspection RubySuperCallWithoutSuperclassInspection,RubyBlockToMethodReference,RubyResolve
+    def create; super {collection_url};end
 
-    # noinspection RubySuperCallWithoutSuperclassInspection,RubyResolve
-    def update
-      params[:teneo_data_model_producer].delete(:password) if params[:teneo_data_model_producer][:password].blank?
-      super do |_|
-        redirect_to collection_url and return if resource.valid?
-      end
-    end
+    # noinspection RubyBlockToMethodReference,RubySuperCallWithoutSuperclassInspection,RubyResolve
+    def update; super {collection_url};end
   end
 
   config.sort_order = 'name_asc'
