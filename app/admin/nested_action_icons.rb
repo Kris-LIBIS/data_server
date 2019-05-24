@@ -1,3 +1,5 @@
+require 'action_icons'
+
 class NestedActionIcons < Arbre::Component
   builder_method :nested_action_icons
 

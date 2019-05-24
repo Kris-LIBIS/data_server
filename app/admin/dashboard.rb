@@ -1,10 +1,15 @@
 ActiveAdmin.register_page "Dashboard" do
+  # noinspection RailsI18nInspection
   menu priority: 1, label: proc { I18n.t("active_admin.dashboard") }
 
+  # noinspection RailsI18nInspection
   content title: proc { I18n.t("active_admin.dashboard") } do
     div class: "blank_slate_container", id: "dashboard_default_message" do
+      # noinspection RubyResolve
       span class: "blank_slate" do
+        # noinspection RailsI18nInspection
         span I18n.t("active_admin.dashboard_welcome.welcome")
+        # noinspection RailsI18nInspection
         small I18n.t("active_admin.dashboard_welcome.call_to_action")
       end
     end

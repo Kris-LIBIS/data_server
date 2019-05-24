@@ -1,3 +1,4 @@
+# noinspection RubyResolve
 class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::StaleObjectError do

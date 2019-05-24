@@ -50,12 +50,15 @@ ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
       row :name
       row :description
       row 'File extensions' do
+        # noinspection RubyResolve
         resource.extensions_list
       end
       row 'MIME types' do
+        # noinspection RubyResolve
         resource.mime_types_list
       end
       row 'PRONOM Unique Identifiers' do
+        # noinspection RubyResolve
         resource.puids_list
       end
     end

@@ -47,6 +47,19 @@ button {
 }
 
 .right-align {
-  display: block;
+  display: flex;
   float: right;
+}
+
+.left-align {
+  display: block;
+  float: left;
+}
+
+.back-button {
+  display: block;
+  position: relative;
+  height: 0;
+  float: right;
+  top: 0.1em;
 }

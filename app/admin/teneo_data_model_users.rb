@@ -27,6 +27,7 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
     Teneo::DataModel::Membership::ROLE_LIST.each do |role|
       # noinspection RubyResolve
       list_column role do |user|
+        # noinspection RubyBlockToMethodReference
         user.organizations_for(role).sort_by {|x| x.name}
       end
     end

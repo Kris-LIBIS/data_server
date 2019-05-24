@@ -25,6 +25,7 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   filter :protocol, as: :select, collection: Teneo::DataModel::Storage::PROTOCOL_LIST
 
   index do
+    back_button :organization
     column :name
     column :protocol
     column :options
@@ -35,10 +36,15 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   end
 
   show do
+
+    # noinspection RubyResolve
+    back_link title: 'organization', path: admin_organization_path(resource.organization)
+
     attributes_table do
       row :name
       row :protocol
       row :options
+      # noinspection RubyResolve
     end
   end
 
@@ -100,6 +106,6 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
         end
       end
     end
-    actions
+    f.actions
   end
 end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# noinspection ALL
 module V1
 
   class API < Grape::API

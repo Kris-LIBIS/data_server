@@ -20,6 +20,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
   filter :collection_name
 
   index do
+    back_button :organization
     column :name
     column :organization
     column :project_name
@@ -32,6 +33,8 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
   end
 
   show do
+    back_button :organization
+
     tabs do
       tab 'Info' do
         # noinspection RubyResolve
@@ -68,10 +71,9 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
             action_icons path: admin_ingest_agreement_ingest_model_path(model.ingest_agreement, model)
           end
         end
-        button class: 'right-align' do
-          # noinspection RubyResolve
-          link_to fa_icon('plus-circle', title: 'New'), new_admin_ingest_agreement_ingest_model_path(resource)
-        end
+        new_button :ingest_agreement, :ingest_model
+        # noinspection RubyResolve
+        # button_link classes: 'right-align', icon: 'plus-circle', title: 'New', href: new_admin_ingest_agreement_ingest_model_path(resource)
       end
 
       tab 'Ingest Jobs', class: 'panel_contents' do
@@ -83,10 +85,9 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
             action_icons path: admin_ingest_agreement_ingest_job_path(job.ingest_agreement, job)
           end
         end
-        button class: 'right-align' do
-          # noinspection RubyResolve
-          link_to fa_icon('plus-circle', title: 'New'), new_admin_ingest_agreement_ingest_job_path(resource)
-        end
+        new_button :ingest_agreement, :ingest_job
+        # noinspection RubyResolve
+        button_link classes: 'right-align', icon: 'plus-circle', title: 'New', href: new_admin_ingest_agreement_ingest_job_path(resource)
 
       end
       tab 'Packages', class: 'panel_contents' do
@@ -101,6 +102,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
 
       end
     end
+
   end
 
   form do |f|

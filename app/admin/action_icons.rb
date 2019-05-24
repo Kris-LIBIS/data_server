@@ -1,23 +1,40 @@
 # noinspection RubyResolve,RailsI18nInspection
+
+def button_link(href:, title:, icon: nil, method: nil, data: nil, classes: nil)
+  options = {href: href, title: title}
+  options[:method] = method if method
+  options[:data] = data if data
+  options[:class] = classes if classes
+  a options do
+    button {icon ? fa_icon(icon.to_s) : title}
+  end
+end
+
+def back_button(object_type)
+  button_link href: send("admin_#{object_type}_path", request.params["#{object_type}_id"]),
+              title: "back to #{object_type}", classes: 'back-button'
+end
+
+def new_button(object_type, resource_type)
+  button_link href: send("new_admin_#{object_type}_#{resource_type}_path",request.params[:id]),
+              title: 'New', icon: 'plus-circle', classes: 'right-align'
+end
+
+def back_link(path:, title: nil)
+  button_link classes: 'right-align', href: path, title: "back to #{(title)}"
+end
+
+# noinspection RailsI18nInspection
 class ActionIcons < Arbre::Component
   builder_method :action_icons
 
   def build(path:, actions: [:view, :edit, :delete])
     div class: 'right-align' do
       localizer = ActiveAdmin::Localizers.resource(active_admin_config)
-      button_link(href: path, title: 'View', icon: :eye) if actions.include? :view
-      button_link(href: "#{path}/edit", title: 'Edit', icon: :edit) if actions.include? :edit
-      button_link(href: path, title: 'Delete', icon: :trash, method: :delete,
+      button_link(href: path, title: 'View', icon: 'eye') if actions.include? :view
+      button_link(href: "#{path}/edit", title: 'Edit', icon: 'edit') if actions.include? :edit
+      button_link(href: path, title: 'Delete', icon: 'trash', method: :delete,
                   data: {confirm: localizer.t(:delete_confirmation)}) if actions.include? :delete
-    end
-  end
-
-  def button_link(href:, title:, icon:, method: nil, data: nil)
-    options = {href: href, title: title}
-    options[:method] = method if method
-    options[:data] = data if data
-    a options do
-      button {fa_icon(icon.to_s)}
     end
   end
 

@@ -4,7 +4,6 @@ require 'action_icons'
 ActiveAdmin.register Teneo::DataModel::IngestModel, as: 'IngestModel' do
 
   belongs_to :ingest_agreement, parent_class: Teneo::DataModel::IngestAgreement
-  navigation_menu :ingest_agreement
 
   config.sort_order = 'name_asc'
   config.batch_actions = false
@@ -51,7 +50,7 @@ ActiveAdmin.register Teneo::DataModel::IngestModel, as: 'IngestModel' do
       end
 
       tab 'Manifestations', class: 'panel_contents' do
-          table_for ingest_model.manifestations do
+          table_for ingest_model.manifestations.order(position: 'asc') do
             column :label
             column :optional
             column '' do |model|
@@ -59,13 +58,13 @@ ActiveAdmin.register Teneo::DataModel::IngestModel, as: 'IngestModel' do
               action_icons path: admin_ingest_model_manifestation_path(model.ingest_model, model)
             end
           end
-          button class: 'right-align' do
-            # noinspection RubyResolve
-            link_to fa_icon('plus-circle', title: 'New'), new_admin_ingest_model_manifestation_path(resource)
-          end
+          # noinspection RubyResolve
+          button_link classes: 'right-align', icon: 'plus-circle', title: 'New', href: new_admin_ingest_model_manifestation_path(resource)
         end
 
     end
+    # noinspection RubyResolve
+    button_link title: resource.ingest_agreement.name, href: admin_organization_ingest_agreement_path(resource.ingest_agreement.organization,resource.ingest_agreement)
   end
 
   form do |f|

@@ -1,17 +1,8 @@
 # frozen_string_literal: true
 require 'action_icons'
-require 'nested_action_icons'
 
 ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
   menu priority: 2
-
-  breadcrumb do
-    [
-        link_to('admin', admin_root_url),
-        link_to('organizations', admin_organizations_url)
-    ]
-    %w(admin organizations)
-  end
 
   config.sort_order = 'name_asc'
   config.batch_actions = false
@@ -70,9 +61,7 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
             action_icons path: admin_organization_storage_path(storage.organization, storage)
           end
         end
-        a class: 'right-align', href: new_admin_organization_storage_path(resource), title: 'New' do
-          button {fa_icon('plus-circle')}
-        end
+        new_button :organization, :storage
 
       end
 
@@ -84,9 +73,7 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
             action_icons path: admin_organization_ingest_agreement_path(agreement.organization, agreement)
           end
         end
-        a class: 'right-align', href: new_admin_organization_ingest_agreement_path(resource), title: 'New' do
-          button {fa_icon('plus-circle')}
-        end
+        new_button(:organization, :ingest_agreement)
 
       end
 

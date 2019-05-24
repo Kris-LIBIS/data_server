@@ -1,3 +1,4 @@
+# noinspection RubyResolve
 ActiveAdmin.setup do |config|
   # == Site Title
   #
@@ -9,7 +10,7 @@ ActiveAdmin.setup do |config|
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
   #
-  config.site_title_link = "https://teneo.libis.be"
+  config.site_title_link = "/admin"
 
   # Set an optional image to be displayed for the header
   # instead of a string (overrides :site_title)
@@ -189,7 +190,7 @@ ActiveAdmin.setup do |config|
   # Breadcrumbs are enabled by default. You can customize them for individual
   # resources or you can disable them globally from here.
   #
-  # config.breadcrumb = false
+  config.breadcrumb = false
 
   # == Create Another Checkbox
   #
@@ -263,7 +264,8 @@ ActiveAdmin.setup do |config|
   #
   #   end
   config.namespace :admin do |admin|
-    admin.download_links = [:json, :csv]
+    # admin.download_links = [:json, :csv]
+    admin.download_links = [:json]
   end
 
   # == Pagination
