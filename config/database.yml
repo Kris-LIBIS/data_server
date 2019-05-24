@@ -21,6 +21,9 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
+  host: localhost
+  port: 5432
+  
   database: teneo
   username: <%= ENV['TENEO_DATABASE_USERNAME'] %>
   password: <%= ENV['TENEO_DATABASE_PASSWORD'] %>

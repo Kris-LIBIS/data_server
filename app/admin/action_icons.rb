@@ -1,23 +1,23 @@
+# noinspection RubyResolve,RailsI18nInspection
 class ActionIcons < Arbre::Component
   builder_method :action_icons
 
   def build(path:, actions: [:view, :edit, :delete])
     div class: 'right-align' do
-      # noinspection RubyResolve
-      button do
-        link_to fa_icon('eye', title: 'View'), path
-      end if actions.include? :view
-      # noinspection RubyResolve
-      button do
-        link_to fa_icon('edit', title: 'Edit'), "#{path}/edit"
-      end if actions.include? :edit
-      # noinspection RubyResolve
-      button do
-        localizer = ActiveAdmin::Localizers.resource(active_admin_config)
-        # noinspection RailsI18nInspection
-        link_to fa_icon('trash', title: 'Delete'), path, method: :delete,
-                data: {confirm: localizer.t(:delete_confirmation)}
-      end if actions.include? :delete
+      localizer = ActiveAdmin::Localizers.resource(active_admin_config)
+      button_link(href: path, title: 'View', icon: :eye) if actions.include? :view
+      button_link(href: "#{path}/edit", title: 'Edit', icon: :edit) if actions.include? :edit
+      button_link(href: path, title: 'Delete', icon: :trash, method: :delete,
+                  data: {confirm: localizer.t(:delete_confirmation)}) if actions.include? :delete
+    end
+  end
+
+  def button_link(href:, title:, icon:, method: nil, data: nil)
+    options = {href: href, title: title}
+    options[:method] = method if method
+    options[:data] = data if data
+    a options do
+      button {fa_icon(icon.to_s)}
     end
   end
 

@@ -70,9 +70,8 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
             action_icons path: admin_organization_storage_path(storage.organization, storage)
           end
         end
-        button class: 'right-align' do
-          # noinspection RubyResolve
-          link_to fa_icon('plus-circle', title: 'New'), new_admin_organization_storage_path(resource)
+        a class: 'right-align', href: new_admin_organization_storage_path(resource), title: 'New' do
+          button {fa_icon('plus-circle')}
         end
 
       end
@@ -85,9 +84,8 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
             action_icons path: admin_organization_ingest_agreement_path(agreement.organization, agreement)
           end
         end
-        button class: 'right-align' do
-          # noinspection RubyResolve
-          link_to fa_icon('plus-circle', title: 'New'), new_admin_organization_ingest_agreement_path(resource)
+        a class: 'right-align', href: new_admin_organization_ingest_agreement_path(resource), title: 'New' do
+          button {fa_icon('plus-circle')}
         end
 
       end
