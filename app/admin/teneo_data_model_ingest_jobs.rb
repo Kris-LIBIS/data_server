@@ -4,7 +4,6 @@ require 'action_icons'
 ActiveAdmin.register Teneo::DataModel::IngestJob, as: 'IngestJob' do
 
   belongs_to :ingest_agreement, parent_class: Teneo::DataModel::IngestAgreement
-  navigation_menu :ingest_agreement
 
   config.sort_order = 'name_asc'
   config.batch_actions = false

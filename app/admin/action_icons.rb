@@ -10,8 +10,16 @@ def button_link(href:, title:, icon: nil, method: nil, data: nil, classes: nil)
   end
 end
 
-def back_button(object_type)
-  button_link href: send("admin_#{object_type}_path", request.params["#{object_type}_id"]),
+def back_button(object_type, parent_type = nil)
+  object_id = request.params["#{object_type}_id"]
+  params = []
+  if parent_type
+    object_class = "Teneo::DataModel::#{object_type.to_s.camelize}".constantize
+    object = object_class.find(object_id)
+    params << object.send(parent_type).id
+  end
+  params << object_id
+  button_link href: send(['admin', parent_type, object_type, 'path'].compact.join('_'), *params),
               title: "back to #{object_type}", classes: 'back-button'
 end
 
