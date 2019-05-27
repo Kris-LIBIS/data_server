@@ -8,21 +8,16 @@ ActiveAdmin.register Teneo::DataModel::IngestJob, as: 'IngestJob' do
   config.sort_order = 'name_asc'
   config.batch_actions = false
 
-  permit_params :name, :description, :entity_type, :user_a, :user_b, :user_c, :identifier, :status,
-                :access_right_id, :retention_policy_id, :ingest_agreement_id, :template_id, :lock_version
+  permit_params :stage, :config, :ingest_agreement_id, :workflow_id, :lock_version
 
-  filter :name
-  filter :entity_type
-  filter :user_a
-  filter :user_b
-  filter :user_c
-  filter :identifier
+  filter :stage
+  filter :workflow
 
   index do
-    column :name
-    column :description
-    column :entity_type
-    column :template
+    back_button :ingest_agreement, :organization
+    column :stage
+    column :config
+    column :workflow
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
       action_icons path: resource_path(object)
@@ -30,45 +25,19 @@ ActiveAdmin.register Teneo::DataModel::IngestJob, as: 'IngestJob' do
   end
 
   show do
-    tabs do
-
-      tab 'Info' do
-        # noinspection RubyResolve
-        attributes_table do
-          row :name
-          row :description
-          row :entity_type
-          row :template
-          row :user_a
-          row :user_b
-          row :user_c
-          row :identifier
-          row :status
-          row :access_right
-          row :retention_policy
-        end
-      end
-
-      tab 'Manifestations' do
-
-      end
-
+    back_button :ingest_agreement, :organization
+    attributes_table do
+      row :stage
+      row :config
+      row :workflow
     end
   end
 
   form do |f|
     f.inputs 'Info' do
-      f.input :name, required: true
-      f.input :description
-      f.input :entity_type
-      f.input :template_id, as: :select
-      f.input :user_a
-      f.input :user_b
-      f.input :user_c
-      f.input :identifier
-      f.input :status
-      f.input :access_right_id, required: true, as: :select
-      f.input :retention_policy, required: true, as: :select
+      f.input :stage, required: true, as: :select, collection: Teneo::DataModel::IngestJob::STAGE_LIST
+      f.input :config, as: :jsonb
+      f.input :workflow_id, as: :select, collection: Teneo::DataModel::Workflow.pluck(:name, :id)
       f.hidden_field :lock_version
     end
     actions

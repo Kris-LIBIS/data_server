@@ -42,7 +42,7 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
         # noinspection RubyResolve
         panel 'Users' do
           table_for organization.memberships do
-            column :organization
+            column :user
             column :role
           end
         end
