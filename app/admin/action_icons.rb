@@ -23,8 +23,11 @@ def back_button(object_type, parent_type = nil)
               title: "back to #{object_type}", classes: 'back-button'
 end
 
-def new_button(object_type, resource_type)
-  button_link href: send("new_admin_#{object_type}_#{resource_type}_path",request.params[:id]),
+def new_button(object_type, resource_type = nil)
+  path = ['new_admin', object_type, resource_type, 'path'].compact.join'_'
+  args = []
+  args << request.params[:id] if resource_type
+  button_link href: send(path, *args),
               title: 'New', icon: 'plus-circle', classes: 'right-align'
 end
 

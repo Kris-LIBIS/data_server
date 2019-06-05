@@ -49,7 +49,6 @@ ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
         table_for manifestation.conversion_jobs.order(position: 'asc') do
           column :format_filter
           column :filename_filter
-          column :config
           column :converter do |cj|
             cj.converter
           end
