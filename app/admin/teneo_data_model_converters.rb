@@ -4,7 +4,7 @@ require 'action_icons'
 ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
   menu parent: 'Ingest tools', priority: 10
 
-  actions :index, :new, :edit, :destroy
+  # actions :index, :new, :edit, :destroy
 
   controller do
     # noinspection RubySuperCallWithoutSuperclassInspection,RubyBlockToMethodReference,RubyResolve
@@ -18,14 +18,24 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
     end
   end
 
+  # page_action :add_parameter_def do |converter_id|
+  #   # noinspection RubyResolve
+  #   render add_parameter_def_admin_converter_path(converter_id), locals: {
+  #       form: ::Admin::Converters::AddParameterForm.new(converter_id)
+  #   }
+  # end
+
   member_action :add_parameter_def, method: :post do
-    parameter_def = params[:parameter_def] || {}
-    parameter_def['name'] = resource.parameter_name || 'New parameter'
-    parameter_def['data_type'] = resource,parameter_type || 'string'
-    parameter_def['with_parameters'] = resource
-    Teneo::DataModel::ParameterDef.create(parameter_def)
     # noinspection RubyResolve
-    redirect_to edit_resource_path(resource, anchor: 'parameters'), notice: "Parameter added"
+    form = ::Admin::Converters::AddPararmeterForm.new(params.fetch(:id))
+    if form.submit(params)
+      # noinspection RubyResolve
+      redirect_to resource_path(resource, anchor: 'parameters'), notice: "Parameter added"
+    else
+      flash[:notice] = "Could not create parameter"
+      # noinspection RubyResolve
+      render add_parameter_def_admin_converter_path(resource), locals: {form: form}
+    end
   end
 
   config.sort_order = 'name_asc'
@@ -41,50 +51,44 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
     column :description
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons path: resource_path(object), actions: %i[edit delete]
+      action_icons path: resource_path(object), actions: %i[view delete]
+    end
+  end
+
+  show do
+    attributes_table do
+      row :name
+      row :description
+      row :class_name
+      row :script_name
+    end
+    # noinspection RubyResolve
+    panel 'Parameters' do
+      table_for converter.parameter_defs do
+        column :name
+        column :description
+        column :data_type
+        column :default
+        column :constraint
+        column '' do |param_def|
+          # noinspection RubyResolve
+          action_icons path: admin_parameter_def_path(param_def), actions: %i[edit delete]
+          p fa_icon(:help, title: param_def.help) if param_def.help
+        end
+      end
+      new_button :converter, action: :add_parameter_def, method: :post
     end
   end
 
   form do |f|
-    tabs do
-      tab 'Details' do
-        f.inputs do
-          f.input :name, required: true
-          f.input :description
-          f.input :class_name
-          f.input :script_name
-          f.hidden_field :lock_version
-        end
-        actions
-      end
-      tab 'Parameters' do
-        table_for converter.parameter_defs do
-          column :name
-          column :description
-          column :datatype
-          column :default
-          column :constraint
-          column '' do |param_def|
-            # noinspection RubyResolve
-            action_icons path: admin_parameter_defs_path(param_def)
-            p fa_icon(:help), title: param_def.help
-          end
-        end
-        f.input :parameter_name
-        f.input :parameter_type
-        # div do
-        #   label 'Name'
-        #   text_field :parameter_name
-        # end
-        # div do
-        #   label 'Data type'
-        #   text_field :parameter_type
-        # end
-        # noinspection RubyResolve
-        button_link href: add_parameter_def_admin_converter_path(converter),
-                    title: 'New parameter', icon: 'plus-circle', classes: 'right-align'
-      end
+    f.inputs do
+      f.input :name, required: true
+      f.input :description
+      f.input :class_name
+      f.input :script_name
+      f.hidden_field :lock_version
     end
+    actions
   end
 
 end

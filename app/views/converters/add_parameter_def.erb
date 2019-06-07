@@ -1,0 +1,36 @@
+<%= semantic_form_for [:admin, form], html: {method: put, class: 'form-hotizontal'}, url: add_parameter_def_admin_converter_path(form.converter) do |f| %>
+  <%= f.semantic_errors :base %>
+
+  <%= f.actions do %>
+
+    <label>
+      <input
+        type="text"
+        name="parameter_name"
+        id="parameter_name"
+        value=""
+        placeholder="name"
+        />
+      <input
+        type="text"
+        name="parameter_type"
+        id="parameter_type"
+        value=""
+        placeholder="type"
+        />
+      <input
+        type="hidden"
+        name="with_parameters_id"
+        value="<%= form.converter.id %>"
+        />
+      <input
+        type="hidden"
+        name="with_parameters_type"
+        value="<%= form.converter.class.name %>"
+        />
+    </label>
+
+    <%= f.action :submit, as: :button, label: "Create parameter" %>
+
+  <%= end %>
+<%= end %>

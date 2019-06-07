@@ -1,7 +1,8 @@
 # noinspection RubyResolve,RailsI18nInspection
 
-def button_link(href:, title:, icon: nil, method: nil, data: nil, classes: nil)
+def button_link(href:, title:, icon: nil, method: nil, data: nil, classes: nil, params: {})
   options = {href: href, title: title}
+  options[:href] += '?' + params.map {|k,v| "#{k}=#{v}"}.join('&') unless params.empty?
   options[:method] = method if method
   options[:data] = data if data
   options[:class] = classes if classes
@@ -23,12 +24,12 @@ def back_button(object_type, parent_type = nil)
               title: "back to #{object_type}", classes: 'back-button'
 end
 
-def new_button(object_type, resource_type = nil)
-  path = ['new_admin', object_type, resource_type, 'path'].compact.join'_'
+def new_button(object_type, resource_type = nil, action: 'new', method: :get, params: {})
+  path = [action, 'admin', object_type, resource_type, 'path'].compact.join'_'
   args = []
   args << request.params[:id] if resource_type
   button_link href: send(path, *args),
-              title: 'New', icon: 'plus-circle', classes: 'right-align'
+              title: 'New', icon: 'plus-circle', classes: 'right-align', method: method, params: params
 end
 
 def back_link(path:, title: nil)

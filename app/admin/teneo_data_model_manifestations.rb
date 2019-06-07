@@ -38,7 +38,7 @@ ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
         attributes_table do
           row :position
           row :label
-          row :optional
+          bool_row :optional
           row :access_right
           row :representation_info
           row :from

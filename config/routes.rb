@@ -27,6 +27,18 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
+  namespace :admin do
+    resources :converters do
+      resources :parameter_defs
+    end
+    resources :tasks do
+      resources :parameter_defs
+    end
+    resources :workflows do
+      resources :parameter_defs
+    end
+  end
+
   root to: 'active_admin/devise/sessions#new'
 
 end
