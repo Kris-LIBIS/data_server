@@ -28,14 +28,14 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
 
   namespace :admin do
-    resources :converters do
-      resources :parameter_defs
+    resources :converters, only: [] do
+      resources :parameter_defs, only: [:new, :edit, :destroy, :index, :create, :show, :update]
     end
-    resources :tasks do
-      resources :parameter_defs
+    resources :tasks, only: [] do
+      resources :parameter_defs, only: [:new, :edit, :destroy, :index, :create, :show, :update]
     end
-    resources :workflows do
-      resources :parameter_defs
+    resources :workflows, only: [] do
+      resources :parameter_defs, only: [:new, :edit, :destroy, :index, :create, :show, :update]
     end
   end
 

@@ -35,34 +35,31 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
   show do
     back_button :organization
 
-    tabs do
-      tab 'Info' do
+    attributes_table do
+      row :name
+      row :organization
+      row 'Ingest contacts', as: :tags do
         # noinspection RubyResolve
-        attributes_table do
-          row :name
-          row :organization
-          row 'Ingest contacts', as: :tags do
-            # noinspection RubyResolve
-            resource.contact_ingest_list
-          end
-          row 'Collection contacts', as: :tags do
-            # noinspection RubyResolve
-            resource.contact_collection_list
-          end
-          row 'System contacts', as: :tags do
-            # noinspection RubyResolve
-            resource.contact_system_list
-          end
-          row :ingest_job_name
-          row :project_name
-          row :collection_name
-          row :collection_description
-          row :ingest_job_name
-          row :producer
-          row :material_flow
-        end
+        resource.contact_ingest_list
       end
+      row 'Collection contacts', as: :tags do
+        # noinspection RubyResolve
+        resource.contact_collection_list
+      end
+      row 'System contacts', as: :tags do
+        # noinspection RubyResolve
+        resource.contact_system_list
+      end
+      row :ingest_job_name
+      row :project_name
+      row :collection_name
+      row :collection_description
+      row :ingest_job_name
+      row :producer
+      row :material_flow
+    end
 
+    tabs do
       tab 'Ingest Models', class: 'panel_contents' do
         table_for ingest_agreement.ingest_models do
           column :name

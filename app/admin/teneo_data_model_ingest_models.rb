@@ -34,24 +34,21 @@ ActiveAdmin.register Teneo::DataModel::IngestModel, as: 'IngestModel' do
   show do
     back_button :ingest_agreement, :organization
 
-    tabs do
+    attributes_table do
+      row :name
+      row :description
+      row :entity_type
+      row :template
+      row :user_a
+      row :user_b
+      row :user_c
+      row :identifier
+      row :status
+      row :access_right
+      row :retention_policy
+    end
 
-      tab 'Info' do
-        # noinspection RubyResolve
-        attributes_table do
-          row :name
-          row :description
-          row :entity_type
-          row :template
-          row :user_a
-          row :user_b
-          row :user_c
-          row :identifier
-          row :status
-          row :access_right
-          row :retention_policy
-        end
-      end
+    tabs do
 
       tab 'Manifestations', class: 'panel_contents' do
           table_for ingest_model.manifestations.order(position: 'asc') do

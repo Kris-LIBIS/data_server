@@ -31,19 +31,16 @@ ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
   show do
     back_button :ingest_model, :ingest_agreement
 
-    tabs do
+    attributes_table do
+      row :position
+      row :label
+      bool_row :optional
+      row :access_right
+      row :representation_info
+      row :from
+    end
 
-      tab 'Info' do
-        # noinspection RubyResolve
-        attributes_table do
-          row :position
-          row :label
-          bool_row :optional
-          row :access_right
-          row :representation_info
-          row :from
-        end
-      end
+    tabs do
 
       tab 'Conversion jobs', class: 'panel_contents' do
         table_for manifestation.conversion_jobs.order(position: 'asc') do

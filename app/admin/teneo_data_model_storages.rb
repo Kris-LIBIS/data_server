@@ -38,7 +38,7 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   show do
 
     # noinspection RubyResolve
-    back_link title: 'organization', path: admin_organization_path(resource.organization)
+    back_button :organization
 
     attributes_table do
       row :name

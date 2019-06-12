@@ -74,7 +74,7 @@ gem 'graphql', '1.8.13'
 gem 'graphiql-rails', '1.5.0', group: :development
 
 # Admin
-gem 'activeadmin'
+gem 'activeadmin', github: 'Kris-LIBIS/activeadmin'
 gem 'activeadmin_addons'
 gem 'activeadmin_json_editor'
 
@@ -86,6 +86,8 @@ gem 'active_admin_theme'
 gem 'font_awesome5_rails'
 
 gem 'sass-rails'
+
+gem 'dotenv-rails'
 
 # Better errors
 group :development do

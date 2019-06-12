@@ -1,13 +1,17 @@
 # noinspection RubyResolve,RailsI18nInspection
 
-def button_link(href:, title:, icon: nil, method: nil, data: nil, classes: nil, params: {})
+def button_link(href:, title:, icon: nil, method: :get, data: {}, classes: [], params: {})
   options = {href: href, title: title}
-  options[:href] += '?' + params.map {|k,v| "#{k}=#{v}"}.join('&') unless params.empty?
+  options[:href] += '?' + params.map {|k, v| "#{k}=#{v}"}.join('&') unless params.empty?
   options[:method] = method if method
+  # options[:type] = :submit
   options[:data] = data if data
-  options[:class] = classes if classes
-  a options do
-    button {icon ? fa_icon(icon.to_s) : title}
+  options[:class] = classes.join(' ')
+  value = icon ? fa_icon(icon.to_s) : title
+  ref = options.delete :href
+  # button(value, ref, options)
+  span class: 'button_link' do
+    link_to value, ref, options
   end
 end
 
@@ -21,19 +25,25 @@ def back_button(object_type, parent_type = nil)
   end
   params << object_id
   button_link href: send(['admin', parent_type, object_type, 'path'].compact.join('_'), *params),
-              title: "back to #{object_type}", classes: 'back-button'
+              title: "back to #{object_type}", classes: ['back-button']
 end
 
 def new_button(object_type, resource_type = nil, action: 'new', method: :get, params: {})
-  path = [action, 'admin', object_type, resource_type, 'path'].compact.join'_'
+  path = [action, 'admin', object_type, resource_type, 'path'].compact.join '_'
   args = []
   args << request.params[:id] if resource_type
   button_link href: send(path, *args),
-              title: 'New', icon: 'plus-circle', classes: 'right-align', method: method, params: params
+              title: 'New', icon: 'plus-circle', classes: ['right-align'], method: method, params: params
 end
 
-def back_link(path:, title: nil)
-  button_link classes: 'right-align', href: path, title: "back to #{(title)}"
+def help_icon(message = nil)
+  return unless message
+  # noinspection RubyResolve
+  span class: 'button_link' do
+    a onclick: "alert('#{message}');" do
+      fa_icon 'question-circle'
+    end
+  end
 end
 
 # noinspection RailsI18nInspection

@@ -62,21 +62,25 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
       row :class_name
       row :script_name
     end
-    # noinspection RubyResolve
-    panel 'Parameters' do
-      table_for converter.parameter_defs do
-        column :name
-        column :description
-        column :data_type
-        column :default
-        column :constraint
-        column '' do |param_def|
-          # noinspection RubyResolve
-          action_icons path: admin_parameter_def_path(param_def), actions: %i[edit delete]
-          p fa_icon(:help, title: param_def.help) if param_def.help
+
+    tabs do
+
+      tab 'Parameters', class: 'panel_contents' do
+        table_for converter.parameter_defs.order(:id) do
+          column :name
+          column :description
+          column :data_type
+          column :default
+          column :constraint
+          column '' do |param_def|
+            # noinspection RubyResolve
+            action_icons path: admin_converter_parameter_def_path(converter, param_def), actions: %i[edit delete]
+            help_icon param_def.help
+          end
         end
+        new_button :converter, :parameter_def
       end
-      new_button :converter, action: :add_parameter_def, method: :post
+
     end
   end
 
