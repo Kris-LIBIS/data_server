@@ -40,8 +40,8 @@ ActiveAdmin.register Teneo::DataModel::ParameterDef, as: 'ParameterDef' do
       f.input :description
       f.input :data_type, required: true
       f.input :help, as: :text, input_html: {rows: 3}
-      f.input :default, as: :jsonb, input_html: {rows: 3}
-      f.input :constraint, as: :jsonb, input_html: {rows: 3}
+      f.input :default
+      f.input :constraint
       f.hidden_field :lock_version
       f.hidden_field :with_parameters_id
       f.hidden_field :with_parameters_type

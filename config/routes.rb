@@ -28,14 +28,33 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
 
   namespace :admin do
+    # noinspection RailsParamDefResolve
     resources :converters, only: [] do
       resources :parameter_defs, only: [:new, :edit, :destroy, :index, :create, :show, :update]
     end
+    # noinspection RailsParamDefResolve
     resources :tasks, only: [] do
       resources :parameter_defs, only: [:new, :edit, :destroy, :index, :create, :show, :update]
     end
+    # noinspection RailsParamDefResolve
     resources :workflows, only: [] do
       resources :parameter_defs, only: [:new, :edit, :destroy, :index, :create, :show, :update]
+    end
+    # noinspection RailsParamDefResolve
+    resources :storages, only: [] do
+      resources :parameter_values, only: [:new, :edit, :destroy, :index, :create, :show, :update]
+    end
+    # noinspection RailsParamDefResolve
+    resources :workflow_tasks, only: [] do
+      resources :parameter_values, only: [:new, :edit, :destroy, :index, :create, :show, :update]
+    end
+    # noinspection RailsParamDefResolve
+    resources :conversion_tasks, only: [] do
+      resources :parameter_values, only: [:new, :edit, :destroy, :index, :create, :show, :update]
+    end
+    # noinspection RailsParamDefResolve
+    resources :packages, only: [] do
+      resources :parameter_values, only: [:new, :edit, :destroy, :index, :create, :show, :update]
     end
   end
 

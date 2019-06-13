@@ -34,6 +34,7 @@ ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
     attributes_table do
       row :position
       row :label
+      # noinspection RubyResolve
       bool_row :optional
       row :access_right
       row :representation_info
@@ -44,11 +45,10 @@ ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
 
       tab 'Conversion jobs', class: 'panel_contents' do
         table_for manifestation.conversion_jobs.order(position: 'asc') do
-          column :format_filter
-          column :filename_filter
-          column :converter do |cj|
-            cj.converter
-          end
+          column :name
+          column :description
+          column :input_formats
+          column :input_filename_regex
           column '' do |model|
             # noinspection RubyResolve
             action_icons path: admin_manifestation_conversion_job_path(model.manifestation, model)

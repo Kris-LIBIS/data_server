@@ -41,7 +41,8 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
   config.sort_order = 'name_asc'
   config.batch_actions = false
 
-  permit_params :name, :description, :class_name, :script_name, :lock_version
+  permit_params :name, :description, :class_name, :script_name,
+                :input_formats_list, :output_formats_list, :lock_version
 
   filter :name
   filter :description
@@ -61,6 +62,8 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
       row :description
       row :class_name
       row :script_name
+      row :input_formats_list, as: :tags
+      row :output_formats_list, as: :tags
     end
 
     tabs do
@@ -90,6 +93,8 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
       f.input :description
       f.input :class_name
       f.input :script_name
+      f.input :input_formats_list, as: :tags, collection: Teneo::DataModel::Format.pluck(:name)
+      f.input :output_formats_list, as: :tags, collection: Teneo::DataModel::Format.pluck(:name)
       f.hidden_field :lock_version
     end
     actions

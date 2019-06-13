@@ -23,7 +23,7 @@ ActiveAdmin.register Teneo::DataModel::ParameterValue, as: 'ParameterValue' do
   end
 
   controller do
-    belongs_to :storage, :workflow_task, :conversion_job, :ingest_job, :package,  polymorphic: true
+    belongs_to :storage, :workflow_task, :conversion_task, :ingest_job, :package,  polymorphic: true
   end
 
 end

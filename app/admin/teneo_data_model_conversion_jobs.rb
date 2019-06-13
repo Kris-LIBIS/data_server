@@ -9,9 +9,8 @@ ActiveAdmin.register Teneo::DataModel::ConversionJob, as: 'ConversionJob' do
   config.sort_order = 'position_asc'
   config.batch_actions = false
 
-  permit_params :position, :name, :format_filter, :filename_filter, :config,
-                :manifestation_id, :converter_id,
-                :lock_version
+  permit_params :position, :name, :input_formats_list, :input_filename_regex,
+                :manifestation_id, :lock_version
 
   filter :name
 
@@ -19,8 +18,8 @@ ActiveAdmin.register Teneo::DataModel::ConversionJob, as: 'ConversionJob' do
     back_button :manifestation, :ingest_model
     column :name
     column :position
-    column :format_filter
-    column :filename_filter
+    column :input_formats_list, as: :tags
+    column :input_filename_regex
     column :config
     column :converter
     actions defaults: false do |object|
@@ -34,10 +33,27 @@ ActiveAdmin.register Teneo::DataModel::ConversionJob, as: 'ConversionJob' do
     attributes_table do
       row :name
       row :position
-      row :format_filter
-      row :filename_filter
-      row :config
-      row :converter
+      row :input_formats_list, as: :tags
+      row :input_filename_regex
+    end
+    tabs do
+
+      tab 'Conversion tasks', class: 'panel_contents' do
+        table_for conversion_job.conversion_tasks.order(position: 'asc') do
+          column :name
+          column :description
+          column :converter do |task|
+            task.converter
+          end
+          column :output_format
+          column '' do |model|
+            # noinspection RubyResolve
+            action_icons path: admin_conversion_job_conversion_task_path(model.conversion_job, model)
+          end
+        end
+        new_button :manifestation, :conversion_job
+      end
+
     end
   end
 
@@ -45,10 +61,8 @@ ActiveAdmin.register Teneo::DataModel::ConversionJob, as: 'ConversionJob' do
     f.inputs 'Conversion job info' do
       f.input :name, required: true
       f.input :position, required: true
-      f.input :format_filter
-      f.input :filename_filter
-      f.input :config, as: :jsonb
-      f.input :converter, as: :select, collection: Teneo::DataModel::Converter.all
+      f.input :input_formats_list, as: :tags, collection: Teneo::DataModel::Format.all_tags
+      f.input :input_filename_regex
       f.hidden_field :lock_version
     end
     actions
