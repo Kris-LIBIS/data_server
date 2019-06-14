@@ -17,7 +17,7 @@ ActiveAdmin.register Teneo::DataModel::ParameterDef, as: 'ParameterDef' do
     end
 
     def destroy!
-      redirect_to :back
+      # redirect_to :back
     end
 
   end

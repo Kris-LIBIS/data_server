@@ -18,26 +18,6 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
     end
   end
 
-  # page_action :add_parameter_def do |converter_id|
-  #   # noinspection RubyResolve
-  #   render add_parameter_def_admin_converter_path(converter_id), locals: {
-  #       form: ::Admin::Converters::AddParameterForm.new(converter_id)
-  #   }
-  # end
-
-  member_action :add_parameter_def, method: :post do
-    # noinspection RubyResolve
-    form = ::Admin::Converters::AddPararmeterForm.new(params.fetch(:id))
-    if form.submit(params)
-      # noinspection RubyResolve
-      redirect_to resource_path(resource, anchor: 'parameters'), notice: "Parameter added"
-    else
-      flash[:notice] = "Could not create parameter"
-      # noinspection RubyResolve
-      render add_parameter_def_admin_converter_path(resource), locals: {form: form}
-    end
-  end
-
   config.sort_order = 'name_asc'
   config.batch_actions = false
 

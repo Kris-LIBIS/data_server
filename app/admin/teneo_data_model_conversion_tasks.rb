@@ -40,7 +40,7 @@ ActiveAdmin.register Teneo::DataModel::ConversionTask, as: 'ConversionTask' do
     tabs do
 
       tab 'Parameters', class: 'panel_contents' do
-        table_for resource.values.order(:id) do
+        table_for resource.parameter_values.order(:id) do
           column :name
           column :value
           column '' do |param_value|
@@ -48,7 +48,7 @@ ActiveAdmin.register Teneo::DataModel::ConversionTask, as: 'ConversionTask' do
             action_icons path: admin_conversion_task_parameter_value_path(resource, param_value), actions: %i[edit delete]
           end
         end
-        new_button :converter, :parameter_def
+        new_button :conversion_task, :parameter_value
       end
 
     end

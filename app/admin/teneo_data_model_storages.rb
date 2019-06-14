@@ -4,22 +4,12 @@ require 'nested_action_icons'
 ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   menu false
 
-  belongs_to :organization, parent_class: Teneo::DataModel::Organization
+  belongs_to :organization
 
   config.sort_order = 'name_asc'
   config.batch_actions = false
 
-  # actions :new, :show, :edit, :destroy
-
-  # controller do
-  #   # noinspection RubySuperCallWithoutSuperclassInspection,RubyBlockToMethodReference,RubyResolve
-  #   def create; super {collection_url};end
-  #
-  #   # noinspection RubyBlockToMethodReference,RubySuperCallWithoutSuperclassInspection,RubyResolve
-  #   def update; super {collection_url};end
-  # end
-
-  permit_params :name, :protocol, :options, :organization_id, :lock_Version
+  permit_params :name, :protocol, :organization_id, :lock_Version
 
   filter :name
   filter :protocol, as: :select, collection: Teneo::DataModel::Storage::PROTOCOL_LIST
@@ -28,7 +18,6 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
     back_button :organization
     column :name
     column :protocol
-    column :options
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
       action_icons path: resource_path(object), actions: %i[edit delete]
@@ -43,27 +32,30 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
     attributes_table do
       row :name
       row :protocol
-      row :options
       # noinspection RubyResolve
     end
-  end
 
-  form do |f|
     columns do
       column do
-        f.inputs do
-          f.input :name, required: true
-          f.input :protocol, required: true, collection: Teneo::DataModel::Storage::PROTOCOL_LIST
-          f.input :options, as: :jsonb
-          f.hidden_field :lock_version
+        # noinspection RubyResolve
+        panel 'Parameters' do
+          table_for resource.parameter_values.order(:id) do
+            column :name
+            column :value
+            column '' do |param_value|
+              # noinspection RubyResolve
+              action_icons path: admin_storage_parameter_value_path(resource, param_value), actions: %i[edit delete]
+            end
+          end
+          new_button :storage, :parameter_value
         end
       end
       column do
         # noinspection RubyResolve
         panel :help do
           div do
-            "The options field configures the storage for a given protocol. The content of the options field " +
-                "should be different, depending on the protocol choosen:".html_safe
+            "The parameters configure the storage for a given protocol. The nnumber and type of parameters " +
+                "will be different, depending on the protocol choosen:".html_safe
           end
 
           data = [
@@ -106,6 +98,15 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
         end
       end
     end
+  end
+
+  form do |f|
+    f.inputs do
+      f.input :name, required: true
+      f.input :protocol, required: true, collection: Teneo::DataModel::Storage::PROTOCOL_LIST
+      f.hidden_field :lock_version
+    end
     f.actions
   end
+
 end

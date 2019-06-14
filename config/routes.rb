@@ -58,6 +58,6 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: 'active_admin/devise/sessions#new'
+  root to: 'admin/dashboard#index'
 
 end
