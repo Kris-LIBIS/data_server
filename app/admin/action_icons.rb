@@ -15,17 +15,37 @@ def button_link(href:, title:, icon: nil, method: :get, data: {}, classes: [], p
   end
 end
 
-def back_button(object_type, parent_type = nil)
-  object_id = request.params["#{object_type}_id"]
-  params = []
-  if parent_type
-    object_class = "Teneo::DataModel::#{object_type.to_s.camelize}".constantize
-    object = object_class.find(object_id)
-    params << object.send(parent_type).id
+def parent_info
+  if (x = request.params.keys.find {|x| x =~ /^(.*)_id$/})
+    return {type: $1, id: request.params[x]}
   end
-  params << object_id
-  button_link href: send(['admin', parent_type, object_type, 'path'].compact.join('_'), *params),
-              title: "back to #{object_type}", classes: ['back-button']
+  nil
+end
+
+def back_path
+  params = []
+  path = ['admin']
+  return unless (info = parent_info)
+  parent_type = info[:type]
+  parent_id = info[:id]
+  parent_resource = ActiveAdmin.application.namespaces[:admin].resources[parent_type.to_s.camelize]
+  return unless parent_resource
+  grand_parent_type = parent_resource.belongs_to_config&.target&.resource_name&.element
+  if grand_parent_type
+    parent_object = parent_resource.resource_class.find(parent_id)
+    grand_parent_id = parent_object.send(grand_parent_type).id
+    path << grand_parent_type
+    params << grand_parent_id
+  end
+  path << parent_type
+  params << parent_id
+  path << 'path'
+  send(path.compact.join('_'), *params)
+end
+
+def back_button
+  return unless (info = parent_info)
+  button_link href: back_path, title: "back to #{info[:type]}", classes: ['back-button']
 end
 
 def new_button(object_type, resource_type = nil, action: 'new', method: :get, params: {})

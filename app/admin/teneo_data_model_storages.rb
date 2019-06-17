@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'nested_action_icons'
+require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   menu false
@@ -15,7 +15,7 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   filter :protocol, as: :select, collection: Teneo::DataModel::Storage::PROTOCOL_LIST
 
   index do
-    back_button :organization
+    back_button
     column :name
     column :protocol
     actions defaults: false do |object|
@@ -27,7 +27,7 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   show do
 
     # noinspection RubyResolve
-    back_button :organization
+    back_button
 
     attributes_table do
       row :name
@@ -59,24 +59,29 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
           end
 
           data = [
-              {protocol: 'NFS', options: [{tag: 'location', info: 'the path to the directory'}]},
+              {protocol: 'NFS', options: [
+                  {tag: 'location', info: 'the path to the directory'},
+              ]},
               {protocol: 'FTP', options: [
                   {tag: 'host', info: 'the hostname or ip-address of the FTP server'},
                   {tag: 'port', info: 'the port number on which the FTP server listens (optional - default: 22)'},
                   {tag: 'user', info: 'the login user name'},
                   {tag: 'password', info: 'the login password'},
+                  {tag: 'location', info: 'the path to the directory'},
               ]},
               {protocol: 'SFTP', options: [
                   {tag: 'host', info: 'the hostname or ip-address of the FTP server'},
                   {tag: 'port', info: 'the port number on which the FTP server listens (optional - default: 22)'},
                   {tag: 'user', info: 'the login user name'},
                   {tag: 'password', info: 'the login password'},
+                  {tag: 'location', info: 'the path to the directory'},
               ]},
               {protocol: 'GDRIVE', options: [
                   {tag: 'credentials_file', info: 'the file where the credentials for the Google Drive can be found'},
                   {tag: 'port', info: 'the port number on which the FTP server listens (optional - default: 22)'},
                   {tag: 'user', info: 'the login user name'},
                   {tag: 'password', info: 'the login password'},
+                  {tag: 'location', info: 'the path to the directory'},
               ]}
           ]
           table_for data do
@@ -93,8 +98,8 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
                 end
               end
             end
-
           end
+
         end
       end
     end

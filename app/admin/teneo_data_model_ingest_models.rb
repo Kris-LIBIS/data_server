@@ -20,7 +20,7 @@ ActiveAdmin.register Teneo::DataModel::IngestModel, as: 'IngestModel' do
   filter :identifier
 
   index do
-    back_button :ingest_agreement, :organization
+    back_button
     column :name
     column :description
     column :entity_type
@@ -32,7 +32,7 @@ ActiveAdmin.register Teneo::DataModel::IngestModel, as: 'IngestModel' do
   end
 
   show do
-    back_button :ingest_agreement, :organization
+    back_button
 
     attributes_table do
       row :name

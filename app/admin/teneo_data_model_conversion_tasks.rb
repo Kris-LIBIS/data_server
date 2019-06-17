@@ -2,6 +2,7 @@
 require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::ConversionTask, as: 'ConversionTask' do
+  menu false
 
   belongs_to :conversion_job
 
@@ -15,7 +16,7 @@ ActiveAdmin.register Teneo::DataModel::ConversionTask, as: 'ConversionTask' do
   filter :name
 
   index do
-    back_button :conversion_job, :manifestation
+    back_button
     column :position
     column :name
     column :description
@@ -28,7 +29,7 @@ ActiveAdmin.register Teneo::DataModel::ConversionTask, as: 'ConversionTask' do
   end
 
   show do
-    back_button :conversion_job, :manifestation
+    back_button
     attributes_table do
       row :position
       row :name

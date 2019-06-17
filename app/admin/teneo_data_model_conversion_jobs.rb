@@ -15,7 +15,7 @@ ActiveAdmin.register Teneo::DataModel::ConversionJob, as: 'ConversionJob' do
   filter :name
 
   index do
-    back_button :manifestation, :ingest_model
+    back_button
     column :name
     column :position
     column :input_formats_list, as: :tags
@@ -29,7 +29,7 @@ ActiveAdmin.register Teneo::DataModel::ConversionJob, as: 'ConversionJob' do
   end
 
   show do
-    back_button :manifestation, :ingest_model
+    back_button
     attributes_table do
       row :name
       row :position

@@ -14,7 +14,7 @@ ActiveAdmin.register Teneo::DataModel::IngestJob, as: 'IngestJob' do
   filter :workflow
 
   index do
-    back_button :ingest_agreement, :organization
+    back_button
     column :stage
     column :config
     column :workflow
@@ -25,7 +25,7 @@ ActiveAdmin.register Teneo::DataModel::IngestJob, as: 'IngestJob' do
   end
 
   show do
-    back_button :ingest_agreement, :organization
+    back_button
     attributes_table do
       row :stage
       row :config

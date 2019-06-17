@@ -5,40 +5,38 @@ ActiveAdmin.register Teneo::DataModel::ParameterValue, as: 'ParameterValue' do
 
   menu false
 
+  config.sort_order = 'created_at_asc'
+  config.batch_actions = false
+
   actions :new, :create, :update, :edit, :destroy
 
   controller do
-    belongs_to :storage, :workflow_task, :conversion_task, :ingest_job, :package,  polymorphic: true
+    belongs_to :storage, parent_class: Teneo::DataModel::Storage, polymorphic: true
+    belongs_to :workflow_task, parent_class: Teneo::DataModel::WorkflowTask, polymorphic: true
+    belongs_to :ingest_job, parent_class: Teneo::DataModel::IngestJob, polymorphic: true
+    belongs_to :package, parent_class: Teneo::DataModel::Package, polymorphic: true
+    belongs_to :conversion_task, parent_class: Teneo::DataModel::ConversionTask, polymorphic: true
+
     def create
-      super do |format|
-        redirect_to request.fullpath if resource.valid?
+      create! do |format|
+        format.html {redirect_to back_path}
       end
     end
 
     def update
-      super do |format|
-        redirect_to :back if resource.valid?
+      update! do |format|
+        format.html {redirect_to back_path}
       end
     end
 
     def destroy
-      super do |format|
-        redirect_to :back
+      destroy! do |format|
+        format.html {redirect_to back_path}
       end
     end
-
   end
 
   permit_params :name, :value, :with_values_id, :with_values_type, :lock_version
-
-  index do
-    column :name
-    column :value
-    actions defaults: false do |object|
-      # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons path: resource_path(object), actions: %i[edit delete]
-    end
-  end
 
   form do |f|
     f.inputs '' do

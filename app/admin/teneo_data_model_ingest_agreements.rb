@@ -20,7 +20,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
   filter :collection_name
 
   index do
-    back_button :organization
+    back_button
     column :name
     column :organization
     column :project_name
@@ -33,7 +33,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
   end
 
   show do
-    back_button :organization
+    back_button
 
     attributes_table do
       row :name

@@ -2,9 +2,8 @@
 require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::RetentionPolicy, as: 'RetentionPolicy' do
-  menu parent: 'Code Tables', priority: 1
 
-  menu parent: 'Code Tables', priority: 1
+  menu parent: 'Code Tables', priority: 2
 
   actions :index, :new, :edit, :destroy
 

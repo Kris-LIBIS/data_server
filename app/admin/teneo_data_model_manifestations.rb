@@ -18,7 +18,7 @@ ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
   filter :representation_info
 
   index do
-    back_button :ingest_model, :ingest_agreement
+    back_button
     column :position
     column :label
     column :representation_info
@@ -29,7 +29,7 @@ ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
   end
 
   show do
-    back_button :ingest_model, :ingest_agreement
+    back_button
 
     attributes_table do
       row :position
