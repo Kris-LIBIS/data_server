@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 require 'teneo-data_model'
 
-dir = File.join Teneo::DataModel.root, 'db', 'seeds'
+# dir = File.join Teneo::DataModel.root, 'db', 'seeds'
+# Teneo::DataModel::SeedLoader.new(dir)
+
+dir = File.join Rails.root, 'db', 'seeds'
 Teneo::DataModel::SeedLoader.new(dir)
 
 LoginUser.create(email: 'admin@libis.be', password: 'abc123')

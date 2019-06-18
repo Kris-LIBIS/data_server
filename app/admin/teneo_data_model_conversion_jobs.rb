@@ -46,6 +46,9 @@ ActiveAdmin.register Teneo::DataModel::ConversionJob, as: 'ConversionJob' do
             task.converter
           end
           column :output_format
+          column 'Parameters' do |task|
+            task.parameter_values.map {|value| "#{value.name}='#{value.value}'"}.join(" ")
+          end
           column '' do |model|
             # noinspection RubyResolve
             action_icons path: admin_conversion_job_conversion_task_path(model.conversion_job, model)

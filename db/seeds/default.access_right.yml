@@ -7,3 +7,6 @@
 - name: 'restricted'
   ext_id: 'AR_IP_RANGE'
   description: 'Access allowed from within the KU Leuven IP range.'
+- name: 'KUL IP range'
+  ext_id: '118683'
+  description: 'Only accessible from devices with an IP Address in the KU Leuven association IP range'

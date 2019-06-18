@@ -16,4 +16,12 @@ namespace :db do
 
   task drop: :kill_connections
 
+  desc 'reset with new schema'
+  task recreate: [:drop, :create, :migrate, :seed]
+
+  desc "Truncate all existing data"
+  task :truncate => "db:load_config" do
+    DatabaseCleaner.clean_with :truncation
+  end
+
 end
