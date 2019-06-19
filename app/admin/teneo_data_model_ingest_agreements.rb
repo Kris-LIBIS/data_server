@@ -39,7 +39,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
       row :name
       row :organization
       row 'Ingest contacts', as: :tags do
-        # noinspection RubyResolve
+          # noinspection RubyResolve
         resource.contact_ingest_list
       end
       row 'Collection contacts', as: :tags do

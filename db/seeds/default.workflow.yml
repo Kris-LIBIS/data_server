@@ -1,0 +1,96 @@
+- name: 'Simple file collect'
+  description: 'Collect all files from the given location'
+  stage: 'Collect'
+  tasks:
+    - task: 'DirCollector'
+      values:
+        sort: true
+        subdirs: 'ignore'
+        file_limit: 5000
+  parameters:
+    location:
+      data_type: 'string'
+      delegation: 'DirCollector#location'
+    selection:
+      data_type: 'string'
+      delegation: 'DirCollector#selection'
+    ignore:
+      data_type: 'string'
+      delegation: 'DirCollector#ignore'
+- name: 'Recursive file collect'
+  description: 'Collect all files from the given location and its subdirectories'
+  stage: 'Collect'
+  tasks:
+    - task: 'DirCollector'
+      values:
+        sort: true
+        subdirs: 'recusive'
+        file_limit: 5000
+  parameters:
+    location:
+      data_type: 'string'
+      delegation: 'DirCollector#location'
+    selection:
+      data_type: 'string'
+      delegation: 'DirCollector#selection'
+    ignore:
+      data_type: 'string'
+      delegation: 'DirCollector#ignore'
+- name: 'Collection file collect'
+  description: 'Collect all files and subdirectories as collections'
+  stage: 'Collect'
+  tasks:
+    - task: 'DirCollector'
+      values:
+        sort: true
+        subdirs: 'collection'
+        file_limit: 5000
+  parameters:
+    location:
+      data_type: 'string'
+      delegation: 'DirCollector#location'
+    selection:
+      data_type: 'string'
+      delegation: 'DirCollector#selection'
+    ignore:
+      data_type: 'string'
+      delegation: 'DirCollector#ignore'
+- name: 'Complex file collect'
+  description: 'Collect all files and subdirectories as IE structure'
+  stage: 'Collect'
+  tasks:
+    - task: 'DirCollector'
+      values:
+        sort: true
+        subdirs: 'complex'
+        file_limit: 5000
+  parameters:
+    location:
+      data_type: 'string'
+      delegation: 'DirCollector#location'
+    selection:
+      data_type: 'string'
+      delegation: 'DirCollector#selection'
+    ignore:
+      data_type: 'string'
+      delegation: 'DirCollector#ignore'
+- name: 'File list collect'
+  stage: 'Collect'
+  tasks:
+    - task: 'DirListCollector'
+      values:
+        subdirs: 'ignore'
+        file_limit: 5000
+  parameters:
+    location:
+      data_type: 'string'
+      delegation: 'DirListCollector#location'
+    file_list:
+      data_type: 'string'
+      delegation: 'DirListCollector#file_list'
+    selection:
+      data_type: 'string'
+      delegation: 'DirListCollector#selection'
+    ignore:
+      data_type: 'string'
+      delegation: 'DirListCollector#ignore'

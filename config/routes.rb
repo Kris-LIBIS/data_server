@@ -38,10 +38,18 @@ Rails.application.routes.draw do
     end
     # noinspection RailsParamDefResolve
     resources :workflows, only: [] do
-      resources :parameter_defs, only: [:new, :edit, :destroy, :create, :update]
+      resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
+    end
+    # noinspection RailsParamDefResolve
+    resources :ingest_jobs, only: [] do
+      resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
     end
     # noinspection RailsParamDefResolve
     resources :storages, only: [] do
+      resources :parameter_values, only: [:new, :edit, :destroy, :create, :update]
+    end
+    # noinspection RailsParamDefResolve
+    resources :ingest_tasks, only: [] do
       resources :parameter_values, only: [:new, :edit, :destroy, :create, :update]
     end
     # noinspection RailsParamDefResolve

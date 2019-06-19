@@ -1,7 +1,7 @@
 #frozen_string_literal: true
 require 'action_icons'
 
-ActiveAdmin.register Teneo::DataModel::ParameterDef, as: 'ParameterDef' do
+ActiveAdmin.register Teneo::DataModel::ParameterRef, as: 'ParameterRef' do
 
   menu false
 
@@ -11,10 +11,8 @@ ActiveAdmin.register Teneo::DataModel::ParameterDef, as: 'ParameterDef' do
   actions :new, :create, :update, :edit, :destroy
 
   controller do
-    belongs_to :converter, parent_class: Teneo::DataModel::Converter, polymorphic: true
-    belongs_to :task, parent_class: Teneo::DataModel::Task, polymorphic: true
-    belongs_to :workflow, parent_class: Teneo::DataModel::Workflow, polymorphic: true
     belongs_to :ingest_job, parent_class: Teneo::DataModel::IngestJob, polymorphic: true
+    belongs_to :workflow, parent_class: Teneo::DataModel::Workflow, polymorphic: true
 
     def create
       create! do |format|
@@ -35,20 +33,19 @@ ActiveAdmin.register Teneo::DataModel::ParameterDef, as: 'ParameterDef' do
     end
   end
 
-  permit_params :name, :description, :data_type, :help, :default, :constraint,
-                :with_parameters_id, :with_parameters_type, :lock_version
+  permit_params :name, :description, :help, :default,
+                :with_param_refs_id, :with_param_refs_type, :lock_version
 
   form do |f|
     f.inputs '' do
       f.input :name, required: true
+      f.input :delegation, required: true
       f.input :description
-      f.input :data_type
       f.input :help, as: :text, input_html: {rows: 3}
       f.input :default
-      f.input :constraint
       f.hidden_field :lock_version
-      f.hidden_field :with_parameters_id
-      f.hidden_field :with_parameters_type
+      f.hidden_field :with_param_refs_id
+      f.hidden_field :with_param_refs_type
     end
     f.actions do
       f.action :submit
