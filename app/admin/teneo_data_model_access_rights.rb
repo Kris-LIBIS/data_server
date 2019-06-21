@@ -22,8 +22,6 @@ ActiveAdmin.register Teneo::DataModel::AccessRight, as: 'AccessRight' do
   filter :name
   filter :description
   filter :ext_id
-  # filter :ingest_models
-  # filter :manifestations
 
   index do
     column :name

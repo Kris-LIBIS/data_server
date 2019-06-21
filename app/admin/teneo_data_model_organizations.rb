@@ -53,9 +53,14 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
 
       tab 'Storages', class: 'panel_contents' do
 
+        # noinspection RubyResolve
         table_for organization.storages do
           column :name
           column :protocol
+          # noinspection RubyResolve
+          list_column :parameter_values do |storage|
+            storage.parameter_values.inject({}) {|hash, value| hash[value.name] = value.value; hash}
+          end
           column '' do |storage|
             # noinspection RubyResolve
             action_icons path: admin_organization_storage_path(storage.organization, storage)
@@ -68,6 +73,14 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
       tab 'Ingest Agreements', class: 'panel_contents' do
         table_for organization.ingest_agreements do
           column :name
+          # noinspection RubyResolve
+          list_column :models do |agreement|
+            agreement.ingest_models.map(&:name)
+          end
+          # noinspection RubyResolve
+          list_column :jobs do |agreement|
+            agreement.ingest_jobs.map(&:name)
+          end
           column '' do |agreement|
             # noinspection RubyResolve
             action_icons path: admin_organization_ingest_agreement_path(agreement.organization, agreement)

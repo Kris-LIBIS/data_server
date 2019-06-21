@@ -34,15 +34,30 @@ ActiveAdmin.register Teneo::DataModel::IngestJob, as: 'IngestJob' do
         table_for ingest_job.ingest_tasks do
           column :stage
           column :workflow
-          column 'Parameters' do |task|
-            task.parameter_values.map {|value| "#{value.name}='#{value.value}'"}.join(" ")
+          # noinspection RubyResolve
+          list_column :parameter_values do |task|
+            task.parameter_values.inject({}) {|hash, value| hash[value.name] = value.value; hash}
           end
           column '' do |model|
             # noinspection RubyResolve
             action_icons path: admin_ingest_job_ingest_task_path(model.ingest_job, model)
           end
         end
-        new_button :ingest_task, :ingest_job
+        new_button :ingest_job, :ingest_task
+      end
+      tab 'Parameters', class: 'panel_contents' do
+        table_for ingest_job.parameter_refs.order(:id) do
+          column :name
+          column :description
+          column :delegation, as: :tags
+          column :default
+          column '' do |param_ref|
+            # noinspection RubyResolve
+            action_icons path: admin_ingest_job_parameter_ref_path(ingest_job, param_ref), actions: %i[edit delete]
+            help_icon param_ref.help
+          end
+        end
+        new_button :ingest_job, :parameter_ref
       end
     end
   end

@@ -43,11 +43,11 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.string "description"
     t.string "input_formats", array: true
     t.string "input_filename_regex"
-    t.bigint "manifestation_id"
+    t.bigint "representation_id"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "lock_version", default: 0, null: false
-    t.index ["manifestation_id"], name: "index_conversion_jobs_on_manifestation_id"
+    t.index ["representation_id"], name: "index_conversion_jobs_on_representation_id"
   end
 
   create_table "conversion_tasks", force: :cascade do |t|
@@ -117,15 +117,14 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
   end
 
   create_table "ingest_jobs", force: :cascade do |t|
-    t.string "stage", null: false
+    t.string "name", null: false
+    t.string "description"
     t.bigint "ingest_agreement_id"
-    t.bigint "workflow_id"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "lock_version", default: 0, null: false
-    t.index ["ingest_agreement_id", "stage"], name: "index_ingest_jobs_on_ingest_agreement_id_and_stage", unique: true
+    t.index ["ingest_agreement_id", "name"], name: "index_ingest_jobs_on_ingest_agreement_id_and_name", unique: true
     t.index ["ingest_agreement_id"], name: "index_ingest_jobs_on_ingest_agreement_id"
-    t.index ["workflow_id"], name: "index_ingest_jobs_on_workflow_id"
   end
 
   create_table "ingest_models", force: :cascade do |t|
@@ -149,6 +148,18 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.index ["ingest_agreement_id"], name: "index_ingest_models_on_ingest_agreement_id"
     t.index ["retention_policy_id"], name: "index_ingest_models_on_retention_policy_id"
     t.index ["template_id"], name: "index_ingest_models_on_template_id"
+  end
+
+  create_table "ingest_tasks", force: :cascade do |t|
+    t.string "stage"
+    t.bigint "ingest_job_id"
+    t.bigint "workflow_id"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "lock_version", default: 0, null: false
+    t.index ["ingest_job_id", "stage"], name: "index_ingest_tasks_on_ingest_job_id_and_stage", unique: true
+    t.index ["ingest_job_id"], name: "index_ingest_tasks_on_ingest_job_id"
+    t.index ["workflow_id"], name: "index_ingest_tasks_on_workflow_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -175,25 +186,6 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.string "encrypted_password", default: "", null: false
     t.integer "lock_version", default: 0, null: false
     t.index ["email"], name: "index_login_users_on_email", unique: true
-  end
-
-  create_table "manifestations", force: :cascade do |t|
-    t.integer "position", null: false
-    t.string "label", null: false
-    t.boolean "optional", default: false
-    t.bigint "access_right_id"
-    t.bigint "representation_info_id", null: false
-    t.bigint "from_id"
-    t.bigint "ingest_model_id", null: false
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.integer "lock_version", default: 0, null: false
-    t.index ["access_right_id"], name: "index_manifestations_on_access_right_id"
-    t.index ["from_id"], name: "index_manifestations_on_from_id"
-    t.index ["ingest_model_id", "label"], name: "index_manifestations_on_ingest_model_id_and_label", unique: true
-    t.index ["ingest_model_id", "position"], name: "index_manifestations_on_ingest_model_id_and_position", unique: true
-    t.index ["ingest_model_id"], name: "index_manifestations_on_ingest_model_id"
-    t.index ["representation_info_id"], name: "index_manifestations_on_representation_info_id"
   end
 
   create_table "material_flows", force: :cascade do |t|
@@ -245,13 +237,26 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.text "help"
     t.string "default"
     t.string "constraint"
-    t.string "delegation"
     t.string "with_parameters_type"
     t.bigint "with_parameters_id"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "lock_version", default: 0, null: false
     t.index ["with_parameters_type", "with_parameters_id"], name: "index_parameter_defs_on_with_parameters"
+  end
+
+  create_table "parameter_refs", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "delegation"
+    t.string "description"
+    t.text "help"
+    t.string "default"
+    t.string "with_param_refs_type"
+    t.bigint "with_param_refs_id"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "lock_version", default: 0, null: false
+    t.index ["with_param_refs_type", "with_param_refs_id"], name: "index_parameter_refs_on_with_param_refs"
   end
 
   create_table "parameter_values", force: :cascade do |t|
@@ -284,6 +289,25 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.integer "lock_version", default: 0, null: false
     t.index ["name"], name: "index_representation_infos_on_name", unique: true
     t.index ["preservation_type"], name: "index_representation_infos_on_preservation_type"
+  end
+
+  create_table "representations", force: :cascade do |t|
+    t.integer "position", null: false
+    t.string "label", null: false
+    t.boolean "optional", default: false
+    t.bigint "access_right_id"
+    t.bigint "representation_info_id", null: false
+    t.bigint "from_id"
+    t.bigint "ingest_model_id", null: false
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "lock_version", default: 0, null: false
+    t.index ["access_right_id"], name: "index_representations_on_access_right_id"
+    t.index ["from_id"], name: "index_representations_on_from_id"
+    t.index ["ingest_model_id", "label"], name: "index_representations_on_ingest_model_id_and_label", unique: true
+    t.index ["ingest_model_id", "position"], name: "index_representations_on_ingest_model_id_and_position", unique: true
+    t.index ["ingest_model_id"], name: "index_representations_on_ingest_model_id"
+    t.index ["representation_info_id"], name: "index_representations_on_representation_info_id"
   end
 
   create_table "retention_policies", force: :cascade do |t|
@@ -356,27 +380,28 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.index ["name"], name: "index_workflows_on_name", unique: true
   end
 
-  add_foreign_key "conversion_jobs", "manifestations"
+  add_foreign_key "conversion_jobs", "representations"
   add_foreign_key "conversion_tasks", "conversion_jobs"
   add_foreign_key "conversion_tasks", "converters"
   add_foreign_key "ingest_agreements", "material_flows"
   add_foreign_key "ingest_agreements", "organizations"
   add_foreign_key "ingest_agreements", "producers"
   add_foreign_key "ingest_jobs", "ingest_agreements"
-  add_foreign_key "ingest_jobs", "workflows"
   add_foreign_key "ingest_models", "access_rights"
   add_foreign_key "ingest_models", "ingest_agreements"
   add_foreign_key "ingest_models", "ingest_models", column: "template_id"
   add_foreign_key "ingest_models", "retention_policies"
+  add_foreign_key "ingest_tasks", "ingest_jobs"
+  add_foreign_key "ingest_tasks", "workflows"
   add_foreign_key "items", "items", column: "parent_id", on_delete: :cascade
   add_foreign_key "items", "packages", on_delete: :cascade
-  add_foreign_key "manifestations", "access_rights"
-  add_foreign_key "manifestations", "ingest_models"
-  add_foreign_key "manifestations", "manifestations", column: "from_id"
-  add_foreign_key "manifestations", "representation_infos"
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
   add_foreign_key "packages", "ingest_agreements"
+  add_foreign_key "representations", "access_rights"
+  add_foreign_key "representations", "ingest_models"
+  add_foreign_key "representations", "representation_infos"
+  add_foreign_key "representations", "representations", column: "from_id"
   add_foreign_key "status_logs", "items", on_delete: :cascade
   add_foreign_key "storages", "organizations"
   add_foreign_key "workflow_tasks", "tasks"

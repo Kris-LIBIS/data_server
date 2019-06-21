@@ -1,0 +1,42 @@
+- name: 'group + alma + collection'
+  description: 'Group files into IEs, get metadata from Alma and create collections'
+  stage: 'PreIngest'
+  tasks:
+    - task: 'FileGrouper'
+    - task: 'IeBuilder'
+    - task: 'ManifestationBuilder'
+    - task: 'MetadataAlmaCollector'
+    - task: 'CollectionCreator'
+  parameters:
+    group_regex:
+      delegation: 'FileGrouper#group_regex'
+    collection_label:
+      delegation: 'FileGrouper#collection_label'
+    group_name:
+      delegation: 'FileGrouper#group_name'
+    group_label:
+      delegation: 'FileGrouper#group_label'
+    file_label:
+      delegation: 'FileGrouper#file_label'
+    collection_navigate:
+      delegation: 'FileGrouper#collection_navigate'
+    collection_publish:
+      delegation: 'FileGrouper#collection_navigate'
+    field:
+      delegation: 'MetadataAlmaCollector#field'
+    term:
+      delegation: 'MetadataAlmaCollector#term'
+    match_regex:
+      delegation: 'MetadataAlmaCollector#match_regex'
+    converter:
+      delegation: 'MetadataAlmaCollector#converter'
+    title_to_name:
+      delegation: 'MetadataAlmaCollector#title_to_name'
+    title_to_label:
+      delegation: 'MetadataAlmaCollector#title_to_label'
+    new_label:
+      delegation: 'MetadataAlmaCollector#new_label'
+    fail_on_not_found:
+      delegation: 'MetadataAlmaCollector#fail_on_not_found'
+    base_collection:
+      delegation: 'CollectionCreator#base_collection'

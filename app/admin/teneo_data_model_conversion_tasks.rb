@@ -2,9 +2,9 @@
 require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::ConversionTask, as: 'ConversionTask' do
-  menu false
 
-  belongs_to :conversion_job
+  belongs_to :conversion_job, parent_class: Teneo::DataModel::ConversionJob
+  reorderable
 
   config.sort_order = 'position_asc'
   config.batch_actions = false
@@ -15,12 +15,16 @@ ActiveAdmin.register Teneo::DataModel::ConversionTask, as: 'ConversionTask' do
 
   filter :name
 
-  index do
+  index as: :reorderable_table do
     back_button
-    column :position
     column :name
     column :description
     column :converter
+    # noinspection RubyResolve
+    list_column 'Parameters' do |task|
+      task.parameter_values.inject({}) { |hash, value| hash[value.name] = value.value; hash }
+    end
+
     column :output_format
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
@@ -31,7 +35,6 @@ ActiveAdmin.register Teneo::DataModel::ConversionTask, as: 'ConversionTask' do
   show do
     back_button
     attributes_table do
-      row :position
       row :name
       row :description
       row :converter
@@ -57,7 +60,6 @@ ActiveAdmin.register Teneo::DataModel::ConversionTask, as: 'ConversionTask' do
 
   form do |f|
     f.inputs 'Conversion task info' do
-      f.input :position, required: true
       f.input :name, required: true
       f.input :description
       f.input :converter, as: :select, collection: Teneo::DataModel::Converter.all

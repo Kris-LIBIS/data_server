@@ -1,0 +1,139 @@
+- name: 'FormatDirIdentifier'
+  stage: 'PreProcess'
+  class_name: 'Libis::Ingester::FormatDirIdentifier'
+  description: 'Tries to determine the format of all files in a directories.'
+  help: "This task will perform the format identification on each FileItem object in the ingest run. It relies completely
+        on the format identification algorithms in Libis::Format::Identifier. If a format could not be determined, the
+        MIME type 'application/octet-stream' will be set and a warning message is logged.
+
+        Note that this task will first determine the formats of all files in the given folder and subfolders (if deep_scan
+        is set to true). It will then iterate over each known FileItem to find the matching file format information. The
+        upside of this approach is that it requires the start of each of the underlying tools only once for the whole set
+        of files, compared with once for each file for the FormatIdentifier. It will therefore perform significantly
+        faster than the latter since starting Droid is very slow. However, if there are a lot of files, this also means
+        that the format information for a lot of files needs to be kept in memory during the whole task run and this
+        task will be more memory-intensive than it's file-by-file counterpart. If there are also a lot of files in the
+        source folder that are ignored, these will also be format-identified by this task, resulting in a significant
+        overhead.
+
+        You should therefore carefully consider which task to use. Of course this task will only be usable if all source
+        files are stored in a single folder tree. If the files are disparsed over a large set of directories, it makes
+        no sense in using this task to format-identify the whole dir tree and the FormatIdentifier task will probably
+        be faster in that case."
+  parameters:
+    folder:
+      data_type: 'string'
+      description: 'Directory with files that need to be idententified.'
+      help: 'The directory tree will be parsed and ingest objects will be created for files and folders found.'
+    deep_scan:
+      data_type: 'bool'
+      default: true
+      description: 'Also identify files recursively in subfolders?'
+    format_options:
+      data_type: 'hash'
+      description: 'Set of options to pass on to the format identifier tool.'
+- name: 'FormatFileIdentifier'
+  stage: 'PreProcess'
+  class_name: 'Libis::Ingester::FormatDirIdentifier'
+  description: 'Tries to determine the format of all files in a directories.'
+  help: "This task will perform the format identification on each FileItem object in the ingest run. It relies completely
+        on the format identification algorithms in Libis::Format::Identifier. If a format could not be determined, the
+        MIME type 'application/octet-stream' will be set and a warning message is logged.
+
+        Note that this task will first determine the formats of all files in the given folder and subfolders (if deep_scan
+        is set to true). It will then iterate over each known FileItem to find the matching file format information. The
+        upside of this approach is that it requires the start of each of the underlying tools only once for the whole set
+        of files, compared with once for each file for the FormatIdentifier. It will therefore perform significantly
+        faster than the latter since starting Droid is very slow. However, if there are a lot of files, this also means
+        that the format information for a lot of files needs to be kept in memory during the whole task run and this
+        task will be more memory-intensive than it's file-by-file counterpart. If there are also a lot of files in the
+        source folder that are ignored, these will also be format-identified by this task, resulting in a significant
+        overhead.
+
+        You should therefore carefully consider which task to use. Of course this task will only be usable if all source
+        files are stored in a single folder tree. If the files are disparsed over a large set of directories, it makes
+        no sense in using this task to format-identify the whole dir tree and the FormatIdentifier task will probably
+        be faster in that case."
+  parameters:
+    folder:
+      data_type: 'string'
+      description: 'Directory with files that need to be idententified.'
+      help: 'The directory tree will be parsed and ingest objects will be created for files and folders found.'
+    deep_scan:
+      data_type: 'bool'
+      default: true
+      description: 'Also identify files recursively in subfolders?'
+    format_options:
+      data_type: 'hash'
+      description: 'Set of options to pass on to the format identifier tool.'
+- name: 'ChecksumTester'
+  stage: 'PreProcess'
+  class_name: 'Libis::Ingester::ChecksumTester'
+  description: 'Check the checksum of FileItem objects.'
+  help: "This preprocessor task calculates the checksum of a file if the 'checksum_type' parameter is filled in. See the
+        parameter's definition for a list of supported checksum algorithms.
+
+        By also filling in a value for the 'checksum_file' parameter, you can supply a file with known checksums for
+        each file. The task will then also verify the calculated checksum with the one in the file and report an error
+        if there is a mismatch.
+
+        If the 'checksum_file' file cannot be found/read, checksum testing is skipped."
+  parameters:
+    checksum_type:
+      data_type: 'string'
+      description: 'Checksum type to use.'
+      constraint: ['MD5', 'SHA1', 'SHA256', 'SHA384', 'SHA512']
+    checksum_file:
+      data_type: 'string'
+      description: 'File with pairs of file names and checksums.'
+- name: 'FileMimetypeChecker'
+  stage: 'PreProcess'
+  class_name: 'Libis::Ingester::FileMimetypeChecker'
+  description: 'Check the MIME type of the collected files.'
+  help: "With the help of this task a check can be performed if the files found are all of the expected type.
+
+        Each file's MIME type will be checked against the regular expression in the 'mimetype_regexp' parameter. If a
+        file's MIME type has not yet been determined, a warning will be logged and the file will be accepted without
+        verifying the MIME type.
+
+        If the 'mimetype_regexp' is not filled in, no MIME type checking will be performed at all."
+  parameters:
+    mimetype_regexp:
+      data_type: 'string'
+      description: 'Match files with MIME types that match the given regular expression. Ignored if empty.'
+- name: 'DirVirusChecker'
+  stage: 'PreProcess'
+  class_name: 'Libis::Ingester::DirVirusChecker'
+  description: 'Scan all files in a directory tree for viruses.'
+  help: "Scanning a complete directory tree for viruses can be much faster that performing a virusscan on each file
+        individually, but it has the discadvantage that you cannot skip infected files and continue with the good
+        files. This task will fail if any file in the directory tree is infected."
+  parameters:
+    location:
+      data_type: 'string'
+      description: 'Directory to scan for viruses.'
+- name: 'FormatValidator'
+  stage: 'PreProcess'
+  class_name: 'Libis::Ingester::FormatValidator'
+  description: 'Validates the file formats.'
+  help: "Scanning a complete directory tree for viruses can be much faster that performing a virusscan on each file
+        individually, but it has the discadvantage that you cannot skip infected files and continue with the good
+        files. This task will fail if any file in the directory tree is infected."
+  parameters:
+    ext_mismatch:
+      data_type: 'string'
+      constraint: ['FAIL', 'WARN', 'FIX']
+      description: "Action to take when an extension mismatch is found."
+      help: "Valid values are:\n
+            - FAIL: report this as an error and stop processing this object\n
+            - WARN: report this as an error and continue (may cause issues later in Rosetta)\n
+            - FIX: change the file extension and continue"
+    encrypted_doc:
+      default: 'FAIL'
+      data_type: 'string'
+      constraint: ['FAIL', 'WARN', 'DUMMY']
+      description: 'Action to take when an encrypted document is found.'
+      help: "Valid values are:\n
+            - FAIL: report this as an error and stop processing this object\n
+            - WARN: report this as an error and continue (may cause issues later during ingest or in Rosetta)\n
+            - DUMMY: create a dummy file with a message why the file was rejected"

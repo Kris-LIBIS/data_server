@@ -23,8 +23,6 @@ ActiveAdmin.register Teneo::DataModel::RetentionPolicy, as: 'RetentionPolicy' do
   filter :name
   filter :description
   filter :ext_id
-  # filter :ingest_models
-  # filter :manifestations
 
   index do
     column :name

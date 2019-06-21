@@ -15,7 +15,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
                 :contact_ingest_list, :contact_collection_list, :contact_system_list,
                 :lock_version
 
-                filter :name
+  filter :name
   filter :organization
   filter :collection_name
 
@@ -39,7 +39,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
       row :name
       row :organization
       row 'Ingest contacts', as: :tags do
-          # noinspection RubyResolve
+        # noinspection RubyResolve
         resource.contact_ingest_list
       end
       row 'Collection contacts', as: :tags do
@@ -63,6 +63,10 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
       tab 'Ingest Models', class: 'panel_contents' do
         table_for ingest_agreement.ingest_models do
           column :name
+          # noinspection RubyResolve
+          list_column :representations do |model|
+            model.representations.map(&:name)
+          end
           column '' do |model|
             # noinspection RubyResolve
             action_icons path: admin_ingest_agreement_ingest_model_path(model.ingest_agreement, model)
@@ -75,6 +79,14 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
 
         table_for ingest_agreement.ingest_jobs do
           column :name
+          # noinspection RubyResolve
+          list_column :tasks do |job|
+            job.ingest_tasks.inject({}) { |hash, task| hash[task.stage] = task.workflow.name; hash }
+          end
+          # noinspection RubyResolve
+          list_column :parameters do |job|
+            job.parameter_refs.map(&:name)
+          end
           column '' do |job|
             # noinspection RubyResolve
             action_icons path: admin_ingest_agreement_ingest_job_path(job.ingest_agreement, job)

@@ -1,10 +1,10 @@
 #frozen_string_literal: true
 require 'action_icons'
 
-ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
+ActiveAdmin.register Teneo::DataModel::Representation, as: 'Representation' do
 
   belongs_to :ingest_model, parent_class: Teneo::DataModel::IngestModel
-  # navigation_menu :ingest_model
+  reorderable
 
   config.sort_order = 'position_asc'
   config.batch_actions = false
@@ -17,9 +17,8 @@ ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
   filter :access_right
   filter :representation_info
 
-  index do
+  index as: :reorderable_table do
     back_button
-    column :position
     column :label
     column :representation_info
     actions defaults: false do |object|
@@ -32,7 +31,6 @@ ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
     back_button
 
     attributes_table do
-      row :position
       row :label
       # noinspection RubyResolve
       bool_row :optional
@@ -44,17 +42,22 @@ ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
     tabs do
 
       tab 'Conversion jobs', class: 'panel_contents' do
-        table_for manifestation.conversion_jobs.order(position: 'asc') do
+        # noinspection RubyResolve
+        reorderable_table_for representation.conversion_jobs.order(position: 'asc') do
           column :name
           column :description
           column :input_formats
           column :input_filename_regex
+          # noinspection RubyResolve
+          list_column :tasks do |job|
+            job.conversion_tasks.map(&:name)
+          end
           column '' do |model|
             # noinspection RubyResolve
-            action_icons path: admin_manifestation_conversion_job_path(model.manifestation, model)
+            action_icons path: admin_representation_conversion_job_path(model.representation, model)
           end
         end
-        new_button :manifestation, :conversion_job
+        new_button :representation, :conversion_job
       end
 
     end
@@ -62,16 +65,14 @@ ActiveAdmin.register Teneo::DataModel::Manifestation, as: 'Manifestation' do
 
   form do |f|
     f.inputs 'Info' do
-      f.input :position
       f.input :label, required: true
       f.input :optional
       f.input :access_right_id, as: :select, collection: Teneo::DataModel::AccessRight.all
       f.input :representation_info_id, as: :select, collection: Teneo::DataModel::RepresentationInfo.all
-      f.input :from, as: :select, collection: resource.ingest_model.manifestations.all
+      f.input :from, as: :select, collection: resource.ingest_model.representations.all
       f.hidden_field :lock_version
     end
     actions
   end
-
 
 end

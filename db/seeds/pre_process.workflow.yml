@@ -1,0 +1,81 @@
+- name: 'format only'
+  description: 'Only format identification'
+  stage: 'PreProcess'
+  tasks:
+    - task: 'FormatDirIdentifier'
+  parameters:
+    location:
+      delegation: 'FormatDirIdentifier#folder'
+- name: 'checksum + format'
+  description: 'Format identification and checksum test'
+  stage: 'PreProcess'
+  tasks:
+    - task: 'ChecksumTester'
+      values:
+        recursive: true
+        checksum_type: 'MD5'
+    - task: 'FormatDirIdentifier'
+  parameters:
+    location:
+      delegation: 'FormatDirIdentifier#folder'
+    checksum_file:
+      delegation: 'ChecksumTester#checksum_file'
+      default: 'md5sums.txt'
+- name: 'format + mimetype'
+  description: 'Format identification and MIME type test'
+  stage: 'PreProcess'
+  tasks:
+    - task: 'FormatDirIdentifier'
+    - task: 'FileMimetypeChecker'
+      values:
+        recursive: true
+  parameters:
+    location:
+      delegation: 'FormatDirIdentifier#folder'
+    mimetype_regexp:
+      delegation: 'FileMimetypeChecker#mimetype_regexp'
+- name: 'checksum + format + mimetype'
+  description: 'Format identification, checksum test and MIME type test'
+  stage: 'PreProcess'
+  tasks:
+    - task: 'ChecksumTester'
+      values:
+        recursive: true
+        checksum_type: 'MD5'
+    - task: 'FormatDirIdentifier'
+    - task: 'FileMimetypeChecker'
+      values:
+        recursive: true
+  parameters:
+    location:
+      delegation: 'FormatDirIdentifier#folder'
+    checksum_file:
+      delegation: 'ChecksumTester#checksum_file'
+      default: 'md5sums.txt'
+    mimetype_regexp:
+      delegation: 'FileMimetypeChecker#mimetype_regexp'
+- name: 'viruscheck + format identification'
+  description: 'Virus check and Format identification'
+  stage: 'PreProcess'
+  tasks:
+    - task: 'DirVirusChecker'
+    - task: 'FormatDirIdentifier'
+  parameters:
+    location:
+      delegation: 'FormatDirIdentifier#folder'
+- name: 'viruscheck + format validation'
+  description: 'Virus check, Format identification and Format validation'
+  stage: 'PreProcess'
+  tasks:
+    - task: 'DirVirusChecker'
+    - task: 'FormatDirIdentifier'
+    - task: 'FormatValidator'
+  parameters:
+    location:
+      delegation: 'FormatDirIdentifier#folder'
+    ext_mismatch:
+      delegation: 'FormatValidator#ext_mismatch'
+      default: 'FIX'
+    encrypted_doc:
+      delegation: 'FormatValidator#encrypted_doc'
+      default: 'DUMMY'

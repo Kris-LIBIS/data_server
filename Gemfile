@@ -78,6 +78,7 @@ gem 'graphiql-rails', '1.5.0', group: :development
 gem 'activeadmin', github: 'Kris-LIBIS/activeadmin'
 gem 'activeadmin_addons'
 gem 'activeadmin_json_editor'
+gem 'activeadmin_reorderable'
 
 gem 'active_admin_theme'
 # gem 'arctic_admin'

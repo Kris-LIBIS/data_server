@@ -1,0 +1,10 @@
+- name: 'METS ingest'
+  description: 'Create METS file and submit to the repository'
+  stage: 'Ingest'
+  tasks:
+    - task: 'MetsCreator'
+    - task: 'Submitter'
+    - task: 'SubmissionChecker'
+  parameters:
+    force_label_to_title:
+      delegation: 'MetsCreator#force_label_to_title'

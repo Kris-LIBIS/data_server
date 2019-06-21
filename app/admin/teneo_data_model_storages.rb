@@ -4,7 +4,7 @@ require 'action_icons'
 ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   menu false
 
-  belongs_to :organization
+  belongs_to :organization, parent_class: Teneo::DataModel::Organization
 
   config.sort_order = 'name_asc'
   config.batch_actions = false

@@ -1,0 +1,13 @@
+- name: 'CSV export'
+  description: 'Create CSV file with report of ingested IEs'
+  stage: 'PostIngest'
+  tasks:
+    - task: 'Exporter'
+      values:
+        export_format: 'csv'
+  parameters:
+    export_dir:
+      delegation: 'Exporter#export_dir'
+    export_key:
+      delegation: 'Exporter#export_key'
+      default: 'item.name'

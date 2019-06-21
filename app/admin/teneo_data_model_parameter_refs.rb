@@ -33,13 +33,13 @@ ActiveAdmin.register Teneo::DataModel::ParameterRef, as: 'ParameterRef' do
     end
   end
 
-  permit_params :name, :description, :help, :default,
+  permit_params :name, :delegation, :description, :help, :default,
                 :with_param_refs_id, :with_param_refs_type, :lock_version
 
   form do |f|
     f.inputs '' do
       f.input :name, required: true
-      f.input :delegation, required: true
+      f.input :delegation, required: true, as: :tags
       f.input :description
       f.input :help, as: :text, input_html: {rows: 3}
       f.input :default

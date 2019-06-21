@@ -1,0 +1,136 @@
+- name: 'FileGrouper'
+  stage: 'PreIngest'
+  class_name: 'Libis::Ingester::FileGrouper'
+  description: 'Groups files into object based on file name.'
+  help: "Files that have part of their filename in common can be grouped into a single IE with this task.
+
+        First of all each file is matched against an expression defined in the 'group_regex' parameter. This regex
+        should define groups that will be used to extract common and unique pieces of the file names. Based on the
+        result of the regex matching, collections and IEs can be generated and file name and labels can be altered.
+
+        If the 'collection_label' parameter is filled in, the value will be evaluated and the resulting value will
+        be the name of a newly created Collection object. If no value is present, no Collection will be created.
+
+        The value of the parameters 'collection_navigate' and 'collection_publish' set the respective properties of
+        the newly created collections.
+
+        The 'group_label' parameter defines the Ruby expression that will be evaluated to retrieve the name of the
+        group (IE) that will be created later. It the value is not present, no grouping of files into IEs will be
+        performed. Optionally a different expression for the group name can be added in 'group_name'.
+
+        With the 'file_label' and 'file_name' parameters, expressions can be defined that will change the name and
+        label of the files."
+  parameters:
+    group_regex:
+      data_type: 'string'
+      description: 'Regular expression for matching; nothing happens if nil.'
+    group_source:
+      data_type: 'string'
+      default: 'item.filename'
+      description: 'The ruby expression of the value we should use for the matching.'
+    collection_label:
+      data_type: 'string'
+      description: 'A Ruby expression for the collection path to put the target in.'
+    group_label:
+      data_type: 'string'
+      description: 'A Ruby expression for the label of the group; default: nil, meaning no grouping.'
+    group_name:
+      data_type: 'string'
+      description: 'A Ruby expression for the name of the group; default: same as group_label.'
+    file_label:
+      data_type: 'string'
+      description: 'A Ruby expression for the label of the files; default: file name.'
+    file_name:
+      data_type: 'string'
+      description: "A Ruby expression for the name of the files; default: don\'t change."
+    collection_navigate:
+      data_type: 'bool'
+      default: true
+      description: 'Allow navigation through the collections.'
+    collection_publish:
+      data_type: 'bool'
+      default: true
+      description: 'Publish the collections.'
+- name: 'IeBuilder'
+  stage: 'PreIngest'
+  class_name: 'Libis::Ingester::IeBuilder'
+  description: 'Create the IE.'
+- name: 'ManifestationBuilder'
+  stage: 'PreIngest'
+  class_name: 'Libis::Ingester::ManifestationBuilder'
+  description: 'Create the derived copies as described in the Ingest Model.'
+  parameters:
+    on_convert_error:
+      data_type: 'string'
+      default: 'FAIL'
+      constraint: ['FAIL', 'DROP', 'COPY']
+      description: 'Action to take when a file conversion fails.'
+      help: "Valid values are:\n' +
+            - FAIL: report this as an error and stop processing the item\n
+            - DROP: report this as an error and continue without the file\n
+            - COPY: report the error and copy the source file instead\n
+            Note that dropping the file may cause errors later, e.g. with empty representations"
+- name: 'MetadataAlmaCollector'
+  stage: 'PreIngest'
+  class_name: 'Libis::Ingester::MetadataAlmaCollector'
+  description: 'Get metadata from Alma and convert to Dublin Core.'
+  parameters:
+    field:
+      data_type: 'string'
+      default: 'alma.mms_id'
+      description: 'Field to search on. If nil (default) no search will be performed, but a simple id lookup will happen instead.'
+    term:
+      data_type: 'string'
+      description: 'Ruby expression that builds the search term to be used in the metadata lookup.'
+      help: "If no term is given, the item name will be used. Use match_regex and match_term to create a term dynamically.\n
+            Available data are: \n
+            - item.filename: file name of the object, \n
+            - item.filepath: relative path of the object, \n
+            - item.fullpath: full path of the object, \n
+            - item.name: name of the object."
+    match_regex:
+      data_type: 'string'
+      description: "Regular expression to check against the 'match_term' value."
+      help: "The results of the match can be used in the \'term\' parameter. If nil, no Regexp matching is performed."
+    match_term:
+      data_type: 'string'
+      default: 'item.name'
+      description: "Ruby expression evaluating to the value to be checked against the 'match_regex'."
+    host:
+      data_type: 'string'
+      description: 'URL of the Alma web service.'
+    library:
+      data_type: 'string'
+      default: '32KUL_LIBIS_NETWORK'
+      description: 'SRU institution code.'
+    converter:
+      data_type: 'string'
+      default: 'Kuleuven'
+      description: 'Match files with MIME types that match the given regular expression. Ignored if empty.'
+- name: 'CollectionCreator'
+  stage: 'PreIngest'
+  class_name: 'Libis::Ingester::CollectionCreator'
+  description: 'Create the collection tree in Rosetta corresponding to the tree of Collection objects in the ingest run.'
+  help: "For each Collection object in the ingest run tree, a Rosetta collection is created. The collection tree can be
+        created as subtree of an existing Rosetta collection by filling in the path in the 'collection' parameter. The
+        collection path does not have to exist and will be created on the fly if missing.
+
+        By default, the Rosetta collections will be created with 'navigate' and 'publish' flags on, but this behaviour
+        can be changed with the parameters with corresponding names. The ingest Collection object's respective
+        properties have priority over these parameter values. The parameter values will also be used when automatically
+        creating intermediate collections in the tree."
+  parameters:
+    collection:
+      data_type: 'string'
+      description: 'Existing collection path to add the documents to.'
+    navigate:
+      data_type: 'bool'
+      default: true
+      description: 'Allow the user to navigate in the collections.'
+    publish:
+      data_type: 'bool'
+      default: true
+      description: 'Publish the collections.'
+    root_collection:
+      data_type: 'string'
+      description: "Root collection to append the collection tree given by the parameter 'collection' to."

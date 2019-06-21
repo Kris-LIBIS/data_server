@@ -4,7 +4,7 @@ require 'action_icons'
 ActiveAdmin.register Teneo::DataModel::IngestModel, as: 'IngestModel' do
 
   belongs_to :ingest_agreement, parent_class: Teneo::DataModel::IngestAgreement
-  # navigation_menu :ingest_agreement
+  reorderable
 
   config.sort_order = 'name_asc'
   config.batch_actions = false
@@ -50,17 +50,24 @@ ActiveAdmin.register Teneo::DataModel::IngestModel, as: 'IngestModel' do
 
     tabs do
 
-      tab 'Manifestations', class: 'panel_contents' do
-          table_for ingest_model.manifestations.order(position: 'asc') do
-            column :label
-            column :optional
-            column '' do |model|
-              # noinspection RubyResolve
-              action_icons path: admin_ingest_model_manifestation_path(model.ingest_model, model)
-            end
+      tab 'Representations', class: 'panel_contents' do
+        # noinspection RubyResolve
+        reorderable_table_for ingest_model.representations do
+          column :label
+          column :optional
+          column :access_right
+          column :representation_info
+          # noinspection RubyResolve
+          list_column :conversion_jobs do |representation|
+            representation.conversion_jobs.map(&:name)
           end
-          new_button :ingest_model, :manifestation
+          column '' do |model|
+            # noinspection RubyResolve
+            action_icons path: admin_ingest_model_representation_path(model.ingest_model, model)
+          end
         end
+        new_button :ingest_model, :representation
+      end
 
     end
   end

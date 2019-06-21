@@ -1,0 +1,36 @@
+- name: 'MetsCreator'
+  stage: 'Ingest'
+  class_name: 'Libis::Ingester::MetsCreator'
+  description: 'Create METS files for each IE in the package and prepare a SIP.'
+  parameters:
+    root_collection:
+      data_type: 'string'
+      description: "Root collection to add the collections to."
+    collection:
+      data_type: 'string'
+      description: 'Collection to add the documents to.'
+    copy_files:
+      data_type: 'bool'
+      default: false
+      description: 'Copy file info ingest dir instead of creating a symbolic link.'
+    force_label_to_title:
+      data_type: 'bool'
+      default: false
+      description: "Force the IE's label into the metadata's dc:title field."
+- name: 'Submitter'
+  stage: 'Ingest'
+  class_name: 'Libis::Ingester::Submitter'
+  description: 'Submit the SIP to the repository.'
+- name: 'SubmissionChecker'
+  stage: 'Ingest'
+  class_name: 'Libis::Ingester::Submitter'
+  description: 'Submit the SIP to the repository.'
+  parameters:
+    retry_count:
+      data_type: 'integer'
+      default: 60
+      description: "Number of times the submitter will check if the SIP has been ingested."
+    retry_interval:
+      data_type: 'integer'
+      default: 60
+      description: 'The number of seconds the submitter will pause between retries.'
