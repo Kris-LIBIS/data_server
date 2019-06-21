@@ -17,7 +17,9 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
                 ingest_agreements_attributes: [:id, :_destroy, :organization_id, :name]
 
   index do
-    column :name
+    column :name do |org|
+      auto_link(org)
+    end
     column :description
     column :inst_code
     actions defaults: false do |object|
@@ -55,7 +57,9 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
 
         # noinspection RubyResolve
         table_for organization.storages do
-          column :name
+          column :name do |storage|
+            auto_link storage
+          end
           column :protocol
           # noinspection RubyResolve
           list_column :parameter_values do |storage|
@@ -63,7 +67,7 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
           end
           column '' do |storage|
             # noinspection RubyResolve
-            action_icons path: admin_organization_storage_path(storage.organization, storage)
+            action_icons path: admin_organization_storage_path(storage.organization, storage), actions: [:delete]
           end
         end
         new_button :organization, :storage
@@ -72,18 +76,20 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
 
       tab 'Ingest Agreements', class: 'panel_contents' do
         table_for organization.ingest_agreements do
-          column :name
+          column :name do |agreement|
+            auto_link agreement
+          end
           # noinspection RubyResolve
           list_column :models do |agreement|
-            agreement.ingest_models.map(&:name)
+            agreement.ingest_models.map {|x| auto_link x}
           end
           # noinspection RubyResolve
           list_column :jobs do |agreement|
-            agreement.ingest_jobs.map(&:name)
+            agreement.ingest_jobs.map {|x| auto_link x}
           end
           column '' do |agreement|
             # noinspection RubyResolve
-            action_icons path: admin_organization_ingest_agreement_path(agreement.organization, agreement)
+            action_icons path: admin_organization_ingest_agreement_path(agreement.organization, agreement), actions: [:delete]
           end
         end
         new_button(:organization, :ingest_agreement)

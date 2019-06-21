@@ -18,8 +18,7 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
 
   index do
     column :name do |user|
-      # noinspection RubyBlockToMethodReference
-      user.name
+      auto_link user
     end
 
     column :email
@@ -28,14 +27,14 @@ ActiveAdmin.register Teneo::DataModel::User, as: 'User' do
       # noinspection RubyResolve
       list_column role do |user|
         # noinspection RubyBlockToMethodReference
-        user.organizations_for(role).sort_by {|x| x.name}
+        user.organizations_for(role).sort_by {|x| x.name}.map {|x| auto_link x}
       end
     end
 
     # noinspection RubyResolve
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference
-      action_icons path: resource_path(object)
+      action_icons path: resource_path(object), actions: [:delete]
     end
   end
 

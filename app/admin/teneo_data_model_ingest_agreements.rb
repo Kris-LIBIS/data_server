@@ -21,13 +21,15 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
 
   index do
     back_button
-    column :name
+    column :name do |agreement|
+      auto_link agreement
+    end
     column :organization
     column :project_name
     column :collection_name
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons path: resource_path(object)
+      action_icons path: resource_path(object), actions: [:delete]
     end
 
   end
@@ -62,14 +64,16 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
     tabs do
       tab 'Ingest Models', class: 'panel_contents' do
         table_for ingest_agreement.ingest_models do
-          column :name
+          column :name do |model|
+            auto_link model
+          end
           # noinspection RubyResolve
           list_column :representations do |model|
-            model.representations.map(&:name)
+            model.representations.map {|x| auto_link x}
           end
           column '' do |model|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_agreement_ingest_model_path(model.ingest_agreement, model)
+            action_icons path: admin_ingest_agreement_ingest_model_path(model.ingest_agreement, model), actions: [:delete]
           end
         end
         new_button :ingest_agreement, :ingest_model
@@ -78,10 +82,12 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
       tab 'Ingest Jobs', class: 'panel_contents' do
 
         table_for ingest_agreement.ingest_jobs do
-          column :name
+          column :name do |job|
+            auto_link job
+          end
           # noinspection RubyResolve
           list_column :tasks do |job|
-            job.ingest_tasks.inject({}) { |hash, task| hash[task.stage] = task.workflow.name; hash }
+            job.ingest_tasks.inject({}) { |hash, task| hash[task.stage] = auto_link(task.workflow); hash }
           end
           # noinspection RubyResolve
           list_column :parameters do |job|
@@ -89,7 +95,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
           end
           column '' do |job|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_agreement_ingest_job_path(job.ingest_agreement, job)
+            action_icons path: admin_ingest_agreement_ingest_job_path(job.ingest_agreement, job), actions: [:delete]
           end
         end
         new_button :ingest_agreement, :ingest_job
@@ -98,10 +104,12 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
       tab 'Packages', class: 'panel_contents' do
 
         table_for ingest_agreement.packages do
-          column :name
+          column :name do |package|
+            auto_link package
+          end
           column '' do |package|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_agreement_package_path(package.ingest_agreement, package)
+            action_icons path: admin_ingest_agreement_package_path(package.ingest_agreement, package), actions: [:delete]
           end
         end
 

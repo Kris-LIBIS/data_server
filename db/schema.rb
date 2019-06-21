@@ -47,6 +47,8 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "lock_version", default: 0, null: false
+    t.index ["representation_id", "name"], name: "index_conversion_jobs_on_representation_id_and_name", unique: true
+    t.index ["representation_id", "position"], name: "index_conversion_jobs_on_representation_id_and_position", unique: true
     t.index ["representation_id"], name: "index_conversion_jobs_on_representation_id"
   end
 
@@ -222,7 +224,6 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.string "stage"
     t.string "status"
     t.string "base_dir"
-    t.jsonb "config", default: {}
     t.bigint "ingest_agreement_id", null: false
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
@@ -365,6 +366,9 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.integer "position"
     t.bigint "workflow_id", null: false
     t.bigint "task_id", null: false
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "lock_version", default: 0, null: false
     t.index ["task_id"], name: "index_workflow_tasks_on_task_id"
     t.index ["workflow_id", "position"], name: "index_workflow_tasks_on_workflow_id_and_position", unique: true
     t.index ["workflow_id"], name: "index_workflow_tasks_on_workflow_id"
