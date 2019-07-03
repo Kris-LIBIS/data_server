@@ -53,7 +53,7 @@ gem 'therubyracer'
 gem 'normalize-rails'
 
 # import DataModel
-gem 'teneo-data_model'
+gem 'teneo-data_model', '~> 0.2'
 
 gem 'tty-prompt'
 gem 'tty-spinner'

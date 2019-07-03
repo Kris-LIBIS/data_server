@@ -12,7 +12,7 @@ ActiveAdmin.register Teneo::DataModel::ParameterValue, as: 'ParameterValue' do
 
   controller do
     belongs_to :storage, parent_class: Teneo::DataModel::Storage, polymorphic: true
-    belongs_to :workflow_task, parent_class: Teneo::DataModel::WorkflowTask, polymorphic: true
+    belongs_to :stage_task, parent_class: Teneo::DataModel::StageTask, polymorphic: true
     belongs_to :ingest_task, parent_class: Teneo::DataModel::IngestTask, polymorphic: true
     belongs_to :package, parent_class: Teneo::DataModel::Package, polymorphic: true
     belongs_to :conversion_task, parent_class: Teneo::DataModel::ConversionTask, polymorphic: true

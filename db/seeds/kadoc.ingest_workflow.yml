@@ -1,6 +1,6 @@
 - ingest_agreement: 'Kerk en Leven'
   name: 'Kerk en Leven'
-  description: 'Ingest job for Kerk en Leven'
+  description: 'Ingest workflow for Kerk en Leven'
   tasks:
     - stage: 'Collect'
       workflow: 'Recursive file collect'

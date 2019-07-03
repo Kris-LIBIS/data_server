@@ -9,19 +9,19 @@ representations:
   - label: 'Archiefkopie (scans)'
     representation_info: 'ARCHIVE'
     access_right:  'KADOC admin'
-    conversion_jobs:
+    conversion_workflows:
       - name: 'copy JPEG files'
         input_formats: ['JPG']
   - label: 'Archiefkopie (OCR)'
     representation_info: 'ARCHIVE_OCR'
     access_right:  'KADOC admin'
-    conversion_jobs:
+    conversion_workflows:
       - name: 'copy PDF files'
         input_formats: ['PDF']
   - label: 'Consultatiekopie'
     representation_info: 'VIEW_MAIN'
     from: 'Archiefkopie (OCR)'
-    conversion_jobs:
+    conversion_workflows:
       - name: 'Assemble PDF files'
         input_formats: ['PDF']
         tasks:

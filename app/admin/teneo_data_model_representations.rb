@@ -41,23 +41,23 @@ ActiveAdmin.register Teneo::DataModel::Representation, as: 'Representation' do
 
     tabs do
 
-      tab 'Conversion jobs', class: 'panel_contents' do
+      tab 'Conversion workflows', class: 'panel_contents' do
         # noinspection RubyResolve
-        reorderable_table_for representation.conversion_jobs.order(position: 'asc') do
+        reorderable_table_for representation.conversion_workflows.order(position: 'asc') do
           column :name
           column :description
           column :input_formats
           column :input_filename_regex
           # noinspection RubyResolve
-          list_column :tasks do |job|
-            job.conversion_tasks.map(&:name)
+          list_column :tasks do |workflow|
+            workflow.conversion_tasks.map(&:name)
           end
           column '' do |model|
             # noinspection RubyResolve
-            action_icons path: admin_representation_conversion_job_path(model.representation, model)
+            action_icons path: admin_representation_conversion_workflow_path(model.representation, model)
           end
         end
-        new_button :representation, :conversion_job
+        new_button :representation, :conversion_workflow
       end
 
     end

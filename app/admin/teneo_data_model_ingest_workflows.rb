@@ -1,7 +1,7 @@
 #frozen_string_literal: true
 require 'action_icons'
 
-ActiveAdmin.register Teneo::DataModel::IngestJob, as: 'IngestJob' do
+ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
 
   belongs_to :ingest_agreement, parent_class: Teneo::DataModel::IngestAgreement
 
@@ -31,8 +31,10 @@ ActiveAdmin.register Teneo::DataModel::IngestJob, as: 'IngestJob' do
     end
     tabs do
       tab 'Ingest Tasks' do
-        table_for ingest_job.ingest_tasks do
+        table_for ingest_workflow.ingest_tasks do
           column :stage
+          # noinspection RubyResolve
+          toggle_bool_column :autorun
           column :workflow
           # noinspection RubyResolve
           list_column :parameter_values do |task|
@@ -40,24 +42,24 @@ ActiveAdmin.register Teneo::DataModel::IngestJob, as: 'IngestJob' do
           end
           column '' do |model|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_job_ingest_task_path(model.ingest_job, model)
+            action_icons path: admin_ingest_workflow_ingest_task_path(model.ingest_workflow, model)
           end
         end
-        new_button :ingest_job, :ingest_task
+        new_button :ingest_workflow, :ingest_task
       end
       tab 'Parameters', class: 'panel_contents' do
-        table_for ingest_job.parameter_refs.order(:id) do
+        table_for ingest_workflow.parameter_refs.order(:id) do
           column :name
           column :description
           column :delegation, as: :tags
           column :default
           column '' do |param_ref|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_job_parameter_ref_path(ingest_job, param_ref), actions: %i[edit delete]
+            action_icons path: admin_ingest_workflow_parameter_ref_path(ingest_workflow, param_ref), actions: %i[edit delete]
             help_icon param_ref.help
           end
         end
-        new_button :ingest_job, :parameter_ref
+        new_button :ingest_workflow, :parameter_ref
       end
     end
   end

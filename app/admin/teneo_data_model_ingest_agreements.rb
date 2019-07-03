@@ -10,7 +10,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
   config.batch_actions = false
 
   permit_params :name, :project_name, :collection_name,
-                :collection_description, :ingest_job_name,
+                :collection_description, :ingest_workflow_name,
                 :organization_id, :producer_id, :material_flow_id,
                 :contact_ingest_list, :contact_collection_list, :contact_system_list,
                 :lock_version
@@ -52,11 +52,11 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
         # noinspection RubyResolve
         resource.contact_system_list
       end
-      row :ingest_job_name
+      row :ingest_workflow_name
       row :project_name
       row :collection_name
       row :collection_description
-      row :ingest_job_name
+      row :ingest_workflow_name
       row :producer
       row :material_flow
     end
@@ -79,26 +79,26 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
         new_button :ingest_agreement, :ingest_model
       end
 
-      tab 'Ingest Jobs', class: 'panel_contents' do
+      tab 'Ingest Workflows', class: 'panel_contents' do
 
-        table_for ingest_agreement.ingest_jobs do
-          column :name do |job|
-            auto_link job
+        table_for ingest_agreement.ingest_workflows do
+          column :name do |workflow|
+            auto_link workflow
           end
           # noinspection RubyResolve
-          list_column :tasks do |job|
-            job.ingest_tasks.inject({}) { |hash, task| hash[task.stage] = auto_link(task.workflow); hash }
+          list_column :tasks do |workflow|
+            workflow.ingest_tasks.inject({}) { |hash, task| hash[task.stage] = auto_link(task.stage_workflow); hash }
           end
           # noinspection RubyResolve
-          list_column :parameters do |job|
-            job.parameter_refs.map(&:name)
+          list_column :parameters do |workflow|
+            workflow.parameter_refs.map(&:name)
           end
-          column '' do |job|
+          column '' do |workflow|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_agreement_ingest_job_path(job.ingest_agreement, job), actions: [:delete]
+            action_icons path: admin_ingest_agreement_ingest_workflow_path(workflow.ingest_agreement, workflow), actions: [:delete]
           end
         end
-        new_button :ingest_agreement, :ingest_job
+        new_button :ingest_agreement, :ingest_workflow
 
       end
       tab 'Packages', class: 'panel_contents' do
@@ -128,7 +128,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
       f.input :contact_system_list, as: :tags
       f.input :collection_name
       f.input :collection_description
-      f.input :ingest_job_name
+      f.input :ingest_run_name
       f.input :producer, as: :select, collection: Teneo::DataModel::Producer.for_organization(resource.organization).all
       f.input :material_flow, as: :select, collection: Teneo::DataModel::MaterialFlow.for_organization(resource.organization).all
       f.hidden_field :lock_version

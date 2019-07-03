@@ -1,7 +1,7 @@
 #frozen_string_literal: true
 require 'action_icons'
 
-ActiveAdmin.register Teneo::DataModel::ConversionJob, as: 'ConversionJob' do
+ActiveAdmin.register Teneo::DataModel::ConversionWorkflow, as: 'ConversionWorkflow' do
 
   belongs_to :representation, parent_class: Teneo::DataModel::Representation
   reorderable
@@ -37,7 +37,7 @@ ActiveAdmin.register Teneo::DataModel::ConversionJob, as: 'ConversionJob' do
 
       tab 'Conversion tasks', class: 'panel_contents' do
         # noinspection RubyResolve
-        reorderable_table_for conversion_job.conversion_tasks.order(position: 'asc') do
+        reorderable_table_for conversion_workflow.conversion_tasks.order(position: 'asc') do
           column :name
           column :description
           column :converter do |task|
@@ -50,17 +50,17 @@ ActiveAdmin.register Teneo::DataModel::ConversionJob, as: 'ConversionJob' do
           end
           column '' do |model|
             # noinspection RubyResolve
-            action_icons path: admin_conversion_job_conversion_task_path(model.conversion_job, model)
+            action_icons path: admin_conversion_workflow_conversion_task_path(model.conversion_workflow, model)
           end
         end
-        new_button :representation, :conversion_job
+        new_button :representation, :conversion_workflow
       end
 
     end
   end
 
   form do |f|
-    f.inputs 'Conversion job info' do
+    f.inputs 'Conversion workflow info' do
       f.input :name, required: true
       f.input :input_formats_list, as: :tags, collection: Teneo::DataModel::Format.all_tags
       f.input :input_filename_regex

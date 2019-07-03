@@ -11,8 +11,8 @@ ActiveAdmin.register Teneo::DataModel::ParameterRef, as: 'ParameterRef' do
   actions :new, :create, :update, :edit, :destroy
 
   controller do
-    belongs_to :ingest_job, parent_class: Teneo::DataModel::IngestJob, polymorphic: true
-    belongs_to :workflow, parent_class: Teneo::DataModel::Workflow, polymorphic: true
+    belongs_to :ingest_workflow, parent_class: Teneo::DataModel::IngestWorkflow, polymorphic: true
+    belongs_to :stage_workflow, parent_class: Teneo::DataModel::StageWorkflow, polymorphic: true
 
     def create
       create! do |format|

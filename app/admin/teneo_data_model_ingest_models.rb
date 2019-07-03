@@ -58,8 +58,8 @@ ActiveAdmin.register Teneo::DataModel::IngestModel, as: 'IngestModel' do
           column :access_right
           column :representation_info
           # noinspection RubyResolve
-          list_column :conversion_jobs do |representation|
-            representation.conversion_jobs.map(&:name)
+          list_column :conversion_workflows do |representation|
+            representation.conversion_workflows.map(&:name)
           end
           column '' do |model|
             # noinspection RubyResolve

@@ -84,8 +84,8 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
             agreement.ingest_models.map {|x| auto_link x}
           end
           # noinspection RubyResolve
-          list_column :jobs do |agreement|
-            agreement.ingest_jobs.map {|x| auto_link x}
+          list_column :workflows do |agreement|
+            agreement.ingest_workflows.map {|x| auto_link x}
           end
           column '' do |agreement|
             # noinspection RubyResolve

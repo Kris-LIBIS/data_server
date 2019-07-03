@@ -1,4 +1,4 @@
-ActiveAdmin.register Teneo::DataModel::Workflow, as: 'Workflow' do
+ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
   menu parent: 'Ingest tools', priority: 5
 
   config.sort_order = 'stage_asc'
@@ -11,8 +11,8 @@ ActiveAdmin.register Teneo::DataModel::Workflow, as: 'Workflow' do
 
   scope :all, default: true
   Teneo::DataModel::Task::STAGE_LIST.each do |stage|
-    scope stage, group: :stage do |workflows|
-      workflows.where(stage: stage)
+    scope stage, group: :stage do |stage_workflows|
+      stage_workflows.where(stage: stage)
     end
   end
 
@@ -34,38 +34,38 @@ ActiveAdmin.register Teneo::DataModel::Workflow, as: 'Workflow' do
     end
 
     tabs do
-      tab 'Workflow tasks', class: 'panel_contents' do
+      tab 'Stage workflow tasks', class: 'panel_contents' do
         # noinspection RubyResolve
-        reorderable_table_for workflow.workflow_tasks do
+        reorderable_table_for stage_workflow.stage_tasks do
           column :task
           # noinspection RubyResolve
-          list_column 'Parameter values' do |workflow_task|
-            workflow_task.parameter_values.inject({}) { |hash, value| hash[value.name] = value.value; hash }
+          list_column 'Parameter values' do |stage_task|
+            stage_task.parameter_values.inject({}) { |hash, value| hash[value.name] = value.value; hash }
           end
           # noinspection RubyResolve
-          list_column 'Parameter definitions' do |workflow_task|
-            workflow_task.task.parameter_defs.map { |param| "#{param.name}#{" (#{param.default})" if param.default}" }
+          list_column 'Parameter definitions' do |stage_task|
+            stage_task.task.parameter_defs.map { |param| "#{param.name}#{" (#{param.default})" if param.default}" }
           end
           column '' do |model|
             # noinspection RubyResolve
-            action_icons path: admin_workflow_workflow_task_path(model.workflow, model)
+            action_icons path: admin_stage_workflow_stage_task_path(model.stage_workflow, model)
           end
         end
-        new_button :workflow, :workflow_task
+        new_button :stage_workflow, :stage_task
       end
       tab 'Parameter references', class: 'panel_contents' do
-        table_for workflow.parameter_refs.order(:id) do
+        table_for stage_workflow.parameter_refs.order(:id) do
           column :name
           column :description
           column :delegation, as: :tags
           column :default
           column '' do |param_ref|
             # noinspection RubyResolve
-            action_icons path: admin_workflow_parameter_ref_path(workflow, param_ref), actions: %i[edit delete]
+            action_icons path: admin_stage_workflow_parameter_ref_path(stage_workflow, param_ref), actions: %i[edit delete]
             help_icon param_ref.help
           end
         end
-        new_button :workflow, :parameter_ref
+        new_button :stage_workflow, :parameter_ref
       end
     end
   end

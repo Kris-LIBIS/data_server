@@ -3,14 +3,14 @@ require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::ConversionTask, as: 'ConversionTask' do
 
-  belongs_to :conversion_job, parent_class: Teneo::DataModel::ConversionJob
+  belongs_to :conversion_workflow, parent_class: Teneo::DataModel::ConversionWorkflow
   reorderable
 
   config.sort_order = 'position_asc'
   config.batch_actions = false
 
   permit_params :position, :name, :description, :output_format,
-                :conversion_job_id, :converter_id,
+                :conversion_workflow_id, :converter_id,
                 :lock_version
 
   filter :name
