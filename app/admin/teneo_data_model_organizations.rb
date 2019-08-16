@@ -53,27 +53,6 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
 
     tabs do
 
-      tab 'Storages', class: 'panel_contents' do
-
-        # noinspection RubyResolve
-        table_for organization.storages do
-          column :name do |storage|
-            auto_link storage
-          end
-          column :protocol
-          # noinspection RubyResolve
-          list_column :parameter_values do |storage|
-            storage.parameter_values.inject({}) {|hash, value| hash[value.name] = value.value; hash}
-          end
-          column '' do |storage|
-            # noinspection RubyResolve
-            action_icons path: admin_organization_storage_path(storage.organization, storage), actions: [:delete]
-          end
-        end
-        new_button :organization, :storage
-
-      end
-
       tab 'Ingest Agreements', class: 'panel_contents' do
         table_for organization.ingest_agreements do
           column :name do |agreement|
@@ -93,6 +72,27 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
           end
         end
         new_button(:organization, :ingest_agreement)
+
+      end
+
+      tab 'Storages', class: 'panel_contents' do
+
+        # noinspection RubyResolve
+        table_for organization.storages do
+          column :name do |storage|
+            auto_link storage
+          end
+          column :protocol
+          # noinspection RubyResolve
+          list_column :parameter_values do |storage|
+            storage.parameter_values.inject({}) {|hash, value| hash[value.name] = value.value; hash}
+          end
+          column '' do |storage|
+            # noinspection RubyResolve
+            action_icons path: admin_organization_storage_path(storage.organization, storage), actions: [:delete]
+          end
+        end
+        new_button :organization, :storage
 
       end
 

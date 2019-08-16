@@ -53,7 +53,9 @@ ActiveAdmin.register Teneo::DataModel::IngestModel, as: 'IngestModel' do
       tab 'Representations', class: 'panel_contents' do
         # noinspection RubyResolve
         reorderable_table_for ingest_model.representations do
-          column :label
+          column :label do |representation|
+            auto_link representation
+          end
           column :optional
           column :access_right
           column :representation_info

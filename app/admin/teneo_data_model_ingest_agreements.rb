@@ -62,23 +62,6 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
     end
 
     tabs do
-      tab 'Ingest Models', class: 'panel_contents' do
-        table_for ingest_agreement.ingest_models do
-          column :name do |model|
-            auto_link model
-          end
-          # noinspection RubyResolve
-          list_column :representations do |model|
-            model.representations.map {|x| auto_link x}
-          end
-          column '' do |model|
-            # noinspection RubyResolve
-            action_icons path: admin_ingest_agreement_ingest_model_path(model.ingest_agreement, model), actions: [:delete]
-          end
-        end
-        new_button :ingest_agreement, :ingest_model
-      end
-
       tab 'Ingest Workflows', class: 'panel_contents' do
 
         table_for ingest_agreement.ingest_workflows do
@@ -101,19 +84,24 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
         new_button :ingest_agreement, :ingest_workflow
 
       end
-      tab 'Packages', class: 'panel_contents' do
 
-        table_for ingest_agreement.packages do
-          column :name do |package|
-            auto_link package
+      tab 'Ingest Models', class: 'panel_contents' do
+        table_for ingest_agreement.ingest_models do
+          column :name do |model|
+            auto_link model
           end
-          column '' do |package|
+          # noinspection RubyResolve
+          list_column :representations do |model|
+            model.representations.map {|x| auto_link x}
+          end
+          column '' do |model|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_agreement_package_path(package.ingest_agreement, package), actions: [:delete]
+            action_icons path: admin_ingest_agreement_ingest_model_path(model.ingest_agreement, model), actions: [:delete]
           end
         end
-
+        new_button :ingest_agreement, :ingest_model
       end
+
     end
 
   end

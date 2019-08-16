@@ -35,7 +35,7 @@ ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
           column :stage
           # noinspection RubyResolve
           toggle_bool_column :autorun
-          column :workflow
+          column :stage_workflow
           # noinspection RubyResolve
           list_column :parameter_values do |task|
             task.parameter_values.inject({}) {|hash, value| hash[value.name] = value.value; hash}
@@ -60,6 +60,17 @@ ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
           end
         end
         new_button :ingest_workflow, :parameter_ref
+      end
+      tab 'Packages', class: 'panel_contents' do
+        table_for ingest_workflow.packages.order(:created_at) do
+          column :name do |package|
+            auto_link package
+          end
+          column '' do |package|
+            # noinspection RubyResolve
+            action_icons path: admin_ingest_workflow_package_path(package.ingest_workdflow, package), actions: [:delete]
+          end
+        end
       end
     end
   end

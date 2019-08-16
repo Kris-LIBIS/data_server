@@ -75,7 +75,7 @@ gem 'graphql', '1.8.13'
 gem 'graphiql-rails', '1.5.0', group: :development
 
 # Admin
-gem 'activeadmin', github: 'Kris-LIBIS/activeadmin'
+gem 'activeadmin', github: 'activeadmin/activeadmin', branch: 'fix_renamed_resources_and_optional_belongs_to'
 gem 'activeadmin_addons'
 gem 'activeadmin_json_editor'
 gem 'activeadmin_reorderable'
