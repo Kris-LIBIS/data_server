@@ -1,4 +1,4 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::Package, as: 'Package' do

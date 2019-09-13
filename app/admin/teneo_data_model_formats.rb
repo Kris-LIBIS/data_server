@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
-  menu label: 'Formats database', parent: 'Code Tables'
+  menu label: 'Formats database', parent: 'Code Tables', priority: 20
 
   config.sort_order = 'name_asc'
   config.batch_actions = false

@@ -1,8 +1,8 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::Producer, as: 'Producer' do
-  menu parent: 'Code Tables', priority: 1
+  menu parent: 'Code Tables', priority: 2
 
   actions :index, :new, :edit, :destroy
 

@@ -37,6 +37,10 @@ Rails.application.routes.draw do
       resources :parameter_defs, only: [:new, :edit, :destroy, :create, :update]
     end
     # noinspection RailsParamDefResolve
+    resources :storage_types, only: [] do
+      resources :parameter_defs, only: [:new, :edit, :destroy, :create, :update]
+    end
+    # noinspection RailsParamDefResolve
     resources :stage_workflows, only: [] do
       resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
     end
@@ -45,24 +49,12 @@ Rails.application.routes.draw do
       resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
     end
     # noinspection RailsParamDefResolve
-    resources :storages, only: [] do
-      resources :parameter_values, only: [:new, :edit, :destroy, :create, :update]
-    end
-    # noinspection RailsParamDefResolve
-    resources :ingest_tasks, only: [] do
-      resources :parameter_values, only: [:new, :edit, :destroy, :create, :update]
-    end
-    # noinspection RailsParamDefResolve
-    resources :stage_tasks, only: [] do
-      resources :parameter_values, only: [:new, :edit, :destroy, :create, :update]
-    end
-    # noinspection RailsParamDefResolve
-    resources :conversion_tasks, only: [] do
-      resources :parameter_values, only: [:new, :edit, :destroy, :create, :update]
-    end
-    # noinspection RailsParamDefResolve
     resources :packages, only: [] do
-      resources :parameter_values, only: [:new, :edit, :destroy, :create, :update]
+      resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
+    end
+    # noinspection RailsParamDefResolve
+    resources :storages, only: [] do
+      resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
     end
   end
 

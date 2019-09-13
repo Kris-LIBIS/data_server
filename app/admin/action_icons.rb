@@ -1,5 +1,7 @@
 # noinspection RubyResolve,RailsI18nInspection
 
+require 'active_admin_patch'
+
 def button_link(href:, title:, icon: nil, method: :get, data: {}, classes: [], params: {})
   options = {href: href, title: title}
   options[:href] += '?' + params.map {|k, v| "#{k}=#{v}"}.join('&') unless params.empty?
@@ -57,7 +59,7 @@ def new_button(object_type, resource_type = nil, action: 'new', method: :get, pa
 end
 
 def help_icon(message = nil)
-  return unless message
+  return if message.blank?
   # noinspection RubyResolve
   span class: 'button_link' do
     a onclick: "alert('#{message}');" do

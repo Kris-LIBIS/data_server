@@ -1,7 +1,7 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 require 'action_icons'
 
-ActiveAdmin.register Teneo::DataModel::IngestTask, as: 'IngestTask' do
+ActiveAdmin.register Teneo::DataModel::IngestStage, as: 'IngestStage' do
 
   belongs_to :ingest_workflow, parent_class: Teneo::DataModel::IngestWorkflow
 
@@ -17,19 +17,16 @@ ActiveAdmin.register Teneo::DataModel::IngestTask, as: 'IngestTask' do
     # noinspection RubyResolve
     toggle_bool_column :autorun
     column :stage_workflow
-    column 'Parameters' do |task|
-      task.parameter_values.map {|value| "#{value.name}='#{value.value}'"}
-    end
-    actions defaults: false do |object|
+    actions defaults: false do |obj|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons path: resource_path(object), actions: %i[view delete]
+      action_icons path: resource_path(obj), actions: %i[view delete]
     end
   end
 
   show do
     back_button
     attributes_table do
-      row :stage, as: :select, collection: Teneo::DataModel::IngestTask::STAGE_LIST
+      row :stage, as: :select, collection: Teneo::DataModel::IngestStage::STAGE_LIST
 
       row :stage_workflow
     end
@@ -37,7 +34,7 @@ ActiveAdmin.register Teneo::DataModel::IngestTask, as: 'IngestTask' do
 
   form do |f|
     f.inputs 'Info' do
-      f.input :stage, required: true, as: :select, collection: Teneo::DataModel::IngestTask::STAGE_LIST
+      f.input :stage, required: true, as: :select, collection: Teneo::DataModel::IngestStage::STAGE_LIST
       f.input :stage_workflow, as: :select, collection: Teneo::DataModel::StageWorkflow.where(stage: resource.stage)
       f.hidden_field :lock_version
     end

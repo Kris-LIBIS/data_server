@@ -75,16 +75,17 @@ gem 'graphql', '1.8.13'
 gem 'graphiql-rails', '1.5.0', group: :development
 
 # Admin
-gem 'activeadmin', github: 'activeadmin/activeadmin', branch: 'fix_renamed_resources_and_optional_belongs_to'
+gem 'activeadmin', github: 'activeadmin/activeadmin'#, branch: 'fix_renamed_resources_and_optional_belongs_to'
 gem 'activeadmin_addons'
 gem 'activeadmin_json_editor'
 gem 'activeadmin_reorderable'
 
 gem 'active_admin_theme'
 # gem 'arctic_admin'
-
 # gem "active_material", github: "vigetlabs/active_material"
 # gem 'active_admin_flat_skin'
+# gem 'responsive_active_admin'
+
 gem 'font_awesome5_rails'
 
 gem 'sass-rails'

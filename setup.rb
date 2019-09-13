@@ -1,0 +1,9 @@
+org = Teneo::DataModel::Organization.all[1]; nil
+ia = org.ingest_agreements.first; nil
+im = ia.ingest_models.first; nil
+iwf = ia.ingest_workflows.first; nil
+swf = iwf.stage_workflows.find_by(stage: 'PreProcess'); nil
+st = swf.stage_tasks.first; nil
+t = st.task; nil
+pds = t.parameter_defs; nil
+pd = pds.last; nil

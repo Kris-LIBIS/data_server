@@ -1,5 +1,5 @@
 ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
-  menu parent: 'Ingest tools', priority: 5
+  menu parent: 'Ingest tools', priority: 3
 
   config.sort_order = 'stage_asc'
   config.batch_actions = false
@@ -26,6 +26,16 @@ ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
     end
   end
 
+  form do |f|
+    f.inputs do
+      f.input :stage, required: true, collection: Teneo::DataModel::StageWorkflow::STAGE_LIST
+      f.input :name
+      f.input :description
+      f.hidden_field :lock_version
+    end
+    actions
+  end
+
   show do
     attributes_table do
       row :stage
@@ -39,12 +49,30 @@ ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
         reorderable_table_for stage_workflow.stage_tasks do
           column :task
           # noinspection RubyResolve
-          list_column 'Parameter values' do |stage_task|
-            stage_task.parameter_values.inject({}) { |hash, value| hash[value.name] = value.value; hash }
-          end
-          # noinspection RubyResolve
-          list_column 'Parameter definitions' do |stage_task|
-            stage_task.task.parameter_defs.map { |param| "#{param.name}#{" (#{param.default})" if param.default}" }
+          column 'Parameter definitions' do |stage_task|
+            table_for stage_task.task.parameter_defs do
+              column :name
+
+              column :export do |param_def|
+                p = resource.parameters["#{stage_task.task.name}##{param_def.name}"]
+                if p && p[:value].nil?
+                  p[:name]
+                end
+              end
+              column :default do |param_def|
+                p = resource.parameters["#{stage_task.task.name}##{param_def.name}"]
+                if p && p[:value].nil?
+                  p[:default]
+                end
+              end
+              column :value do |param_def|
+                p = resource.parameters["#{stage_task.task.name}##{param_def.name}"]
+                if p && p[:value]
+                  p[:value]
+                end
+              end
+            end
+            # stage_task.task.parameter_defs.map { |param| "#{param.name}#{" (#{param.default})" if param.default}" }
           end
           column '' do |model|
             # noinspection RubyResolve
@@ -53,12 +81,15 @@ ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
         end
         new_button :stage_workflow, :stage_task
       end
-      tab 'Parameter references', class: 'panel_contents' do
+      tab 'Parameters', class: 'panel_contents' do
         table_for stage_workflow.parameter_refs.order(:id) do
-          column :name
+          column 'Export as' do |obj|
+            obj.value ? '' : obj.name
+          end
           column :description
           column :delegation, as: :tags
           column :default
+          column :value
           column '' do |param_ref|
             # noinspection RubyResolve
             action_icons path: admin_stage_workflow_parameter_ref_path(stage_workflow, param_ref), actions: %i[edit delete]
@@ -66,6 +97,14 @@ ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
           end
         end
         new_button :stage_workflow, :parameter_ref
+      end
+      tab 'Ingest Workflows', class: 'panel_contents' do
+        table_for stage_workflow.ingest_workflows do
+          column :name do |obj|
+            # noinspection RubyResolve
+            link_to obj.name, admin_ingest_agreement_ingest_workflow_path(obj.ingest_agreement, obj)
+          end
+        end
       end
     end
   end

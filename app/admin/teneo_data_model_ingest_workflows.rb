@@ -1,4 +1,4 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
@@ -17,9 +17,9 @@ ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
     back_button
     column :name
     column :description
-    actions defaults: false do |object|
+    actions defaults: false do |obj|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons path: resource_path(object), actions: %i[view delete]
+      action_icons path: resource_path(obj), actions: %i[view delete]
     end
   end
 
@@ -30,33 +30,32 @@ ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
       row :description
     end
     tabs do
-      tab 'Ingest Tasks' do
-        table_for ingest_workflow.ingest_tasks do
+      tab 'Ingest Stages', class: 'panel_contents' do
+        table_for ingest_workflow.ingest_stages do
           column :stage
           # noinspection RubyResolve
           toggle_bool_column :autorun
           column :stage_workflow
-          # noinspection RubyResolve
-          list_column :parameter_values do |task|
-            task.parameter_values.inject({}) {|hash, value| hash[value.name] = value.value; hash}
-          end
           column '' do |model|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_workflow_ingest_task_path(model.ingest_workflow, model)
+            action_icons path: admin_ingest_workflow_ingest_stage_path(model.ingest_workflow, model)
           end
         end
-        new_button :ingest_workflow, :ingest_task
+        new_button :ingest_workflow, :ingest_stage
       end
       tab 'Parameters', class: 'panel_contents' do
         table_for ingest_workflow.parameter_refs.order(:id) do
-          column :name
+          column :name do |obj|
+            obj.name unless obj.value
+          end
           column :description
           column :delegation, as: :tags
           column :default
+          column :value
           column '' do |param_ref|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_workflow_parameter_ref_path(ingest_workflow, param_ref), actions: %i[edit delete]
             help_icon param_ref.help
+            action_icons path: admin_ingest_workflow_parameter_ref_path(ingest_workflow, param_ref), actions: %i[edit delete]
           end
         end
         new_button :ingest_workflow, :parameter_ref

@@ -9,18 +9,23 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   config.sort_order = 'name_asc'
   config.batch_actions = false
 
-  permit_params :name, :protocol, :organization_id, :lock_Version
+  permit_params :name, :is_upload, :organization_id, :lock_Version
 
   filter :name
-  filter :protocol, as: :select, collection: Teneo::DataModel::Storage::PROTOCOL_LIST
 
   index do
     back_button
     column :name
-    column :protocol
-    actions defaults: false do |object|
+    column :is_upload
+    column :protocol do |obj|
+      obj.storage_type.protocol
+    end
+    column :parameters do |obj|
+      obj.parameters.each_with_object(Hash.new { |h, k| h[k] = {} }) {|(n, p), r| r[n] = p[:value] }
+    end
+    actions defaults: false do |obj|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons path: resource_path(object), actions: %i[edit delete]
+      action_icons path: resource_path(obj), actions: %i[edit delete]
     end
   end
 
@@ -31,8 +36,10 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
 
     attributes_table do
       row :name
-      row :protocol
-      # noinspection RubyResolve
+      row :protocol do |obj|
+        # noinspection RubyResolve
+        obj.storage_type.protocol
+      end
     end
 
     columns do

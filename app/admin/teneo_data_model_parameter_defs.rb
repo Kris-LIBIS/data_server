@@ -1,4 +1,4 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::ParameterDef, as: 'ParameterDef' do
@@ -11,10 +11,10 @@ ActiveAdmin.register Teneo::DataModel::ParameterDef, as: 'ParameterDef' do
   actions :new, :create, :update, :edit, :destroy
 
   controller do
+
     belongs_to :converter, parent_class: Teneo::DataModel::Converter, polymorphic: true
     belongs_to :task, parent_class: Teneo::DataModel::Task, polymorphic: true
-    belongs_to :stage_workflow, parent_class: Teneo::DataModel::StageWorkflow, polymorphic: true
-    belongs_to :ingest_workflow, parent_class: Teneo::DataModel::IngestWorkflow, polymorphic: true
+    belongs_to :storage_type, parent_class: Teneo::DataModel::StorageType, polymorphic: true
 
     def create
       create! do |format|

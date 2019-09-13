@@ -1,7 +1,7 @@
-- ingest_agreement: 'Kerk en Leven'
-  name: 'Kerk en Leven'
+- ingest_agreement: 'KerkEnLeven'
+  name: 'KerkEnLeven'
   description: 'Ingest workflow for Kerk en Leven'
-  tasks:
+  stages:
     - stage: 'Collect'
       workflow: 'Recursive file collect'
     - stage: 'PreProcess'

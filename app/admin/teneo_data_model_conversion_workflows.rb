@@ -1,4 +1,4 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::ConversionWorkflow, as: 'ConversionWorkflow' do
@@ -44,10 +44,6 @@ ActiveAdmin.register Teneo::DataModel::ConversionWorkflow, as: 'ConversionWorkfl
             task.converter
           end
           column :output_format
-          # noinspection RubyResolve
-          list_column 'Parameters' do |task|
-            task.parameter_values.inject({}) { |hash, value| hash[value.name] = value.value; hash }
-          end
           column '' do |model|
             # noinspection RubyResolve
             action_icons path: admin_conversion_workflow_conversion_task_path(model.conversion_workflow, model)

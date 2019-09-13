@@ -11,7 +11,7 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
   filter :description
   filter :inst_code
 
-  permit_params :name, :description, :inst_code, :ingest_dir, :lock_version,
+  permit_params :name, :description, :inst_code, :lock_version,
                 memberships_attributes: [:id, :_destroy, :organization_id, :role_id, :user_id],
                 storages_attributes: [:id, :_destroy, :organization_id, :name, :protocol, :options],
                 ingest_agreements_attributes: [:id, :_destroy, :organization_id, :name]
@@ -35,9 +35,8 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
 
         attributes_table do
           row :name
-          row :description
           row :inst_code
-          row :ingest_dir
+          row :description
         end
       end
       column do
@@ -106,7 +105,6 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
       f.input :name, required: true
       f.input :description
       f.input :inst_code, required: true
-      f.input :ingest_dir
     end
     actions
   end

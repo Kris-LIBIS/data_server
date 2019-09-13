@@ -1,4 +1,5 @@
-- name: 'Kerk en Leven'
+- name: 'KerkEnLeven'
+  description: 'Parochiebladen Kerk en Leven'
   contact_ingest:
     - 'luc.schokkaert@kuleuven.be'
   contact_collection:

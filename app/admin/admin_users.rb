@@ -1,7 +1,7 @@
 require 'action_icons'
 
 ActiveAdmin.register AdminUser do
-  menu parent: 'Users', priority: 1
+  menu parent: 'Users', priority: 2
 
   config.sort_order = 'email_asc'
   config.batch_actions = false

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 ActiveAdmin.register Teneo::DataModel::Membership, as: 'Membership' do
   menu false
 

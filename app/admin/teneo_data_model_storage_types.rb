@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require 'action_icons'
 
-ActiveAdmin.register Teneo::DataModel::MaterialFlow, as: 'MaterialFlow' do
-  menu parent: 'Code Tables', priority: 1
+ActiveAdmin.register Teneo::DataModel::StorageType, as: 'StorageType' do
+  menu parent: 'Ingest tools', priority: 4
 
   actions :index, :new, :edit, :destroy
 
@@ -14,22 +14,17 @@ ActiveAdmin.register Teneo::DataModel::MaterialFlow, as: 'MaterialFlow' do
     def update; super {collection_url};end
   end
 
-  config.sort_order = 'name_asc'
+  config.sort_order = 'protocol_asc'
   config.batch_actions = false
 
-  permit_params :name, :ext_id, :inst_code, :description, :lock_version
+  permit_params :protocol, :description, :lock_version
 
-  filter :name
+  filter :protocol
   filter :description
-  filter :ext_id
-  filter :inst_code
-  # filter :ingest_agreements
 
   index do
-    column :name
+    column :protocol
     column :description
-    column :inst_code
-    column :ext_id
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
       action_icons path: resource_path(object), actions: %i[edit delete]
@@ -41,20 +36,40 @@ ActiveAdmin.register Teneo::DataModel::MaterialFlow, as: 'MaterialFlow' do
   #   panel link_to(object.name, edit_resource_path(object)) do
   #     para object.description
   #     # noinspection RubyResolve
-  #     attributes_table_for object do
-  #       row :inst_code
-  #       row :ext_id
-  #     end
-  #     # noinspection RubyResolve
   #     action_icons path: resource_path(object), actions: %i[edit delete]
   #   end
   # end
 
+  show do
+    attributes_table do
+      row :protocol
+      row :description
+    end
+
+    tabs do
+
+      tab 'Parameters', class: 'panel_contents' do
+        table_for storage_type.parameter_defs.order(:id) do
+          column :name
+          column :description
+          column :data_type
+          column :default
+          column :constraint
+          column '' do |param_def|
+            # noinspection RubyResolve
+            action_icons path: admin_storage_type_parameter_def_path(storage_type, param_def), actions: %i[edit delete]
+            help_icon param_def.help
+          end
+        end
+        new_button :storage_type, :parameter_def
+      end
+
+    end
+  end
+
   form do |f|
-    f.inputs 'Material Flow info' do
-      f.input :name, required: true
-      f.input :inst_code, required: true
-      f.input :ext_id, required: true
+    f.inputs 'StorageType info' do
+      f.input :protocol, required: true
       f.input :description
       f.hidden_field :lock_version
     end

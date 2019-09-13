@@ -54,6 +54,27 @@
       default: 'md5sums.txt'
     mimetype_regexp:
       delegation: 'FileMimetypeChecker#mimetype_regexp'
+- name: 'checksum + viruscheck + format + mimetype'
+  description: 'Format identification, virus check, checksum test and MIME type test'
+  stage: 'PreProcess'
+  tasks:
+    - task: 'ChecksumTester'
+      values:
+        recursive: true
+        checksum_type: 'MD5'
+    - task: 'DirVirusChecker'
+    - task: 'FormatDirIdentifier'
+    - task: 'FileMimetypeChecker'
+      values:
+        recursive: true
+  parameters:
+    location:
+      delegation: 'DirVirusChecker#location FormatDirIdentifier#folder'
+    checksum_file:
+      delegation: 'ChecksumTester#checksum_file'
+      default: 'md5sums.txt'
+    mimetype_regexp:
+      delegation: 'FileMimetypeChecker#mimetype_regexp'
 - name: 'viruscheck + format identification'
   description: 'Virus check and Format identification'
   stage: 'PreProcess'

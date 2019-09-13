@@ -1,4 +1,4 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
@@ -70,11 +70,11 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
           end
           # noinspection RubyResolve
           list_column :tasks do |workflow|
-            workflow.ingest_tasks.inject({}) { |hash, task| hash[task.stage] = auto_link(task.stage_workflow); hash }
+            workflow.ingest_stages.inject({}) { |hash, stage| hash[stage.stage] = auto_link(stage.stage_workflow); hash }
           end
           # noinspection RubyResolve
           list_column :parameters do |workflow|
-            workflow.parameter_refs.map(&:name)
+            workflow.parameter_values
           end
           column '' do |workflow|
             # noinspection RubyResolve

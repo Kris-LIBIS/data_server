@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require 'action_icons'
 
-ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
-  menu parent: 'Ingest tools', priority: 1
+ActiveAdmin.register Teneo::DataModel::Task, as: 'Task' do
+  menu parent: 'Ingest tools', priority: 2
 
   # actions :index, :new, :edit, :destroy
 
@@ -49,7 +49,7 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
     tabs do
 
       tab 'Parameters', class: 'panel_contents' do
-        table_for converter.parameter_defs.order(:id) do
+        table_for resource.parameter_defs.order(:id) do
           column :name
           column :description
           column :data_type
@@ -57,7 +57,7 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
           column :constraint
           column '' do |param_def|
             # noinspection RubyResolve
-            action_icons path: admin_converter_parameter_def_path(converter, param_def), actions: %i[edit delete]
+            action_icons path: admin_converter_parameter_def_path(resource, param_def), actions: %i[edit delete]
             help_icon param_def.help
           end
         end

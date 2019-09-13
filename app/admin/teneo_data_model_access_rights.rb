@@ -1,8 +1,8 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::AccessRight, as: 'AccessRight' do
-  menu parent: 'Code Tables', priority: 1
+  menu parent: 'Code Tables', priority: 4
 
   actions :index, :new, :edit, :destroy
 

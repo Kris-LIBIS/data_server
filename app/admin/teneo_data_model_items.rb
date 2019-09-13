@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 ActiveAdmin.register Teneo::DataModel::Item, as: 'Item' do
   menu false
   belongs_to :package, parent_class: Teneo::DataModel::Package
