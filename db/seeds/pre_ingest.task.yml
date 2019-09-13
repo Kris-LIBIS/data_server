@@ -42,7 +42,7 @@
       description: 'A Ruby expression for the label of the files; default: file name.'
     file_name:
       data_type: 'string'
-      description: "A Ruby expression for the name of the files; default: don\'t change."
+      description: "A Ruby expression for the name of the files; default: don't change."
     collection_navigate:
       data_type: 'bool'
       default: true
@@ -91,7 +91,7 @@
     match_regex:
       data_type: 'string'
       description: "Regular expression to check against the 'match_term' value."
-      help: "The results of the match can be used in the \'term\' parameter. If nil, no Regexp matching is performed."
+      help: "The results of the match can be used in the 'term' parameter. If nil, no Regexp matching is performed."
     match_term:
       data_type: 'string'
       default: 'item.name'

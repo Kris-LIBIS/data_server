@@ -252,7 +252,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
   create_table "parameter_refs", force: :cascade do |t|
     t.string "name", null: false
     t.string "delegation", null: false
-    t.string "value"
+    t.boolean "export", null: false
     t.string "default"
     t.string "description"
     t.text "help"
