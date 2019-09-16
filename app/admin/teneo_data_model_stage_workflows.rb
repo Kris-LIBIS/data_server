@@ -50,9 +50,10 @@ ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
           column :task
           # noinspection RubyResolve
           list_column 'Parameters' do |stage_task|
-            stage_task.task.parameter_defs.each_with_object(Hash.new { |h, k| h[k] = {} }) do |param_def, result|
-              result[param_def.name] = param_def.data_type + (param_def.default.blank? ? '' : " (#{param_def.default})")
-            end
+            stage_task.stage_workflow.parameter_values.each_with_object(Hash.new {|h,k|h[k]={}}) {|(k,v),result|
+              next unless k =~ /^#{stage_task.task.name}#(.*)$/
+              result[$1] = v
+            }
           end
           column '' do |model|
             # noinspection RubyResolve
