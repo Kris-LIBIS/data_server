@@ -69,7 +69,7 @@
         recursive: true
   parameters:
     location:
-      delegation: 'DirVirusChecker#location FormatDirIdentifier#folder'
+      delegation: 'DirVirusChecker#location, FormatDirIdentifier#folder'
     checksum_file:
       delegation: 'ChecksumTester#checksum_file'
       default: 'md5sums.txt'
@@ -83,7 +83,7 @@
     - task: 'FormatDirIdentifier'
   parameters:
     location:
-      delegation: 'FormatDirIdentifier#folder'
+      delegation: 'DirVirusChecker#location, FormatDirIdentifier#folder'
 - name: 'viruscheck + format validation'
   description: 'Virus check, Format identification and Format validation'
   stage: 'PreProcess'
@@ -93,7 +93,7 @@
     - task: 'FormatValidator'
   parameters:
     location:
-      delegation: 'FormatDirIdentifier#folder'
+      delegation: 'DirVirusChecker#location, FormatDirIdentifier#folder'
     ext_mismatch:
       delegation: 'FormatValidator#ext_mismatch'
       default: 'FIX'
