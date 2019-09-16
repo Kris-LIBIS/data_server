@@ -3,6 +3,7 @@ require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
 
+  # noinspection RailsParamDefResolve
   belongs_to :ingest_agreement, parent_class: Teneo::DataModel::IngestAgreement
 
   config.sort_order = 'name_asc'
@@ -45,16 +46,15 @@ ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
       end
       tab 'Parameters', class: 'panel_contents' do
         table_for ingest_workflow.parameter_refs.order(:id) do
-          column :name do |obj|
-            obj.name unless obj.value
+          column :delegation, as: :tags
+          column 'Export as' do |param|
+            param.name if param.export
           end
           column :description
-          column :delegation, as: :tags
           column :default
-          column :value
           column '' do |param_ref|
-            # noinspection RubyResolve
             help_icon param_ref.help
+            # noinspection RubyResolve
             action_icons path: admin_ingest_workflow_parameter_ref_path(ingest_workflow, param_ref), actions: %i[edit delete]
           end
         end

@@ -16,10 +16,10 @@ ActiveAdmin.register Teneo::DataModel::ParameterRef, as: 'ParameterRef' do
 
     # belongs_to :ingest_workflow, :stage_workflow, :package, :storage, polymorphic: true
 
-    belongs_to :ingest_workflow, parent_class: Teneo::DataModel::IngestWorkflow, polymorphic: true
-    belongs_to :stage_workflow, parent_class: Teneo::DataModel::StageWorkflow, polymorphic: true
-    belongs_to :package, parent_class: Teneo::DataModel::Package, polymorphic: true
-    belongs_to :storage, parent_class: Teneo::DataModel::Storage, polymorphic: true
+    # belongs_to :ingest_workflow, parent_class: Teneo::DataModel::IngestWorkflow, polymorphic: true
+    # belongs_to :stage_workflow, parent_class: Teneo::DataModel::StageWorkflow, polymorphic: true
+    # belongs_to :package, parent_class: Teneo::DataModel::Package, polymorphic: true
+    # belongs_to :storage, parent_class: Teneo::DataModel::Storage, polymorphic: true
 
     def create
       create! do |format|
@@ -48,12 +48,11 @@ ActiveAdmin.register Teneo::DataModel::ParameterRef, as: 'ParameterRef' do
       f.input :name, required: true
       f.input :delegation, required: true, as: :tags
       f.input :default
-      f.input :value
       f.input :description
       f.input :help, as: :text, input_html: {rows: 3}
       f.hidden_field :lock_version
-      f.input :with_param_refs_id
-      f.input :with_param_refs_type
+      f.hidden_field :with_param_refs_id
+      f.hidden_field :with_param_refs_type
     end
     f.actions do
       f.action :submit

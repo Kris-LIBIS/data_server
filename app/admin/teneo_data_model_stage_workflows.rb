@@ -49,30 +49,10 @@ ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
         reorderable_table_for stage_workflow.stage_tasks do
           column :task
           # noinspection RubyResolve
-          column 'Parameter definitions' do |stage_task|
-            table_for stage_task.task.parameter_defs do
-              column :name
-
-              column :export do |param_def|
-                p = resource.parameters["#{stage_task.task.name}##{param_def.name}"]
-                if p && p[:value].nil?
-                  p[:name]
-                end
-              end
-              column :default do |param_def|
-                p = resource.parameters["#{stage_task.task.name}##{param_def.name}"]
-                if p && p[:value].nil?
-                  p[:default]
-                end
-              end
-              column :value do |param_def|
-                p = resource.parameters["#{stage_task.task.name}##{param_def.name}"]
-                if p && p[:value]
-                  p[:value]
-                end
-              end
+          list_column 'Parameters' do |stage_task|
+            stage_task.task.parameter_defs.each_with_object(Hash.new { |h, k| h[k] = {} }) do |param_def, result|
+              result[param_def.name] = param_def.data_type + (param_def.default.blank? ? '' : " (#{param_def.default})")
             end
-            # stage_task.task.parameter_defs.map { |param| "#{param.name}#{" (#{param.default})" if param.default}" }
           end
           column '' do |model|
             # noinspection RubyResolve
@@ -83,17 +63,18 @@ ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
       end
       tab 'Parameters', class: 'panel_contents' do
         table_for stage_workflow.parameter_refs.order(:id) do
-          column 'Export as' do |obj|
-            obj.value ? '' : obj.name
+          column :delegation, as: :tags do |param|
+            param.delegation.split(/[\s,;]+/)
+          end
+          column 'Export as' do |param|
+            param.name if param.export
           end
           column :description
-          column :delegation, as: :tags
           column :default
-          column :value
           column '' do |param_ref|
+            help_icon param_ref.help
             # noinspection RubyResolve
             action_icons path: admin_stage_workflow_parameter_ref_path(stage_workflow, param_ref), actions: %i[edit delete]
-            help_icon param_ref.help
           end
         end
         new_button :stage_workflow, :parameter_ref
