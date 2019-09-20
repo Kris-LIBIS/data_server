@@ -37,19 +37,24 @@ ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
           # noinspection RubyResolve
           toggle_bool_column :autorun
           column :stage_workflow
-          column '' do |model|
+          # noinspection RubyResolve
+          list_column 'Parameters' do |stage|
+            stage.ingest_workflow.parameter_values.each_with_object(Hash.new {|h,k|h[k]={}}) {|(k,v),result|
+              next unless k =~ /^#{stage.stage}#(.*)$/
+              result[$1] = v
+            }
+          end
+          column '' do |stage|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_workflow_ingest_stage_path(model.ingest_workflow, model)
+            action_icons path: admin_ingest_workflow_ingest_stage_path(stage.ingest_workflow, stage)
           end
         end
         new_button :ingest_workflow, :ingest_stage
       end
       tab 'Parameters', class: 'panel_contents' do
-        table_for ingest_workflow.parameter_refs.order(:id) do
+        table_for ingest_workflow.parameter_refs.order(:id).where(export: true) do
+          column :name
           column :delegation, as: :tags
-          column 'Export as' do |param|
-            param.name if param.export
-          end
           column :description
           column :default
           column '' do |param_ref|

@@ -9,11 +9,11 @@
         file_limit: 5000
   parameters:
     location:
-      delegation: 'DirCollector#location'
+      delegation: ['DirCollector#location']
     selection:
-      delegation: 'DirCollector#selection'
+      delegation: ['DirCollector#selection']
     ignore:
-      delegation: 'DirCollector#ignore'
+      delegation: ['DirCollector#ignore']
 - name: 'Complex file collect'
   description: 'Collect all files and subdirectories as IE structure'
   stage: 'Collect'
@@ -25,11 +25,11 @@
         file_limit: 5000
   parameters:
     location:
-      delegation: 'DirCollector#location'
+      delegation: ['DirCollector#location']
     selection:
-      delegation: 'DirCollector#selection'
+      delegation: ['DirCollector#selection']
     ignore:
-      delegation: 'DirCollector#ignore'
+      delegation: ['DirCollector#ignore']
 - name: 'Recursive file collect'
   description: 'Collect all files from the given location and its subdirectories'
   stage: 'Collect'
@@ -41,11 +41,11 @@
         file_limit: 5000
   parameters:
     location:
-      delegation: 'DirCollector#location'
+      delegation: ['DirCollector#location']
     selection:
-      delegation: 'DirCollector#selection'
+      delegation: ['DirCollector#selection']
     ignore:
-      delegation: 'DirCollector#ignore'
+      delegation: ['DirCollector#ignore']
 - name: 'File collect with collection'
   description: 'Collect all files and subdirectories as collections'
   stage: 'Collect'
@@ -57,11 +57,11 @@
         file_limit: 5000
   parameters:
     location:
-      delegation: 'DirCollector#location'
+      delegation: ['DirCollector#location']
     selection:
-      delegation: 'DirCollector#selection'
+      delegation: ['DirCollector#selection']
     ignore:
-      delegation: 'DirCollector#ignore'
+      delegation: ['DirCollector#ignore']
 - name: 'Collect from file list'
   stage: 'Collect'
   tasks:
@@ -71,10 +71,10 @@
         file_limit: 5000
   parameters:
     location:
-      delegation: 'DirListCollector#location'
+      delegation: ['DirListCollector#location']
     file_list:
-      delegation: 'DirListCollector#file_list'
+      delegation: ['DirListCollector#file_list']
     selection:
-      delegation: 'DirListCollector#selection'
+      delegation: ['DirListCollector#selection']
     ignore:
-      delegation: 'DirListCollector#ignore'
+      delegation: ['DirListCollector#ignore']

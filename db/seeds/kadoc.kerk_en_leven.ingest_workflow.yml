@@ -36,14 +36,14 @@
         export_dir: '/nas/vol04/export/kadocadmin/ingest'
   parameters:
     location:
-      delegation: 'Collect#location'
+      delegation: ['Collect#location']
       default: '/nas/vol04/upload/flandrica/kadoc/kadoc'
     selection:
-      delegation: 'Collect#selection'
+      delegation: ['Collect#selection']
       default: '^KYE[0-9]+_[^_]+_[^_]+_.+\.(JPG|jpg|PDF|pdf)$'
     checksum_file:
-      delegation: 'PreProcess#checksum_file'
+      delegation: ['PreProcess#checksum_file']
       default: '/nas/vol04/upload/flandrica/kadoc/kadoc'
     base_collection:
-      delegation: 'PreIngest#base_collection'
+      delegation: ['PreIngest#base_collection']
       default: 'E_periodieken/Parochiebladen'
