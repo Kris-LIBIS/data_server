@@ -44,6 +44,9 @@ ActiveAdmin.register Teneo::DataModel::ConversionWorkflow, as: 'ConversionWorkfl
             task.converter
           end
           column :output_format
+          list_column 'parameters' do |task|
+            task.parameter_values
+          end
           column '' do |model|
             # noinspection RubyResolve
             action_icons path: admin_conversion_workflow_conversion_task_path(model.conversion_workflow, model)

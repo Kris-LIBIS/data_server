@@ -63,12 +63,10 @@ ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
         new_button :stage_workflow, :stage_task
       end
       tab 'Parameters', class: 'panel_contents' do
-        table_for stage_workflow.parameter_refs.order(:id) do
+        table_for stage_workflow.parameter_refs.order(:id).where(export: true) do
+          column :name
           column :delegation, as: :tags do |param|
             param.delegation.split(/[\s,;]+/)
-          end
-          column 'Export as' do |param|
-            param.name if param.export
           end
           column :description
           column :default
