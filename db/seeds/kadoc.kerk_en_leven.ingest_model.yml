@@ -26,16 +26,16 @@ representations:
         input_formats: ['PDF']
         tasks:
           - name: 'optimize'
-            converter: 'PDF Optimizer'
+            converter: 'PDFoptimizer'
             output_format: 'PDF'
             values:
               quality: 1
           - name: 'watermark'
-            converter: 'PDF Watermarker'
+            converter: 'PDFwatermarker'
             output_format: 'PDF'
             values:
               text: 'KADOC - KU Leuven'
               opacity: 0.15
           - name: 'assemble'
-            converter: 'PDF Assembler'
+            converter: 'PDFassembler'
             output_format: 'PDF'

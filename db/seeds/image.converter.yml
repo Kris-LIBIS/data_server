@@ -1,4 +1,4 @@
-- name: 'image converter'
+- name: 'ImageConverter'
   class_name: 'Libis::Format::Converter::ImageConverter'
   description: 'Imagemagick: converts any image format into another'
   input_formats: ['TIFF', 'JPG', 'PNG', 'BMP', 'GIF', 'PDF', 'JP2']
@@ -51,7 +51,7 @@
       data_type: 'bool'
       default: false
       description: 'removes the modify-date and create-date image attributes from the output image'
-- name: 'image watermarker'
+- name: 'ImageWatermarker'
   class_name: 'Libis::Format::Converter::ImageWatermarker'
   description: 'Adds a watermark to an image'
   input_formats: ['TIFF', 'JPG', 'PNG', 'BMP', 'GIF', 'PDF', 'JP2']
@@ -115,7 +115,7 @@
       default: '10'
       description: 'the image composition method for merging the watermark image'
       help: 'See https://imagemagick.org/script/compose.php for more information'
-- name: 'Image assembler'
+- name: 'ImageAssembler'
   class_name: 'Libis::Format::Converter::ImageAssembler'
   description: 'Combines multiple images into one multipage file'
   input_formats: ['TIFF', 'JPG', 'PNG', 'BMP', 'GIF', 'PDF', 'JP2']
@@ -125,7 +125,7 @@
       data_type: 'bool'
       default: false
       description: 'suppress output'
-- name: 'JPeg 2000 converter'
+- name: 'JPeg2kConverter'
   class_name: 'Libis::Format::Converter::Jp2Converter'
   description: 'Convert images to JPEG 2000 format using j2kdriver'
   input_formats: ['TIFF', 'JPG', 'PNG', 'BMP', 'GIF', 'PDF']
