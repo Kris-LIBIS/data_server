@@ -9,7 +9,7 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
   config.sort_order = 'name_asc'
   config.batch_actions = false
 
-  permit_params :name, :is_upload, :organization_id, :lock_Version
+  permit_params :name, :is_upload, :organization_id, :storage_type_id, :lock_Version
 
   filter :name
 
@@ -20,12 +20,13 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
     column :protocol do |obj|
       obj.storage_type.protocol
     end
-    column :parameters do |obj|
-      obj.parameters.each_with_object(Hash.new { |h, k| h[k] = {} }) {|(n, p), r| r[n] = p[:value] }
+    # noinspection RubyResolve
+    list_column :parameters do |obj|
+      obj.parameter_values.transform_keys { |k| k.gsub(/^.*#/, '') }
     end
     actions defaults: false do |obj|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons path: resource_path(obj), actions: %i[edit delete]
+      action_icons path: resource_path(obj), actions: %i[view edit delete]
     end
   end
 
@@ -36,86 +37,64 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
 
     attributes_table do
       row :name
+      row :is_upload
       row :protocol do |obj|
         # noinspection RubyResolve
         obj.storage_type.protocol
       end
     end
 
-    columns do
-      column do
-        # noinspection RubyResolve
-        panel 'Parameters' do
-          table_for resource.parameter_values.order(:id) do
-            column :name
-            column :value
-            column '' do |param_value|
-              # noinspection RubyResolve
-              action_icons path: admin_storage_parameter_value_path(resource, param_value), actions: %i[edit delete]
-            end
-          end
-          new_button :storage, :parameter_value
+    # noinspection RubyResolve
+    panel 'Parameters' do
+      table_for resource.parameter_refs.order(:id) do
+        column :protocol do |param_ref|
+          param_ref.delegation.first.gsub(/#.*/, '')
+        end
+        column :name
+        column :default
+        column '' do |param_ref|
+          # noinspection RubyResolve
+          action_icons path: admin_storage_parameter_ref_path(resource, param_ref), actions: %i[edit delete]
         end
       end
-      column do
-        # noinspection RubyResolve
-        panel :help do
-          div do
-            "The parameters configure the storage for a given protocol. The nnumber and type of parameters " +
-                "will be different, depending on the protocol choosen:".html_safe
-          end
-
-          data = [
-              {protocol: 'NFS', options: [
-                  {tag: 'location', info: 'the path to the directory'},
-              ]},
-              {protocol: 'FTP', options: [
-                  {tag: 'host', info: 'the hostname or ip-address of the FTP server'},
-                  {tag: 'port', info: 'the port number on which the FTP server listens (optional - default: 22)'},
-                  {tag: 'user', info: 'the login user name'},
-                  {tag: 'password', info: 'the login password'},
-                  {tag: 'location', info: 'the path to the directory'},
-              ]},
-              {protocol: 'SFTP', options: [
-                  {tag: 'host', info: 'the hostname or ip-address of the FTP server'},
-                  {tag: 'port', info: 'the port number on which the FTP server listens (optional - default: 22)'},
-                  {tag: 'user', info: 'the login user name'},
-                  {tag: 'password', info: 'the login password'},
-                  {tag: 'location', info: 'the path to the directory'},
-              ]},
-              {protocol: 'GDRIVE', options: [
-                  {tag: 'credentials_file', info: 'the file where the credentials for the Google Drive can be found'},
-                  {tag: 'port', info: 'the port number on which the FTP server listens (optional - default: 22)'},
-                  {tag: 'user', info: 'the login user name'},
-                  {tag: 'password', info: 'the login password'},
-                  {tag: 'location', info: 'the path to the directory'},
-              ]}
-          ]
-          table_for data do
-            column :protocol do |info|
-              info[:protocol]
-            end
-            column :options do |info|
-              table_for info[:options] do
-                column :tag do |option|
-                  option[:tag]
-                end
-                column :info do |option|
-                  option[:info]
-                end
-              end
-            end
-          end
-
+      div do
+        "Available parameters to configure the storage. The number and type of parameters " +
+            "will be different, depending on the protocol choosen:".html_safe
+      end
+      data = []
+      resource.storage_type.parameter_defs.each do |param_def|
+        h = param_def.to_hash
+        next if resource.parameter_refs.find_by(delegation: "{#{resource.storage_type.name}##{h[:name]}}")
+        data << h
+      end
+      puts data.to_s
+      table_for data do
+        column :name
+        column :data_type
+        column :default
+        column :description
+        column '' do |data|
+          help_icon data[:help]
+          new_button :storage, :parameter_ref,
+                     values: {
+                         teneo_data_model_parameter_ref: {
+                             name: data[:name],
+                             delegation_list: "#{resource.storage_type.name}##{data[:name]}",
+                             with_param_refs_type: resource.class.name,
+                             with_param_refs_id: resource.id
+                         }
+                     }
         end
       end
+      # new_button :storage, :parameter_ref
     end
   end
 
   form do |f|
     f.inputs do
       f.input :name, required: true
-      f.input :protocol, required: true, collection: Teneo::DataModel::Storage::PROTOCOL_LIST
+      f.input :is_upload
+      f.input :storage_type, required: true, collection: Teneo::DataModel::StorageType.all
       f.hidden_field :lock_version
     end
     f.actions

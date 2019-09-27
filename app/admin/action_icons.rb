@@ -12,6 +12,7 @@ def button_link(href:, title:, icon: nil, method: :get, data: {}, classes: [], p
   value = icon ? fa_icon(icon.to_s) : title
   ref = options.delete :href
   # button(value, ref, options)
+  # noinspection RubyResolve
   span class: 'button_link' do
     link_to value, ref, options
   end
@@ -24,10 +25,10 @@ def parent_info
   nil
 end
 
-def back_path
+def back_path(info: nil, anchor: nil)
   params = []
   path = ['admin']
-  return unless (info = parent_info)
+  return unless (info ||= parent_info)
   parent_type = info[:type]
   parent_id = info[:id]
   parent_resource = ActiveAdmin.application.namespaces[:admin].resources[parent_type.to_s.camelize]
@@ -42,18 +43,20 @@ def back_path
   path << parent_type
   params << parent_id
   path << 'path'
-  send(path.compact.join('_'), *params)
+  # send(path.compact.join('_'), *params) + '/#' + anchor.to_s
+  send(path.compact.join('_'), *params, anchor: anchor)
 end
 
-def back_button
+def back_button(anchor: nil)
   return unless (info = parent_info)
-  button_link href: back_path, title: "back to #{info[:type]}", classes: ['back-button']
+  button_link href: back_path(anchor: anchor), title: "back to #{info[:type]}", classes: ['back-button']
 end
 
-def new_button(object_type, resource_type = nil, action: 'new', method: :get, params: {})
+def new_button(object_type, resource_type = nil, action: 'new', method: :get, params: {}, values: {})
   path = [action, 'admin', object_type, resource_type, 'path'].compact.join '_'
   args = []
   args << request.params[:id] if resource_type
+  args << values
   button_link href: send(path, *args),
               title: 'New', icon: 'plus-circle', classes: ['right-align'], method: method, params: params
 end

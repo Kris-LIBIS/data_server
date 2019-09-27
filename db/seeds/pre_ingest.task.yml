@@ -107,6 +107,29 @@
       data_type: 'string'
       default: 'Kuleuven'
       description: 'Match files with MIME types that match the given regular expression. Ignored if empty.'
+    not_found:
+      data_type: 'string'
+      default: 'ignore'
+      description: 'What to do when record is not found'
+      constraint: ['ignore', 'warn', 'error', 'abort']
+    title_to_name:
+      data_type: 'bool'
+      default: false
+      description: 'Update the item name with the title in the metadata?'
+    title_to_label:
+      data_type: 'bool'
+      default: true
+      description: 'Update the item label with the title in the metadata?'
+    new_name:
+      data_type: 'string'
+      description: 'Ruby expression that transforms the name.'
+    new_label:
+      data_type: 'string'
+      description: 'Ruby expression that transforms the label.'
+    fail_on_missing:
+      data_type: 'bool'
+      default: false
+      description: 'Raise an error if a metadata record is missing?'
 - name: 'CollectionCreator'
   stage: 'PreIngest'
   class_name: 'Libis::Ingester::CollectionCreator'

@@ -30,9 +30,15 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
   index do
     column :name
     column :description
-    actions defaults: false do |object|
+    column :referenced, class: 'button' do |obj|
+      if obj.conversion_tasks.count > 0
+        # noinspection RubyResolve
+        button_link href: resource_path(obj, anchor: 'referenced-by'), title: obj.conversion_tasks.count
+      end
+    end
+    actions defaults: false do |obj|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons path: resource_path(object), actions: %i[view delete]
+      action_icons path: resource_path(obj), actions: %i[view delete]
     end
   end
 
@@ -48,6 +54,7 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
 
     tabs do
 
+      # noinspection DuplicatedCode
       tab 'Parameters', class: 'panel_contents' do
         table_for converter.parameter_defs.order(:id) do
           column :name
@@ -62,6 +69,40 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
           end
         end
         new_button :converter, :parameter_def
+      end
+
+      tab 'Referenced by', class: 'panel_contents' do
+        table_for converter.conversion_tasks do
+          column :organization do |obj|
+            obj = obj.conversion_workflow.representation.ingest_model.ingest_agreement.organization
+            # noinspection RubyResolve
+            link_to obj.name, admin_organization_path(obj)
+          end
+          column :ingest_agreement do |obj|
+            obj = obj.conversion_workflow.representation.ingest_model.ingest_agreement
+            # noinspection RubyResolve
+            link_to obj.name, admin_organization_ingest_agreement_path(obj.organization, obj)
+          end
+          column :ingest_model do |obj|
+            obj = obj.conversion_workflow.representation.ingest_model
+            # noinspection RubyResolve
+            link_to obj.name, admin_ingest_agreement_ingest_model_path(obj.ingest_agreement, obj)
+          end
+          column :representation do |obj|
+            obj = obj.conversion_workflow.representation
+            # noinspection RubyResolve
+            link_to obj.name, admin_ingest_model_representation_path(obj.ingest_model, obj)
+          end
+          column :workflow do |obj|
+            obj = obj.conversion_workflow
+            # noinspection RubyResolve
+            link_to obj.name, admin_representation_conversion_workflow_path(obj.representation, obj)
+          end
+          column :task do |obj|
+            # noinspection RubyResolve
+            link_to obj.name, admin_conversion_workflow_conversion_task_path(obj.conversion_workflow, obj)
+          end
+        end
       end
 
     end

@@ -30,6 +30,12 @@ ActiveAdmin.register Teneo::DataModel::Task, as: 'Task' do
   index do
     column :name
     column :description
+    column :referenced, class: 'button' do |obj|
+      if obj.stage_workflows.count > 0
+        # noinspection RubyResolve
+        button_link href: resource_path(obj, anchor: 'referenced-by'), title: obj.stage_workflows.count
+      end
+    end
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
       action_icons path: resource_path(object), actions: %i[view delete]
@@ -48,6 +54,7 @@ ActiveAdmin.register Teneo::DataModel::Task, as: 'Task' do
 
     tabs do
 
+      # noinspection DuplicatedCode
       tab 'Parameters', class: 'panel_contents' do
         table_for resource.parameter_defs.order(:id) do
           column :name
@@ -64,9 +71,20 @@ ActiveAdmin.register Teneo::DataModel::Task, as: 'Task' do
         new_button :converter, :parameter_def
       end
 
+      tab 'Referenced by', class: 'panel_contents' do
+        table_for resource.stage_workflows do
+          column :stage_workflow do |obj|
+            obj = obj
+            # noinspection RubyResolve
+            link_to obj.name, admin_stage_workflow_path(obj)
+          end
+        end
+      end
+
     end
   end
 
+  # noinspection DuplicatedCode
   form do |f|
     f.inputs do
       f.input :name, required: true

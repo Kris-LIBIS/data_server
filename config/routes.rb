@@ -41,6 +41,10 @@ Rails.application.routes.draw do
       resources :parameter_defs, only: [:new, :edit, :destroy, :create, :update]
     end
     # noinspection RailsParamDefResolve
+    resources :conversion_tasks, only: [] do
+      resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
+    end
+    # noinspection RailsParamDefResolve
     resources :stage_workflows, only: [] do
       resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
     end

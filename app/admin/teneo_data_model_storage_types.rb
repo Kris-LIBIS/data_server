@@ -4,7 +4,7 @@ require 'action_icons'
 ActiveAdmin.register Teneo::DataModel::StorageType, as: 'StorageType' do
   menu parent: 'Ingest tools', priority: 4
 
-  actions :index, :new, :edit, :destroy
+  # actions :index, :new, :edit, :destroy
 
   controller do
     # noinspection RubySuperCallWithoutSuperclassInspection,RubyBlockToMethodReference,RubyResolve
@@ -25,9 +25,15 @@ ActiveAdmin.register Teneo::DataModel::StorageType, as: 'StorageType' do
   index do
     column :protocol
     column :description
+    column :referenced, class: 'button' do |obj|
+      if obj.storages.count > 0
+        # noinspection RubyResolve
+        button_link href: resource_path(obj, anchor: 'referenced-by'), title: obj.storages.count
+      end
+    end
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons path: resource_path(object), actions: %i[edit delete]
+      action_icons path: resource_path(object), actions: %i[view edit delete]
     end
   end
 
@@ -62,6 +68,23 @@ ActiveAdmin.register Teneo::DataModel::StorageType, as: 'StorageType' do
           end
         end
         new_button :storage_type, :parameter_def
+      end
+
+      tab 'Referenced by', class: 'panel_contents' do
+        table_for storage_type.storages do
+          column :organization do |obj|
+            obj = obj.organization
+            # noinspection RubyResolve
+            link_to obj.name, admin_organization_path(obj)
+          end
+          column :storage do |obj|
+            # noinspection RubyResolve
+            link_to obj.name, admin_organization_storage_path(obj.organization, obj)
+          end
+          column :upload do |obj|
+            obj.is_upload
+          end
+        end
       end
 
     end

@@ -37,6 +37,6 @@
     new_label:
       delegation: ['MetadataAlmaCollector#new_label']
     fail_on_not_found:
-      delegation: ['MetadataAlmaCollector#fail_on_not_found']
+      delegation: ['MetadataAlmaCollector#fail_on_missing']
     base_collection:
-      delegation: ['CollectionCreator#base_collection']
+      delegation: ['CollectionCreator#collection']

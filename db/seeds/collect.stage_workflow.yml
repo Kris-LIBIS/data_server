@@ -68,7 +68,6 @@
     - task: 'DirListCollector'
       values:
         subdirs: 'ignore'
-        file_limit: 5000
   parameters:
     location:
       delegation: ['DirListCollector#location']

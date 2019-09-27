@@ -44,8 +44,9 @@ ActiveAdmin.register Teneo::DataModel::ConversionWorkflow, as: 'ConversionWorkfl
             task.converter
           end
           column :output_format
+          # noinspection RubyResolve
           list_column 'parameters' do |task|
-            task.parameter_values
+            task.parameter_values.each_with_object({}) {|(k,v),h| h[k.gsub(/^.*#/,'')] = v}
           end
           column '' do |model|
             # noinspection RubyResolve

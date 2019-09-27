@@ -12,9 +12,9 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
   filter :inst_code
 
   permit_params :name, :description, :inst_code, :lock_version,
-                memberships_attributes: [:id, :_destroy, :organization_id, :role_id, :user_id],
-                storages_attributes: [:id, :_destroy, :organization_id, :name, :protocol, :options],
-                ingest_agreements_attributes: [:id, :_destroy, :organization_id, :name]
+                memberships_attributes: [:id, :_destroy, :organization_id, :role_id, :user_id]#,
+                # storages_attributes: [:id, :_destroy, :organization_id, :name, :protocol, :options],
+                # ingest_agreements_attributes: [:id, :_destroy, :organization_id, :name]
 
   index do
     column :name do |org|
@@ -83,8 +83,8 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
           end
           column :protocol
           # noinspection RubyResolve
-          list_column :parameter_values do |storage|
-            storage.parameter_values.inject({}) {|hash, value| hash[value.name] = value.value; hash}
+          list_column :parameters do |storage|
+            storage.parameter_values.transform_keys {|k| k.gsub(/^.*#/, '')}
           end
           column '' do |storage|
             # noinspection RubyResolve

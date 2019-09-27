@@ -12,7 +12,6 @@
   tasks:
     - task: 'ChecksumTester'
       values:
-        recursive: true
         checksum_type: 'MD5'
     - task: 'FormatDirIdentifier'
   parameters:
@@ -27,8 +26,6 @@
   tasks:
     - task: 'FormatDirIdentifier'
     - task: 'FileMimetypeChecker'
-      values:
-        recursive: true
   parameters:
     location:
       delegation: ['FormatDirIdentifier#folder']
@@ -40,12 +37,9 @@
   tasks:
     - task: 'ChecksumTester'
       values:
-        recursive: true
         checksum_type: 'MD5'
     - task: 'FormatDirIdentifier'
     - task: 'FileMimetypeChecker'
-      values:
-        recursive: true
   parameters:
     location:
       delegation: ['FormatDirIdentifier#folder']
@@ -60,13 +54,10 @@
   tasks:
     - task: 'ChecksumTester'
       values:
-        recursive: true
         checksum_type: 'MD5'
     - task: 'DirVirusChecker'
     - task: 'FormatDirIdentifier'
     - task: 'FileMimetypeChecker'
-      values:
-        recursive: true
   parameters:
     location:
       delegation: ['DirVirusChecker#location', 'FormatDirIdentifier#folder']
