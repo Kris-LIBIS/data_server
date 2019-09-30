@@ -2,7 +2,7 @@
 
 require 'active_admin_patch'
 
-def button_link(href:, title:, icon: nil, method: :get, data: {}, classes: [], params: {})
+def button_link(href:, title:, icon: nil, method: :get, data: {}, classes: [], params: {}, disabled: nil)
   options = {href: href, title: title}
   options[:href] += '?' + params.map { |k, v| "#{k}=#{v}" }.join('&') unless params.empty?
   options[:method] = method if method
@@ -13,9 +13,9 @@ def button_link(href:, title:, icon: nil, method: :get, data: {}, classes: [], p
   ref = options.delete :href
   # button(value, ref, options)
   # noinspection RubyResolve
-  span class: 'button_link' do
-    link_to value, ref, options
-  end
+  disabled ?
+      span(class: 'button_link disabled') {a value, onclick: "alert('#{disabled}');" } :
+      span(class: 'button_link') { link_to value, ref, options }
 end
 
 def parent_info
@@ -75,12 +75,12 @@ end
 class ActionIcons < Arbre::Component
   builder_method :action_icons
 
-  def build(path:, actions: [:view, :edit, :delete])
+  def build(path:, actions: [:view, :edit, :delete], disabled: {})
     div class: 'right-align' do
       localizer = ActiveAdmin::Localizers.resource(active_admin_config)
-      button_link(href: path, title: 'View', icon: 'eye') if actions.include? :view
-      button_link(href: "#{path}/edit", title: 'Edit', icon: 'edit') if actions.include? :edit
-      button_link(href: path, title: 'Delete', icon: 'trash', method: :delete,
+      button_link(href: path, title: 'View', icon: 'eye', disabled: disabled[:view]) if actions.include? :view
+      button_link(href: "#{path}/edit", title: 'Edit', icon: 'edit', disabled: disabled[:edit]) if actions.include? :edit
+      button_link(href: path, title: 'Delete', icon: 'trash', disabled: disabled[:delete], method: :delete,
                   data: {confirm: localizer.t(:delete_confirmation)}) if actions.include? :delete
     end
   end
@@ -116,9 +116,12 @@ class ParameterTab < Arbre::Component
       column '' do |param|
         help_icon param.help
         action_labels = %i[edit delete]
-        action_labels.delete(:delete) if param.targets.count + param.sources.count > 0
+        disabled = {}
+        disabled[:delete] = 'Other parameters stil have a reference to this parameter' if param.sources.count > 0
+        # action_labels.delete(:delete) if param.sources.count > 0
         # noinspection RubyResolve
-        action_icons path: send("admin_#{path_name}_parameter_path", resource, param), actions: action_labels
+        action_icons path: send("admin_#{path_name}_parameter_path", resource, param),
+                     actions: action_labels, disabled: disabled
       end
     end
     div message.html_safe
@@ -142,8 +145,8 @@ class ParameterTab < Arbre::Component
           new_button path_name, :parameter,
                      values: {
                          teneo_data_model_parameter: {
-                             name: row[:name],
-                             # target_list: ["", "#{row[:reference]}##{row[:name]}"],
+                             name: "#{row[:reference]}##{row[:name]}",
+                             # target_list: ["#{row[:reference]}##{row[:name]}"],
                              with_parameters_type: resource.class.name,
                              with_parameters_id: resource.id
                          }
@@ -170,9 +173,12 @@ class ParameterDefTab < Arbre::Component
         div class: 'right-align' do
           help_icon param.help
           action_labels = %i[edit delete]
-          action_labels.delete(:delete) if param.targets.count + param.sources.count > 0
+          disabled = {}
+          disabled[:delete] = 'Other parameters stil have a reference to this parameter' if param.sources.count > 0
+          # action_labels.delete(:delete) if param.sources.count > 0
           # noinspection RubyResolve
-          action_icons path: send("admin_#{path_name}_parameter_path", resource, param), actions: action_labels
+          action_icons path: send("admin_#{path_name}_parameter_path", resource, param),
+                       actions: action_labels, disabled: disabled
         end
       end
     end

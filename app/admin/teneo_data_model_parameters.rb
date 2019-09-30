@@ -19,13 +19,17 @@ ActiveAdmin.register Teneo::DataModel::Parameter, as: 'Parameter' do
     # belongs_to :task, parent_class: Teneo::DataModel::Task, polymorphic: true
     # belongs_to :storage_type, parent_class: Teneo::DataModel::StorageType, polymorphic: true
 
+    def return_path(resource)
+      back_path(info: {type: resource.with_parameters_type.split('::').last.underscore,
+                       id: resource.with_parameters.id}, anchor: 'parameters')
+    end
+
     def create
       targets = params['teneo_data_model_parameter'].delete('target_list')
       create! do |format|
         if resource.valid?
           resource.target_list = targets
-          format.html { redirect_to back_path(info: {type: resource.with_parameters_type.split('::').last.underscore,
-                                                     id: resource.with_parameters.id}, anchor: 'parameters') }
+          format.html { redirect_to return_path(resource) }
         end
       end
     end
@@ -35,17 +39,15 @@ ActiveAdmin.register Teneo::DataModel::Parameter, as: 'Parameter' do
       update! do |format|
         if resource.valid?
           resource.target_list = targets
-          format.html { redirect_to back_path(info: {type: resource.with_parameters_type.split('::').last.underscore,
-                                                     id: resource.with_parameters.id}, anchor: 'parameters') }
+          format.html { redirect_to return_path(resource) }
         end
       end
     end
 
     def destroy
-      path = back_path(info: {type: resource.with_parameters_type.split('::').last.underscore,
-                              id: resource.with_parameters.id}, anchor: 'parameters')
+      resource.targets.clear
       destroy! do |format|
-        format.html { redirect_to path }
+        format.html { redirect_to return_path(resource) }
       end
     end
   end
