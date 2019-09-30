@@ -3,6 +3,7 @@ require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
 
+  # noinspection RailsParamDefResolve
   belongs_to :organization, parent_class: Teneo::DataModel::Organization
   # navigation_menu :organization
 

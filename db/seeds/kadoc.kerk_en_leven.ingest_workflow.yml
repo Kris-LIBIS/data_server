@@ -36,14 +36,14 @@
         export_dir: '/nas/vol04/export/kadocadmin/ingest'
   parameters:
     location:
-      delegation: ['Recursive file collect#location']
+      targets: ['Recursive file collect#location', 'checksum + format + mimetype#location']
       default: '/nas/vol04/upload/flandrica/kadoc/kadoc'
     selection:
-      delegation: ['Recursive file collect#selection']
+      targets: ['Recursive file collect#selection']
       default: '^KYE[0-9]+_[^_]+_[^_]+_.+\.(JPG|jpg|PDF|pdf)$'
     checksum_file:
-      delegation: ['checksum + format + mimetype#checksum_file']
+      targets: ['checksum + format + mimetype#checksum_file']
       default: '/nas/vol04/upload/flandrica/kadoc/kadoc'
     base_collection:
-      delegation: ['group + alma + collection#base_collection']
+      targets: ['group + alma + collection#base_collection']
       default: 'E_periodieken/Parochiebladen'

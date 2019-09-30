@@ -7,7 +7,7 @@
         export_format: 'csv'
   parameters:
     export_dir:
-      delegation: ['Exporter#export_dir']
+      targets: ['Exporter#export_dir']
     export_key:
-      delegation: ['Exporter#export_key']
+      targets: ['Exporter#export_key']
       default: 'item.name'

@@ -56,19 +56,8 @@ ActiveAdmin.register Teneo::DataModel::Converter, as: 'Converter' do
 
       # noinspection DuplicatedCode
       tab 'Parameters', class: 'panel_contents' do
-        table_for converter.parameter_defs.order(:id) do
-          column :name
-          column :description
-          column :data_type
-          column :default
-          column :constraint
-          column '' do |param_def|
-            # noinspection RubyResolve
-            action_icons path: admin_converter_parameter_def_path(converter, param_def), actions: %i[edit delete]
-            help_icon param_def.help
-          end
-        end
-        new_button :converter, :parameter_def
+        # noinspection RubyResolve
+        parameter_def_tab resource: converter
       end
 
       tab 'Referenced by', class: 'panel_contents' do

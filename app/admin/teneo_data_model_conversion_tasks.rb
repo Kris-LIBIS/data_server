@@ -41,46 +41,8 @@ ActiveAdmin.register Teneo::DataModel::ConversionTask, as: 'ConversionTask' do
 
     # noinspection RubyResolve
     panel 'Parameters' do
-      table_for resource.parameter_refs.order(:id) do
-        column :converter do |param_ref|
-          param_ref.delegation.first.gsub(/#.*/, '')
-        end
-        column :name
-        column :default
-        column '' do |param_ref|
-          # noinspection RubyResolve
-          action_icons path: admin_conversion_task_parameter_ref_path(resource, param_ref), actions: %i[edit delete]
-        end
-      end
-      div do
-        "Available parameters to configure the converter. The number and type of parameters " +
-            "will be different, depending on the converter choosen:".html_safe
-      end
-      data = []
-      resource.converter.parameter_defs.each do |param_def|
-        h = param_def.to_hash
-        next if resource.parameter_refs.find_by(delegation: "{#{resource.converter.name}##{h[:name]}}")
-        data << h
-      end
-      table_for data do
-        column :name
-        column :data_type
-        column :default
-        column :description
-        column '' do |data|
-          help_icon data[:help]
-          new_button :conversion_task, :parameter_ref,
-                     values: {
-                         teneo_data_model_parameter_ref: {
-                             name: data[:name],
-                             delegation_list: "#{resource.converter.name}##{data[:name]}",
-                             with_param_refs_type: resource.class.name,
-                             with_param_refs_id: resource.id
-                         }
-                     }
-        end
-      end
-      # new_button :storage, :parameter_ref
+      parameter_tab resource: resource, message: "Available parameters to configure the converter. " +
+          "The number and type of parameters will be different, depending on the converter choosen:"
     end
 
   end

@@ -42,12 +42,7 @@ ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
           column :stage_workflow
           # noinspection RubyResolve
           list_column 'Parameters' do |stage|
-            stage.ingest_workflow.parameters_for(stage.stage_workflow.name, recursive: true).reduce({}) {|r, (k,v)|
-              n = k.gsub(/^.*#/, '')
-              n = "<b>#{n}</b>" if v[:export]
-              r[n] = v[:data_type] == 'bool' ? v[:default] == 't' : v[:default].to_s
-              r
-            }
+            list_for parent_resource: ingest_workflow, resource: stage.stage_workflow
           end
           column '' do |stage|
             # noinspection RubyResolve
@@ -58,57 +53,9 @@ ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
       end
 
       tab 'Parameters', class: 'panel_contents' do
-        table_for ingest_workflow.parameter_refs.order(:id) do
-          column :delegation, as: :tags do |param_ref|
-            param_ref.delegation
-          end
-          column :export_name do |param_ref|
-            param_ref.name if param_ref.export
-          end
-          # noinspection RubyResolve
-          column :default
-          column :description
-          column '' do |param_ref|
-            help_icon param_ref.help
-            # noinspection RubyResolve
-            action_icons path: admin_ingest_workflow_parameter_ref_path(ingest_workflow, param_ref), actions: %i[edit delete]
-          end
-        end
-        div do
-          "The parameters configure the stage workflows. The following parameters can be referenced:".html_safe
-        end
-        data = []
-        resource.child_parameters.each do |name, param|
-            h = param
-            h[:stage_workflow] = Teneo::DataModel::ParameterRef.delegation_host(name)
-            next if resource.parameter_refs.where("'#{name}' = ANY (delegation)").count > 0
-            data << h if h[:export]
-        end
-        puts data.to_s
-        table_for data do
-          column :stage_workflow
-          column :name
-          # do |data|
-          #   Teneo::DataModel::ParameterRef.delegation_param(data[:name])
-          # end
-          column :data_type
-          column :default do |data|
-            data[:data_type] == 'bool' ? data[:default] == 't' : data[:default].to_s
-          end
-          column :description
-          column '' do |data|
-            help_icon data[:help]
-            new_button :ingest_workflow, :parameter_ref,
-                       values: {
-                           teneo_data_model_parameter_ref: {
-                               name: data[:name],
-                               delegation_list: "#{data[:stage_workflow]}##{data[:name]}",
-                               with_param_refs_type: resource.class.name,
-                               with_param_refs_id: resource.id
-                           }
-                       }
-          end
-        end
+        # noinspection RubyResolve
+        parameter_tab resource: ingest_workflow,
+                      message: "The parameters configure the stage workflows. The following parameters can be referenced:"
       end
 
       tab 'Packages', class: 'panel_contents' do

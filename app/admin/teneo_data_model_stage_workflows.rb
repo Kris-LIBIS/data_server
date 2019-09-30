@@ -57,16 +57,7 @@ ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
           column :task
           # noinspection RubyResolve
           list_column 'Parameters' do |stage_task|
-            # stage_task.stage_workflow.parameter_values.each_with_object({}) do |(k, v), result|
-            #   next unless k =~ /^#{stage_task.task.name}#(.*)$/
-            #   result[$1] = v
-            # end
-            stage_task.stage_workflow.parameters_for(stage_task.task.name, recursive: true).reduce({}) {|r, (k,v)|
-              n = k.gsub(/^.*#/, '')
-              n = "<b>#{n}</b>" if v[:export]
-              r[n] = (v[:data_type] == 'bool' ? v[:default] == 't' : (v[:default] || ''))
-              r
-            }
+            list_for parent_resource: stage_workflow, resource: stage_task
           end
           column '' do |model|
             # noinspection RubyResolve
@@ -77,54 +68,10 @@ ActiveAdmin.register Teneo::DataModel::StageWorkflow, as: 'StageWorkflow' do
       end
 
       tab 'Parameters', class: 'panel_contents' do
-        table_for stage_workflow.parameter_refs.order(:id) do
-          column :delegation, as: :tags do |param_ref|
-            param_ref.delegation
-          end
-          column :export_name do |param_ref|
-            param_ref.name if param_ref.export
-          end
-          # noinspection RubyResolve
-          column :default
-          column :description
-          column '' do |param_ref|
-            help_icon param_ref.help
-            # noinspection RubyResolve
-            action_icons path: admin_stage_workflow_parameter_ref_path(stage_workflow, param_ref), actions: %i[edit delete]
-          end
-        end
-        div do
-          "Available parameters to configure the stage's tasks. The number and type of parameters " +
-              "will be different, depending on the tasks choosen:".html_safe
-        end
-        data = []
-        resource.tasks.each do |task|
-          task.parameter_defs.each do |param_def|
-            h = param_def.to_hash
-            h[:task] = task.name
-            next if resource.parameter_refs.where("'#{h[:task]}##{h[:name]}' = ANY (delegation)").count > 0
-            data << h
-          end
-        end
-        table_for data do
-          column :task
-          column :name
-          column :data_type
-          column :default
-          column :description
-          column '' do |data|
-            help_icon data[:help]
-            new_button :stage_workflow, :parameter_ref,
-                       values: {
-                           teneo_data_model_parameter_ref: {
-                               name: data[:name],
-                               delegation_list: "#{data[:task]}##{data[:name]}",
-                               with_param_refs_type: resource.class.name,
-                               with_param_refs_id: resource.id
-                           }
-                       }
-          end
-        end
+        # noinspection RubyResolve
+        parameter_tab resource: stage_workflow,
+                      message: 'Available parameters to configure the stage\'s tasks. ' +
+                          'The number and type of parameters will be different, depending on the tasks choosen.'
       end
 
       tab 'Referenced by', class: 'panel_contents' do

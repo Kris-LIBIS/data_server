@@ -3,6 +3,7 @@ require 'action_icons'
 
 ActiveAdmin.register Teneo::DataModel::IngestStage, as: 'IngestStage' do
 
+  # noinspection RailsParamDefResolve
   belongs_to :ingest_workflow, parent_class: Teneo::DataModel::IngestWorkflow
 
   config.batch_actions = false

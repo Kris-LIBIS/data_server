@@ -21,13 +21,20 @@ ActiveAdmin.register Teneo::DataModel::Task, as: 'Task' do
   config.sort_order = 'name_asc'
   config.batch_actions = false
 
-  permit_params :name, :description, :class_name, :script_name,
-                :input_formats_list, :output_formats_list, :lock_version
+  permit_params :name, :description, :class_name, :stage, :lock_version
 
   filter :name
   filter :description
 
+  scope :all, default: true
+  Teneo::DataModel::Task::STAGE_LIST.each do |stage|
+    scope stage, group: :stage do |stage_workflows|
+      stage_workflows.where(stage: stage)
+    end
+  end
+
   index do
+    column :stage
     column :name
     column :description
     column :referenced, class: 'button' do |obj|
@@ -44,35 +51,23 @@ ActiveAdmin.register Teneo::DataModel::Task, as: 'Task' do
 
   show do
     attributes_table do
+      row :stage
       row :name
-      row :description
       row :class_name
-      row :script_name
-      row :input_formats_list, as: :tags
-      row :output_formats_list, as: :tags
+      row :description
+      row :help
     end
 
     tabs do
 
       # noinspection DuplicatedCode
       tab 'Parameters', class: 'panel_contents' do
-        table_for resource.parameter_defs.order(:id) do
-          column :name
-          column :description
-          column :data_type
-          column :default
-          column :constraint
-          column '' do |param_def|
-            # noinspection RubyResolve
-            action_icons path: admin_converter_parameter_def_path(resource, param_def), actions: %i[edit delete]
-            help_icon param_def.help
-          end
-        end
-        new_button :converter, :parameter_def
+        # noinspection RubyResolve
+        parameter_def_tab resource: task
       end
 
       tab 'Referenced by', class: 'panel_contents' do
-        table_for resource.stage_workflows do
+        table_for task.stage_workflows do
           column :stage_workflow do |obj|
             obj = obj
             # noinspection RubyResolve
@@ -87,12 +82,11 @@ ActiveAdmin.register Teneo::DataModel::Task, as: 'Task' do
   # noinspection DuplicatedCode
   form do |f|
     f.inputs do
+      f.input :stage, required: true, collection: Teneo::DataModel::Task::STAGE_LIST
       f.input :name, required: true
-      f.input :description
       f.input :class_name
-      f.input :script_name
-      f.input :input_formats_list, as: :tags, collection: Teneo::DataModel::Format.pluck(:name)
-      f.input :output_formats_list, as: :tags, collection: Teneo::DataModel::Format.pluck(:name)
+      f.input :description
+      f.input :help, as: :text, input_html: {rows: 3}
       f.hidden_field :lock_version
     end
     actions

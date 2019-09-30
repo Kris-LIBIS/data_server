@@ -55,19 +55,8 @@ ActiveAdmin.register Teneo::DataModel::StorageType, as: 'StorageType' do
     tabs do
 
       tab 'Parameters', class: 'panel_contents' do
-        table_for storage_type.parameter_defs.order(:id) do
-          column :name
-          column :description
-          column :data_type
-          column :default
-          column :constraint
-          column '' do |param_def|
-            # noinspection RubyResolve
-            action_icons path: admin_storage_type_parameter_def_path(storage_type, param_def), actions: %i[edit delete]
-            help_icon param_def.help
-          end
-        end
-        new_button :storage_type, :parameter_def
+        # noinspection RubyResolve
+        parameter_def_tab resource: storage_type
       end
 
       tab 'Referenced by', class: 'panel_contents' do

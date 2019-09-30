@@ -84,7 +84,7 @@ ActiveAdmin.register Teneo::DataModel::Organization, as: 'Organization' do
           column :protocol
           # noinspection RubyResolve
           list_column :parameters do |storage|
-            storage.parameter_values.transform_keys {|k| k.gsub(/^.*#/, '')}
+            storage.parameter_values.transform_keys {|k| k.gsub(/^.*:/, '')}
           end
           column '' do |storage|
             # noinspection RubyResolve

@@ -46,47 +46,9 @@ ActiveAdmin.register Teneo::DataModel::Storage, as: 'Storage' do
 
     # noinspection RubyResolve
     panel 'Parameters' do
-      table_for resource.parameter_refs.order(:id) do
-        column :protocol do |param_ref|
-          param_ref.delegation.first.gsub(/#.*/, '')
-        end
-        column :name
-        column :default
-        column '' do |param_ref|
-          # noinspection RubyResolve
-          action_icons path: admin_storage_parameter_ref_path(resource, param_ref), actions: %i[edit delete]
-        end
-      end
-      div do
-        "Available parameters to configure the storage. The number and type of parameters " +
-            "will be different, depending on the protocol choosen:".html_safe
-      end
-      data = []
-      resource.storage_type.parameter_defs.each do |param_def|
-        h = param_def.to_hash
-        next if resource.parameter_refs.find_by(delegation: "{#{resource.storage_type.name}##{h[:name]}}")
-        data << h
-      end
-      puts data.to_s
-      table_for data do
-        column :name
-        column :data_type
-        column :default
-        column :description
-        column '' do |data|
-          help_icon data[:help]
-          new_button :storage, :parameter_ref,
-                     values: {
-                         teneo_data_model_parameter_ref: {
-                             name: data[:name],
-                             delegation_list: "#{resource.storage_type.name}##{data[:name]}",
-                             with_param_refs_type: resource.class.name,
-                             with_param_refs_id: resource.id
-                         }
-                     }
-        end
-      end
-      # new_button :storage, :parameter_ref
+      parameter_tab resource: resource,
+                    message: "Available parameters to configure the storage. The number and type of parameters " +
+                                "will be different, depending on the protocol choosen:"
     end
   end
 

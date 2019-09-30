@@ -7,4 +7,4 @@
     - task: 'SubmissionChecker'
   parameters:
     force_label_to_title:
-      delegation: ['MetsCreator#force_label_to_title']
+      targets: ['MetsCreator#force_label_to_title']

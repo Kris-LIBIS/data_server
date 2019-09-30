@@ -27,38 +27,39 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
+  p_only = [:index, :show, :new, :edit, :destroy, :create, :update]
   namespace :admin do
     # noinspection RailsParamDefResolve
     resources :converters, only: [] do
-      resources :parameter_defs, only: [:new, :edit, :destroy, :create, :update]
+      resources :parameters, only: p_only
     end
     # noinspection RailsParamDefResolve
     resources :tasks, only: [] do
-      resources :parameter_defs, only: [:new, :edit, :destroy, :create, :update]
+      resources :parameters, only: p_only
     end
     # noinspection RailsParamDefResolve
     resources :storage_types, only: [] do
-      resources :parameter_defs, only: [:new, :edit, :destroy, :create, :update]
+      resources :parameters, only: p_only
     end
     # noinspection RailsParamDefResolve
     resources :conversion_tasks, only: [] do
-      resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
+      resources :parameters, only: p_only
     end
     # noinspection RailsParamDefResolve
     resources :stage_workflows, only: [] do
-      resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
+      resources :parameters, only: p_only
     end
     # noinspection RailsParamDefResolve
     resources :ingest_workflows, only: [] do
-      resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
+      resources :parameters, only: p_only
     end
     # noinspection RailsParamDefResolve
     resources :packages, only: [] do
-      resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
+      resources :parameters, only: p_only
     end
     # noinspection RailsParamDefResolve
     resources :storages, only: [] do
-      resources :parameter_refs, only: [:new, :edit, :destroy, :create, :update]
+      resources :parameters, only: p_only
     end
   end
 

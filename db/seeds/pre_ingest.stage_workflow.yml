@@ -9,34 +9,34 @@
     - task: 'CollectionCreator'
   parameters:
     group_regex:
-      delegation: ['FileGrouper#group_regex']
+      targets: ['FileGrouper#group_regex']
     collection_label:
-      delegation: ['FileGrouper#collection_label']
+      targets: ['FileGrouper#collection_label']
     group_name:
-      delegation: ['FileGrouper#group_name']
+      targets: ['FileGrouper#group_name']
     group_label:
-      delegation: ['FileGrouper#group_label']
+      targets: ['FileGrouper#group_label']
     file_label:
-      delegation: ['FileGrouper#file_label']
+      targets: ['FileGrouper#file_label']
     collection_navigate:
-      delegation: ['FileGrouper#collection_navigate']
+      targets: ['FileGrouper#collection_navigate']
     collection_publish:
-      delegation: ['FileGrouper#collection_navigate']
+      targets: ['FileGrouper#collection_navigate']
     field:
-      delegation: ['MetadataAlmaCollector#field']
+      targets: ['MetadataAlmaCollector#field']
     term:
-      delegation: ['MetadataAlmaCollector#term']
+      targets: ['MetadataAlmaCollector#term']
     match_regex:
-      delegation: ['MetadataAlmaCollector#match_regex']
+      targets: ['MetadataAlmaCollector#match_regex']
     converter:
-      delegation: ['MetadataAlmaCollector#converter']
+      targets: ['MetadataAlmaCollector#converter']
     title_to_name:
-      delegation: ['MetadataAlmaCollector#title_to_name']
+      targets: ['MetadataAlmaCollector#title_to_name']
     title_to_label:
-      delegation: ['MetadataAlmaCollector#title_to_label']
+      targets: ['MetadataAlmaCollector#title_to_label']
     new_label:
-      delegation: ['MetadataAlmaCollector#new_label']
+      targets: ['MetadataAlmaCollector#new_label']
     fail_on_not_found:
-      delegation: ['MetadataAlmaCollector#fail_on_missing']
+      targets: ['MetadataAlmaCollector#fail_on_missing']
     base_collection:
-      delegation: ['CollectionCreator#collection']
+      targets: ['CollectionCreator#collection']
