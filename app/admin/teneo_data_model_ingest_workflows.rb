@@ -63,6 +63,10 @@ ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
           column :name do |package|
             auto_link package
           end
+          # noinspection RubyResolve
+          list_column :runs do |package|
+            package.runs.map {|x| auto_link x}
+          end
           column '' do |package|
             # noinspection RubyResolve
             action_icons path: admin_ingest_workflow_package_path(package.ingest_workdflow, package), actions: [:delete]
