@@ -168,16 +168,18 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
 
   create_table "items", force: :cascade do |t|
     t.string "type", null: false
+    t.string "parent_type"
+    t.bigint "parent_id"
+    t.integer "position"
     t.string "name", null: false
     t.string "label"
-    t.json "properties"
-    t.bigint "parent_id"
-    t.bigint "package_id"
+    t.jsonb "options", default: "{}"
+    t.jsonb "properties", default: "{}"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "lock_version", default: 0, null: false
-    t.index ["package_id"], name: "index_items_on_package_id"
-    t.index ["parent_id"], name: "index_items_on_parent_id"
+    t.index ["parent_type", "parent_id", "position"], name: "index_items_on_parent_type_and_parent_id_and_position", unique: true
+    t.index ["parent_type", "parent_id"], name: "index_items_on_parent_type_and_parent_id"
   end
 
   create_table "jwt_blacklist", force: :cascade do |t|
@@ -212,6 +214,27 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.index ["organization_id"], name: "index_memberships_on_organization_id"
     t.index ["user_id", "organization_id", "role"], name: "index_memberships_on_user_id_and_organization_id_and_role", unique: true
     t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
+
+  create_table "message_logs", force: :cascade do |t|
+    t.string "severity"
+    t.bigint "item_id"
+    t.bigint "run_id", null: false
+    t.string "task"
+    t.string "message"
+    t.jsonb "data"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["item_id", "severity"], name: "index_message_logs_on_item_id_and_severity"
+    t.index ["item_id"], name: "index_message_logs_on_item_id"
+    t.index ["run_id", "severity"], name: "index_message_logs_on_run_id_and_severity"
+    t.index ["run_id"], name: "index_message_logs_on_run_id"
+  end
+
+  create_table "metadata_records", force: :cascade do |t|
+    t.string "format", null: false
+    t.jsonb "data"
+    t.bigint "item_id", null: false
+    t.index ["item_id"], name: "index_metadata_records_on_item_id"
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -316,7 +339,10 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.boolean "log_to_file", default: false
     t.string "log_level", default: "INFO"
     t.string "log_filename"
-    t.json "config"
+    t.string "name", null: false
+    t.jsonb "config", default: "{}"
+    t.jsonb "options", default: "{}"
+    t.jsonb "properties", default: "{}"
     t.bigint "package_id"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
@@ -347,12 +373,12 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
   end
 
   create_table "status_logs", force: :cascade do |t|
-    t.string "task"
     t.string "status"
-    t.integer "progess"
-    t.integer "max"
     t.bigint "item_id"
     t.bigint "run_id", null: false
+    t.string "task"
+    t.integer "progress", default: 0
+    t.integer "max", default: 0
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["item_id"], name: "index_status_logs_on_item_id"
@@ -413,10 +439,11 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
   add_foreign_key "ingest_stages", "ingest_workflows"
   add_foreign_key "ingest_stages", "stage_workflows"
   add_foreign_key "ingest_workflows", "ingest_agreements"
-  add_foreign_key "items", "items", column: "parent_id", on_delete: :cascade
-  add_foreign_key "items", "packages", on_delete: :cascade
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
+  add_foreign_key "message_logs", "items"
+  add_foreign_key "message_logs", "runs"
+  add_foreign_key "metadata_records", "items"
   add_foreign_key "packages", "ingest_workflows"
   add_foreign_key "parameter_references", "parameters", column: "source_id"
   add_foreign_key "parameter_references", "parameters", column: "target_id"
@@ -427,7 +454,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
   add_foreign_key "runs", "packages", on_delete: :cascade
   add_foreign_key "stage_tasks", "stage_workflows"
   add_foreign_key "stage_tasks", "tasks"
-  add_foreign_key "status_logs", "items", on_delete: :cascade
+  add_foreign_key "status_logs", "items"
   add_foreign_key "status_logs", "runs"
   add_foreign_key "storages", "organizations"
   add_foreign_key "storages", "storage_types"

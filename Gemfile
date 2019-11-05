@@ -90,6 +90,8 @@ gem 'font_awesome5_rails'
 
 gem 'sass-rails'
 
+gem 'teneo-ingester'
+
 # Better errors
 group :development do
   gem "better_errors"

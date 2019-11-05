@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 require 'teneo-data_model'
+require 'teneo-ingester'
 
 # dir = File.join Teneo::DataModel.root, 'db', 'seeds'
 # Teneo::DataModel::SeedLoader.new(dir)
+dir = File.join Teneo::Ingester::ROOT_DIR, 'db', 'seeds'
+Teneo::Ingester::SeedLoader.new(dir)
 
 dir = File.join Rails.root, 'db', 'seeds'
 Teneo::DataModel::SeedLoader.new(dir)
