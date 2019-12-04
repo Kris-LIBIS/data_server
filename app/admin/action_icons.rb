@@ -61,12 +61,31 @@ def new_button(object_type, resource_type = nil, action: 'new', method: :get, pa
               title: 'New', icon: 'plus-circle', classes: ['right-align'], method: method, params: params
 end
 
-def help_icon(message = nil)
+def help_icon(message = nil, title = nil)
   return if message.blank?
   # noinspection RubyResolve
+  # span class: 'button_link' do
+  #   a onclick: "alert('#{MarkdownService.render(message.gsub(/"'/, '').gsub(/\n/,' \\n '))}');" do
+  #     fa_icon 'question-circle'
+  #   end
+  # end
+  i = message.hash.abs.to_s(36)
+  # noinspection RubyResolve
   span class: 'button_link' do
-    a onclick: "alert('#{message}');" do
-      fa_icon 'question-circle'
+    a onclick: "openPopup('help_#{i}');", title: 'help' do
+      fa_icon('question-circle')
+    end
+  end
+  div id: "help_#{i}", class: 'help_popup', onclick: "closePopup('help_#{i}');" do
+    div class: 'popup_window' do
+      # noinspection RubyResolve
+      h4 { title || 'Help' }
+      a class: 'close', onclick: "closePopup('help_#{i}');" do
+        raw('&times;')
+      end
+      div class: 'content' do
+        raw(MarkdownService.render(message))
+      end
     end
   end
 end
@@ -90,7 +109,7 @@ end
 def list_for(resource:, parent_resource:)
   parent_resource.parameters_hash_for(resource.name, recursive: true).reduce({}) { |r, (k, v)|
     n = k.gsub(/^.*#/, '')
-    n = "<b>#{n}</b>" if v[:export]
+    n = "<b>#{v[:name]}</b> -> #{n}" if v[:export]
     x = v[:data_type] == 'bool' ? v[:default] == 't' : v[:default]
     x = "\u180e" if x.nil? || x.blank?
     r[n] = x
@@ -114,14 +133,15 @@ class ParameterTab < Arbre::Component
       column :default
       column :description
       column '' do |param|
-        help_icon param.help
         action_labels = %i[edit delete]
         disabled = {}
         disabled[:delete] = 'Other parameters stil have a reference to this parameter' if param.sources.count > 0
         # action_labels.delete(:delete) if param.sources.count > 0
         # noinspection RubyResolve
         action_icons path: send("admin_#{path_name}_parameter_path", resource, param),
-                     actions: action_labels, disabled: disabled
+                     actions: action_labels, disabled: disabled do
+          help_icon param.help, "parameter: #{param.name}"
+        end
       end
     end
     div message.html_safe
@@ -141,7 +161,7 @@ class ParameterTab < Arbre::Component
       column :description
       column '' do |row|
         div class: 'right-align' do
-          help_icon row[:help]
+          help_icon row[:help], "parameter: #{row[:name]}"
           new_button path_name, :parameter,
                      values: {
                          teneo_data_model_parameter: {
@@ -171,7 +191,7 @@ class ParameterDefTab < Arbre::Component
       column :description
       column '' do |param|
         div class: 'right-align' do
-          help_icon param.help
+          help_icon param.help, "parameter: #{param.name}"
           action_labels = %i[edit delete]
           disabled = {}
           disabled[:delete] = 'Other parameters stil have a reference to this parameter' if param.sources.count > 0

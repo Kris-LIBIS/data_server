@@ -79,6 +79,8 @@ gem 'activeadmin', github: 'activeadmin/activeadmin'#, branch: 'fix_renamed_reso
 gem 'activeadmin_addons'
 gem 'activeadmin_json_editor'
 gem 'activeadmin_reorderable'
+# gem 'activeadmin_simplemde', github: 'parti-coop/activeadmin_simplemde'
+gem 'active_admin-markdown_editor'
 
 gem 'active_admin_theme'
 # gem 'arctic_admin'

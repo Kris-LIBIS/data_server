@@ -55,7 +55,7 @@ ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
       tab 'Parameters', class: 'panel_contents' do
         # noinspection RubyResolve
         parameter_tab resource: ingest_workflow,
-                      message: "The parameters configure the stage workflows. The following parameters can be referenced:"
+                      message: "The parameters configure the ingest workflow. The following parameters can be used:"
       end
 
       tab 'Packages', class: 'panel_contents' do
@@ -63,16 +63,19 @@ ActiveAdmin.register Teneo::DataModel::IngestWorkflow, as: 'IngestWorkflow' do
           column :name do |package|
             auto_link package
           end
+          column :base_dir
           # noinspection RubyResolve
           list_column :runs do |package|
             package.runs.map {|x| auto_link x}
           end
           column '' do |package|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_workflow_package_path(package.ingest_workdflow, package), actions: [:delete]
+            action_icons path: admin_ingest_workflow_package_path(package.ingest_workflow, package), actions: [:delete]
           end
         end
+        new_button :ingest_workflow, :package
       end
+
     end
   end
 

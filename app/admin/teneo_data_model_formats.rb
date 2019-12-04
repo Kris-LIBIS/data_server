@@ -9,7 +9,7 @@ ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
   config.paginate = true
 
   permit_params :category, :name, :description, #:lock_version,
-                :extensions_list,:mime_types_list, :puids_list
+                :extensions_list,:mimetypes_list, :puids_list
 
   # User can use scopes instead
   # filter :category, as: :select, collection: Teneo::DataModel::Format::CATEGORY_LIST
@@ -56,7 +56,7 @@ ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
       end
       row 'MIME types' do
         # noinspection RubyResolve
-        resource.mime_types_list
+        resource.mimetypes_list
       end
       row 'PRONOM Unique Identifiers' do
         # noinspection RubyResolve
@@ -71,7 +71,7 @@ ActiveAdmin.register Teneo::DataModel::Format, as: 'Format' do
       f.input :description
       f.input :category, required: true, as: :select, collection: Teneo::DataModel::Format::CATEGORY_LIST
       f.input :extensions_list, label: 'File extensions', required: true, as: :tags
-      f.input :mime_types_list, label: 'MIME types', required: true, as: :tags
+      f.input :mimetypes_list, label: 'MIME types', required: true, as: :tags
       f.input :puids_list, label: 'PRONOM Unique Identifiers', as: :tags
       # f.hidden_field :lock_version
     end

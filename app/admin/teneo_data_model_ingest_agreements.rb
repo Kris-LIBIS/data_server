@@ -10,7 +10,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
   config.sort_order = 'name_asc'
   config.batch_actions = false
 
-  permit_params :name, :project_name, :collection_name,
+  permit_params :name, :description, :project_name, :collection_name,
                 :collection_description, :ingest_workflow_name,
                 :organization_id, :producer_id, :material_flow_id,
                 :contact_ingest_list, :contact_collection_list, :contact_system_list,
@@ -40,6 +40,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
 
     attributes_table do
       row :name
+      row :description
       row :organization
       row 'Ingest contacts', as: :tags do
         # noinspection RubyResolve
@@ -79,7 +80,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
           # end
           column '' do |workflow|
             # noinspection RubyResolve
-            action_icons path: admin_ingest_agreement_ingest_workflow_path(workflow.ingest_agreement, workflow), actions: [:delete]
+            action_icons path: admin_ingest_agreement_ingest_workflow_path(workflow.ingest_agreement, workflow)
           end
         end
         new_button :ingest_agreement, :ingest_workflow
@@ -110,6 +111,7 @@ ActiveAdmin.register Teneo::DataModel::IngestAgreement, as: 'IngestAgreement' do
   form do |f|
     f.inputs 'Ingest Agreement info' do
       f.input :name, required: true
+      f.input :description
       f.input :organization, required: true
       f.input :project_name
       f.input :contact_ingest_list, as: :tags

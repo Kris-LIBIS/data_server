@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
   end
 
   create_table "conversion_tasks", force: :cascade do |t|
-    t.integer "position", null: false
+    t.integer "position"
     t.string "name", null: false
     t.string "description"
     t.string "output_format"
@@ -48,15 +48,17 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "lock_version", default: 0, null: false
     t.index ["conversion_workflow_id", "name"], name: "index_conversion_tasks_on_conversion_workflow_id_and_name", unique: true
-    t.index ["conversion_workflow_id", "position"], name: "index_conversion_tasks_on_conversion_workflow_id_and_position", unique: true
+    t.index ["conversion_workflow_id", "position"], name: "index_conversion_tasks_on_conversion_workflow_id_and_position"
     t.index ["conversion_workflow_id"], name: "index_conversion_tasks_on_conversion_workflow_id"
     t.index ["converter_id"], name: "index_conversion_tasks_on_converter_id"
   end
 
   create_table "conversion_workflows", force: :cascade do |t|
-    t.integer "position", null: false
+    t.integer "position"
     t.string "name"
     t.string "description"
+    t.boolean "copy_files", default: false
+    t.boolean "copy_structure", default: true
     t.string "input_formats", array: true
     t.string "input_filename_regex"
     t.bigint "representation_id"
@@ -64,18 +66,19 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "lock_version", default: 0, null: false
     t.index ["representation_id", "name"], name: "index_conversion_workflows_on_representation_id_and_name", unique: true
-    t.index ["representation_id", "position"], name: "index_conversion_workflows_on_representation_id_and_position", unique: true
+    t.index ["representation_id", "position"], name: "index_conversion_workflows_on_representation_id_and_position"
     t.index ["representation_id"], name: "index_conversion_workflows_on_representation_id"
   end
 
   create_table "converters", force: :cascade do |t|
+    t.string "category", default: "converter", null: false
     t.string "name"
-    t.string "description"
     t.string "class_name"
     t.string "script_name"
+    t.string "description"
+    t.string "help"
     t.string "input_formats", array: true
     t.string "output_formats", array: true
-    t.string "category", default: "converter", null: false
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "lock_version", default: 0, null: false
@@ -85,13 +88,13 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.string "name", null: false
     t.string "category", null: false
     t.string "description"
-    t.string "mime_types", null: false, array: true
+    t.string "mimetypes", null: false, array: true
     t.string "puids", array: true
     t.string "extensions", null: false, array: true
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["extensions"], name: "index_formats_on_extensions", using: :gin
-    t.index ["mime_types"], name: "index_formats_on_mime_types", using: :gin
+    t.index ["mimetypes"], name: "index_formats_on_mimetypes", using: :gin
     t.index ["name"], name: "index_formats_on_name", unique: true
     t.index ["puids"], name: "index_formats_on_puids", using: :gin
   end
@@ -178,8 +181,10 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "lock_version", default: 0, null: false
-    t.index ["parent_type", "parent_id", "position"], name: "index_items_on_parent_type_and_parent_id_and_position", unique: true
+    t.index ["options"], name: "index_items_on_options", using: :gin
+    t.index ["parent_type", "parent_id", "position"], name: "index_items_on_parent_type_and_parent_id_and_position"
     t.index ["parent_type", "parent_id"], name: "index_items_on_parent_type_and_parent_id"
+    t.index ["properties"], name: "index_items_on_properties", using: :gin
   end
 
   create_table "jwt_blacklist", force: :cascade do |t|
@@ -224,15 +229,15 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.string "message"
     t.jsonb "data"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.index ["item_id", "severity"], name: "index_message_logs_on_item_id_and_severity"
+    t.index ["created_at", "item_id", "severity"], name: "index_message_logs_on_created_at_and_item_id_and_severity"
+    t.index ["created_at", "run_id", "severity"], name: "index_message_logs_on_created_at_and_run_id_and_severity"
     t.index ["item_id"], name: "index_message_logs_on_item_id"
-    t.index ["run_id", "severity"], name: "index_message_logs_on_run_id_and_severity"
     t.index ["run_id"], name: "index_message_logs_on_run_id"
   end
 
   create_table "metadata_records", force: :cascade do |t|
     t.string "format", null: false
-    t.jsonb "data"
+    t.xml "data"
     t.bigint "item_id", null: false
     t.index ["item_id"], name: "index_metadata_records_on_item_id"
   end
@@ -249,7 +254,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.string "name", null: false
     t.string "stage"
     t.string "status"
-    t.string "base_dir"
+    t.jsonb "options", default: "{}"
     t.bigint "ingest_workflow_id", null: false
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
@@ -308,9 +313,10 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
   end
 
   create_table "representations", force: :cascade do |t|
-    t.integer "position", null: false
+    t.integer "position"
     t.string "label", null: false
     t.boolean "optional", default: false
+    t.boolean "keep_structure", default: true
     t.bigint "access_right_id"
     t.bigint "representation_info_id", null: false
     t.bigint "from_id"
@@ -321,7 +327,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.index ["access_right_id"], name: "index_representations_on_access_right_id"
     t.index ["from_id"], name: "index_representations_on_from_id"
     t.index ["ingest_model_id", "label"], name: "index_representations_on_ingest_model_id_and_label", unique: true
-    t.index ["ingest_model_id", "position"], name: "index_representations_on_ingest_model_id_and_position", unique: true
+    t.index ["ingest_model_id", "position"], name: "index_representations_on_ingest_model_id_and_position"
     t.index ["ingest_model_id"], name: "index_representations_on_ingest_model_id"
     t.index ["representation_info_id"], name: "index_representations_on_representation_info_id"
   end
@@ -344,10 +350,14 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.jsonb "options", default: "{}"
     t.jsonb "properties", default: "{}"
     t.bigint "package_id"
+    t.bigint "user_id"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "lock_version", default: 0, null: false
+    t.index ["options"], name: "index_runs_on_options", using: :gin
     t.index ["package_id"], name: "index_runs_on_package_id"
+    t.index ["properties"], name: "index_runs_on_properties", using: :gin
+    t.index ["user_id"], name: "index_runs_on_user_id"
   end
 
   create_table "stage_tasks", force: :cascade do |t|
@@ -357,7 +367,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "lock_version", default: 0, null: false
-    t.index ["stage_workflow_id", "position"], name: "index_stage_tasks_on_stage_workflow_id_and_position", unique: true
+    t.index ["stage_workflow_id", "position"], name: "index_stage_tasks_on_stage_workflow_id_and_position"
     t.index ["stage_workflow_id"], name: "index_stage_tasks_on_stage_workflow_id"
     t.index ["task_id"], name: "index_stage_tasks_on_task_id"
   end
@@ -381,6 +391,8 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
     t.integer "max", default: 0
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["created_at", "item_id"], name: "index_status_logs_on_created_at_and_item_id"
+    t.index ["created_at", "run_id"], name: "index_status_logs_on_created_at_and_run_id"
     t.index ["item_id"], name: "index_status_logs_on_item_id"
     t.index ["run_id"], name: "index_status_logs_on_run_id"
   end
@@ -452,6 +464,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_054115) do
   add_foreign_key "representations", "representation_infos"
   add_foreign_key "representations", "representations", column: "from_id"
   add_foreign_key "runs", "packages", on_delete: :cascade
+  add_foreign_key "runs", "users", on_delete: :nullify
   add_foreign_key "stage_tasks", "stage_workflows"
   add_foreign_key "stage_tasks", "tasks"
   add_foreign_key "status_logs", "items"

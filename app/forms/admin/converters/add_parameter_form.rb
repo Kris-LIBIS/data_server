@@ -16,7 +16,7 @@ class Admin::Converters::AddParameterForm
     @params = params
     return false unless valid?
 
-    parameter = Teneo::DataModel::ParameterDef.create(
+    parameter = Teneo::DataModel::Parameter.create(
         name: @params.fetch(:parameter_name),
         data_type: @params.fetch(:parameter_type),
         with_parameters_id: @params.fetch(:with_parameters_id),
@@ -30,7 +30,7 @@ class Admin::Converters::AddParameterForm
   end
 
   def valid?
-    found = Teneo::DataModel::ParameterDef.find_by(
+    found = Teneo::DataModel::Parameter.find_by(
         with_parameters_type: @params.fetch(:with_parameters_type),
         with_parameters_id: @params.fetch(:with_parameters_id),
         name: @params.fetch(:parameter_name),

@@ -91,7 +91,8 @@ ActiveAdmin.register Teneo::DataModel::Parameter, as: 'Parameter' do
       f.input :default
       f.input :target_list, as: :select, multiple: true, collection: f.object.target_candidates.map(&:reference_name)
       f.input :description
-      f.input :help, as: :text, input_html: {rows: 3}
+      # f.input :help, as: :text, input_html: {rows: 3}
+      f.input :help, as: :markdown_editor
       f.hidden_field :lock_version
       f.hidden_field :with_parameters_id
       f.hidden_field :with_parameters_type

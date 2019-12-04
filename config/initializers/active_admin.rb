@@ -1,3 +1,5 @@
+require 'teneo-ingester'
+
 # noinspection RubyResolve
 ActiveAdmin.setup do |config|
   # == Site Title

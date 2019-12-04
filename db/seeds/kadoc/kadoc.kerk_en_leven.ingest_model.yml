@@ -11,31 +11,45 @@ representations:
     access_right:  'KADOC admin'
     conversion_workflows:
       - name: 'copy JPEG files'
+        copy_files: false
+        copy_structure: false
         input_formats: ['JPG']
+        tasks:
+          - name: 'copy_files'
+            converter: 'RepresentationSelecter'
   - label: 'Archiefkopie (OCR)'
     representation_info: 'ARCHIVE_OCR'
     access_right:  'KADOC admin'
     conversion_workflows:
       - name: 'copy PDF files'
+        copy_files: false
+        copy_structure: false
         input_formats: ['PDF']
+        tasks:
+          - name: 'copy_files'
+            converter: 'RepresentationSelecter'
   - label: 'Consultatiekopie'
     representation_info: 'VIEW_MAIN'
     from: 'Archiefkopie (OCR)'
     conversion_workflows:
       - name: 'Assemble PDF files'
+        copy_files: true
+        copy_structure: false
         input_formats: ['PDF']
         tasks:
+          - name: 'copy_files'
+            converter: 'RepresentationSelecter'
           - name: 'optimize'
-            converter: 'PDFoptimizer'
+            converter: 'PdfOptimizer'
             output_format: 'PDF'
             values:
               quality: 1
           - name: 'watermark'
-            converter: 'PDFwatermarker'
+            converter: 'PdfWatermarker'
             output_format: 'PDF'
             values:
               text: 'KADOC - KU Leuven'
               opacity: 0.15
           - name: 'assemble'
-            converter: 'PDFassembler'
+            converter: 'PdfAssembler'
             output_format: 'PDF'

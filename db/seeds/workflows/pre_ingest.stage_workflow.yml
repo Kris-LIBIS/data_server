@@ -5,9 +5,9 @@
     - task: 'CollectionBuilderFromPattern'
     - task: 'FileGrouperFromPattern'
     - task: 'FileLabelerFromPattern'
-      values:
     - task: 'IeBuilderFromGroup'
     - task: 'MetadataAlmaCollector'
+    - task: 'CollectionLabelerFromMetadata'
     - task: 'IeLabelerFromMetadata'
     - task: 'ManifestationBuilder'
   parameters:
@@ -16,7 +16,6 @@
         - 'CollectionBuilderFromPattern#pattern'
         - 'FileGrouperFromPattern#pattern'
         - 'FileLabelerFromPattern#pattern'
-        - 'MetadataAlmaCollector#pattern'
     collection_value:
       targets: ['CollectionBuilderFromPattern#value']
     collection_path:
@@ -25,8 +24,12 @@
       targets: ['CollectionBuilderFromPattern#navigate']
     collection_publish:
       targets: ['CollectionBuilderFromPattern#publish']
-    collection_root:
-      targets: ['CollectionCreator#collection']
+    collection_label:
+      targets: ['CollectionLabelerFromMetadata#label']
+    collection_label_pattern:
+      targets: ['CollectionLabelerFromMetadata#pattern']
+    collection_label_value:
+      targets: ['CollectionLabelerFromMetadata#value']
     group_value:
       targets: ['FileGrouperFromPattern#value']
     group_name:
@@ -37,6 +40,8 @@
       targets: ['FileLabelerFromPattern#value']
     file_label:
       targets: ['FileLabelerFromPattern#label']
+    metadata_pattern:
+      targets: ['MetadataAlmaCollector#pattern']
     metadata_field:
       targets: ['MetadataAlmaCollector#field']
     metadata_value:
@@ -53,4 +58,3 @@
       targets: ['IeLabelerFromMetadata#value']
     ie_label:
       targets: ['IeLabelerFromMetadata#label']
-

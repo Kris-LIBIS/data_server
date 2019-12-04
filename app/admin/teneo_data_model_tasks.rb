@@ -45,7 +45,9 @@ ActiveAdmin.register Teneo::DataModel::Task, as: 'Task' do
     end
     actions defaults: false do |object|
       # noinspection RubyBlockToMethodReference,RubyResolve
-      action_icons path: resource_path(object), actions: %i[view delete]
+      action_icons path: resource_path(object), actions: %i[view delete] do
+        help_icon object.help, "task: #{object.name}"
+      end
     end
   end
 
@@ -55,7 +57,9 @@ ActiveAdmin.register Teneo::DataModel::Task, as: 'Task' do
       row :name
       row :class_name
       row :description
-      row :help
+      row :help do |data|
+        raw(MarkdownService.render(data.help))
+      end
     end
 
     tabs do
@@ -86,7 +90,7 @@ ActiveAdmin.register Teneo::DataModel::Task, as: 'Task' do
       f.input :name, required: true
       f.input :class_name
       f.input :description
-      f.input :help, as: :text, input_html: {rows: 3}
+      f.input :help, as: :markdown_editor
       f.hidden_field :lock_version
     end
     actions

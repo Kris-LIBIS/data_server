@@ -29,14 +29,14 @@
   stage: 'PreProcess'
   tasks:
     - task: 'FormatIdentifierByDir'
-    - task: 'FileMimetypeChecker'
+    - task: 'MimetypeChecker'
   parameters:
     location:
       targets: ['FormatIdentifierByDir#folder']
     subdirs:
       targets: ['FormatIdentifierByDir#deep_scan']
-    mimetype_regexp:
-      targets: ['FileMimetypeChecker#mimetype_regexp']
+    mimetype_pattern:
+      targets: ['MimetypeChecker#pattern']
 - name: 'checksum_format_mimetype'
   description: 'Format identification, checksum test and MIME type test'
   stage: 'PreProcess'
@@ -54,8 +54,8 @@
     checksum_file:
       targets: ['ChecksumTester#checksum_file']
       default: 'md5sums.txt'
-    mimetype_regexp:
-      targets: ['MimetypeChecker#mimetype_regexp']
+    mimetype_pattern:
+      targets: ['MimetypeChecker#pattern']
 - name: 'checksum_viruscheck_format_mimetype'
   description: 'Format identification, virus check, checksum test and MIME type test'
   stage: 'PreProcess'
@@ -71,11 +71,11 @@
       targets: ['VirusCheckerDir#location', 'FormatIdentifierByDir#folder']
     subdirs:
       targets: ['FormatIdentifierByDir#deep_scan']
-  checksum_file:
+    checksum_file:
       targets: ['ChecksumTester#checksum_file']
       default: 'md5sums.txt'
-    mimetype_regexp:
-      targets: ['MimetypeChecker#mimetype_regexp']
+    mimetype_pattern:
+      targets: ['MimetypeChecker#pattern']
 - name: 'viruscheck_format'
   description: 'Virus check and Format identification'
   stage: 'PreProcess'

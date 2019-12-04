@@ -35,6 +35,8 @@ $skinTablePadding: 5px!default;
 //@import "active_admin_flat_skin";
 @import "activeadmin_reorderable";
 
+@import "active_admin/markdown_editor.css";
+
 h3 {
   margin-block-start: 0;
 }
@@ -64,23 +66,24 @@ a.back-button {
   float: right;
   top: 0.2em;
   font-weight: 600;
-  font-family: "Helvetica Neue", Helvetica, Arial, Sans-Serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, Sans-Serif, serif;
   line-height: 25px;
 }
 
 span.button_link a {
-    background-image: none;
-    border: none;
-    box-shadow: none;
-    text-shadow: none;
-    border-radius: 5px;
-    background-color: #61c1ca;
-    color: white;
-    display: inline-block;
-    margin: 0px 3px 0px;
-    padding: 2px 10px 2px 10px;
-    height: auto;
-    text-decoration: none;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  text-shadow: none;
+  border-radius: 5px;
+  background-color: #61c1ca;
+  color: white;
+  display: inline-block;
+  margin: 0 3px 0;
+  padding: 2px 10px 2px 10px;
+  height: auto;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 span.button_link.disabled a {
@@ -101,3 +104,55 @@ span.button_link.disabled a {
 //  height: auto;
 //  text-decoration: none;
 //}
+
+.help_popup {
+  position: fixed;
+  display: none;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.7);
+  -webkit-transition: opacity 5s ease-in-out;
+  -moz-transition: opacity 5s ease-in-out;
+  transition: opacity 5s ease-in-out;
+}
+
+.popup_window {
+  margin: 10vh auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  position: relative;
+  width: 50%;
+  //max-height: 50%;
+  //transition: all 1s ease-in-out;
+  z-index: 100000;
+}
+
+.popup_window h4 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.popup_window .close {
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+
+.popup_window .close:hover {
+  color: #06D85F;
+}
+
+.popup_window .content {
+  max-height: 40vh;
+  overflow: auto;
+}
