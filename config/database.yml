@@ -7,10 +7,11 @@ default: &default
   data_schema: teneo
   schema_search_path: teneo
 
-  database: teneo
-
   username: teneo
   password: teneo
+
+  dba_user: teneo_dba
+  dba_pass: teneo_dba
 
   migrations_paths:
     - <%= Teneo::DataModel.migrations_path %>
@@ -37,3 +38,4 @@ production:
   password: <%= ENV['DATABASE_PASSWORD'] %>
   dba_name: <%= ENV['DATABASE_DBA_USERNAME'] %>
   dba_pass: <%= ENV['DATABASE_DBA_PASSWORD'] %>
+
