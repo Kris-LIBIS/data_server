@@ -8,16 +8,16 @@ ON_TTY=true
 dir = File.join Teneo::Ingester::ROOT_DIR, 'db', 'seeds'
 Teneo::Ingester::SeedLoader.new(dir, tty: ON_TTY)
 
-dir = File.join Rails.root, 'db', 'seeds'
+dir = File.join __dir__, 'seeds'
 Teneo::DataModel::SeedLoader.new(dir, tty: ON_TTY)
 
-dir = File.join Rails.root, 'db', 'seeds', 'code_tables'
+dir = File.join __dir__, 'seeds', 'code_tables'
 Teneo::DataModel::SeedLoader.new(dir, tty: ON_TTY)
 
-dir = File.join Rails.root, 'db', 'seeds', 'workflows'
+dir = File.join __dir__, 'seeds', 'workflows'
 Teneo::DataModel::SeedLoader.new(dir, tty: ON_TTY)
 
-dir = File.join Rails.root, 'db', 'seeds', 'kadoc'
+dir = File.join __dir__, 'seeds', 'kadoc'
 Teneo::DataModel::SeedLoader.new(dir, tty: ON_TTY)
 
 LoginUser.update_or_create({email: 'admin@libis.be'}, {password: 'abc123', password_confirmation: 'abc123'})

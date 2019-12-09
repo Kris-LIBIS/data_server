@@ -13,7 +13,6 @@
 ActiveRecord::Schema.define(version: 2019_05_17_054115) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "access_rights", force: :cascade do |t|
