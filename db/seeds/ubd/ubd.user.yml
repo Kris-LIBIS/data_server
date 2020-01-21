@@ -1,6 +1,0 @@
-- email: 'info@ubd.be'
-  first_name: 'UBD'
-  last_name: 'Ingester'
-  roles:
-    - organization: 'ubd'
-      role: 'ingester'

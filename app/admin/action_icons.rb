@@ -146,7 +146,7 @@ class ParameterTab < Arbre::Component
     end
     div message.html_safe
     data = []
-    resource.child_parameters(export_only: true, unmapped_only: true).each do |param|
+    resource.child_parameters(export_only: true, mapped: false).each do |param|
       h = param.to_hash
       h[:reference] = param.with_parameters.name
       data << h

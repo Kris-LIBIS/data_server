@@ -1,6 +1,0 @@
-- user: 'admin@libis.be'
-  organization: 'ubd'
-  role: 'admin'
-- user: 'teneo.libis@gmail.com'
-  organization: 'ubd'
-  role: 'ingester'

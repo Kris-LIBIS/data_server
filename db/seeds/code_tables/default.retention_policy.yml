@@ -1,3 +1,0 @@
-- name: 'NoRetentionPolicy'
-  ext_id: 'NO_RETENTION'
-  description: 'No retention policy applied.'
